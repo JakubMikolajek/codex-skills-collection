@@ -1,0 +1,3 @@
+interface:
+  display_name: "Implementation Gap Analysis"
+  short_description: "Compare expected outcomes to current state"

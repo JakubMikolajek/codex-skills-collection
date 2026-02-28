@@ -1,0 +1,4 @@
+interface:
+  display_name: "SwiftUI"
+  short_description: "Build and review SwiftUI app features"
+  default_prompt: "Use $swiftui to implement or review this SwiftUI feature."

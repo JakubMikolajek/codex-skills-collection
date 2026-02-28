@@ -1,0 +1,4 @@
+interface:
+  display_name: "React"
+  short_description: "Implement robust React components and flows"
+  default_prompt: "Use $react to implement or review this React task."

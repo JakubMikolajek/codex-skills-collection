@@ -1,0 +1,4 @@
+interface:
+  display_name: "React Next.js"
+  short_description: "Build robust Next.js React application flows"
+  default_prompt: "Use $react-nextjs to implement or review this Next.js React task."

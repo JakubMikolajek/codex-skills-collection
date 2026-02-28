@@ -1,0 +1,4 @@
+interface:
+  display_name: "Kotlin"
+  short_description: "Write maintainable Kotlin application code"
+  default_prompt: "Use $kotlin to implement or review this Kotlin change."

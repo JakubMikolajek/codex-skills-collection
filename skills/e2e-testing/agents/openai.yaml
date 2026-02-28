@@ -1,0 +1,3 @@
+interface:
+  display_name: "E2E Testing"
+  short_description: "Design and implement reliable E2E tests"

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Dev Docs Flow"
+  short_description: "Compose dev skills into docs and flows"
+  default_prompt: "Use $dev-docs-flow to generate implementation docs and execution flow for this task."

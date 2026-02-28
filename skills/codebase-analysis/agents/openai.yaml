@@ -1,0 +1,3 @@
+interface:
+  display_name: "Codebase Analysis"
+  short_description: "Analyze architecture, patterns, and quality"

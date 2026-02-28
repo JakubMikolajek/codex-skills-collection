@@ -1,0 +1,4 @@
+interface:
+  display_name: "shadcn Tailwind"
+  short_description: "Implement shadcn ui with Tailwind patterns"
+  default_prompt: "Use $shadcn-tailwind to implement this shadcn/ui and Tailwind task."

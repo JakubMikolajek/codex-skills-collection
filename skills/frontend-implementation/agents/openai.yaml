@@ -1,0 +1,3 @@
+interface:
+  display_name: "Frontend Implementation"
+  short_description: "Implement accessible, production UI code"

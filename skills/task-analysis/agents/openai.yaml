@@ -1,0 +1,3 @@
+interface:
+  display_name: "Task Analysis"
+  short_description: "Build task context, scope, and requirements"

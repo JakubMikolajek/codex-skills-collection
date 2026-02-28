@@ -1,0 +1,3 @@
+interface:
+  display_name: "Technical Context Discovery"
+  short_description: "Discover project conventions before coding"
