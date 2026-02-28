@@ -1,0 +1,4 @@
+interface:
+  display_name: "Vuetify PrimeVue"
+  short_description: "Implement Vuetify and PrimeVue UI patterns"
+  default_prompt: "Use $vuetify-primevue to implement this Vuetify or PrimeVue UI task."

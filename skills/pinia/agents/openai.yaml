@@ -1,0 +1,4 @@
+interface:
+  display_name: "Pinia"
+  short_description: "Model predictable Pinia store state"
+  default_prompt: "Use $pinia to implement or review this Pinia state management task."

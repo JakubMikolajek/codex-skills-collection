@@ -59,6 +59,8 @@ All skills live under `skills/`:
 - `implementation-gap-analysis`
 - `kotlin`
 - `nestjs`
+- `nuxt`
+- `pinia`
 - `react`
 - `react-nextjs`
 - `shadcn-tailwind`
@@ -67,6 +69,8 @@ All skills live under `skills/`:
 - `task-analysis`
 - `technical-context-discovery`
 - `ui-verification`
+- `vue`
+- `vuetify-primevue`
 
 Each skill includes:
 
@@ -89,6 +93,8 @@ Each skill includes:
 │   ├── implementation-gap-analysis/
 │   ├── kotlin/
 │   ├── nestjs/
+│   ├── nuxt/
+│   ├── pinia/
 │   ├── react/
 │   ├── react-nextjs/
 │   ├── shadcn-tailwind/
@@ -96,7 +102,9 @@ Each skill includes:
 │   ├── swiftui/
 │   ├── task-analysis/
 │   ├── technical-context-discovery/
-│   └── ui-verification/
+│   ├── ui-verification/
+│   ├── vue/
+│   └── vuetify-primevue/
 ├── CHANGELOG.md
 └── README.md
 ```

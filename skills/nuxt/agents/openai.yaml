@@ -1,0 +1,4 @@
+interface:
+  display_name: "Nuxt"
+  short_description: "Build robust Nuxt application flows"
+  default_prompt: "Use $nuxt to implement or review this Nuxt task."

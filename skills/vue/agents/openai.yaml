@@ -1,0 +1,4 @@
+interface:
+  display_name: "Vue"
+  short_description: "Build maintainable Vue application components"
+  default_prompt: "Use $vue to implement or review this Vue task."
