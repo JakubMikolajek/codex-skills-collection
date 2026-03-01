@@ -56,6 +56,7 @@ Use the following skills from this repository:
 - `pinia` (file: `skills/pinia/SKILL.md`)
 - `react` (file: `skills/react/SKILL.md`)
 - `react-nextjs` (file: `skills/react-nextjs/SKILL.md`)
+- `rust` (file: `skills/rust/SKILL.md`)
 - `shadcn-tailwind` (file: `skills/shadcn-tailwind/SKILL.md`)
 - `sql-and-database` (file: `skills/sql-and-database/SKILL.md`)
 - `swiftui` (file: `skills/swiftui/SKILL.md`)
@@ -69,17 +70,17 @@ Use the following skills from this repository:
 
 If a user explicitly names a skill (for example `architecture-design`), use that skill.
 
-If a task clearly targets SwiftUI, Kotlin, React, Next.js, NestJS, Vue, Nuxt, Pinia, Vuetify/PrimeVue, or shadcn/ui + Tailwind, use the corresponding dedicated skill even when the user does not name it explicitly.
+If a task clearly targets SwiftUI, Kotlin, Rust, React, Next.js, NestJS, Vue, Nuxt, Pinia, Vuetify/PrimeVue, or shadcn/ui + Tailwind, use the corresponding dedicated skill even when the user does not name it explicitly.
 
 If a user uses command-style requests, route as follows:
 
 - `/research` -> `task-analysis` + `codebase-analysis` (as needed)
 - `/plan` -> `architecture-design` + `implementation-gap-analysis`
 - `/docs-flow` -> `dev-docs-flow` (which composes dev skills contextually)
-- `/implement` -> `technical-context-discovery` + `implementation-gap-analysis`; add `sql-and-database` when data/storage is involved; add `swiftui`, `kotlin`, `react`, `react-nextjs`, `shadcn-tailwind`, `vue`, `nuxt`, `pinia`, `vuetify-primevue`, or `nestjs` when stack-specific
+- `/implement` -> `technical-context-discovery` + `implementation-gap-analysis`; add `sql-and-database` when data/storage is involved; add `swiftui`, `kotlin`, `rust`, `react`, `react-nextjs`, `shadcn-tailwind`, `vue`, `nuxt`, `pinia`, `vuetify-primevue`, or `nestjs` when stack-specific
 - `/implement-ui` -> `technical-context-discovery` + `frontend-implementation` + `ui-verification`; add `react`, `react-nextjs`, `shadcn-tailwind`, `vue`, `nuxt`, `vuetify-primevue`, or `swiftui` when framework-specific
 - `/review-ui` -> `ui-verification`; add `react`, `react-nextjs`, `shadcn-tailwind`, `vue`, `nuxt`, `vuetify-primevue`, or `swiftui` when framework-specific
-- `/review` -> `code-review` + `technical-context-discovery`; add `swiftui`, `kotlin`, `react`, `react-nextjs`, `shadcn-tailwind`, `vue`, `nuxt`, `pinia`, `vuetify-primevue`, or `nestjs` when stack-specific
+- `/review` -> `code-review` + `technical-context-discovery`; add `swiftui`, `kotlin`, `rust`, `react`, `react-nextjs`, `shadcn-tailwind`, `vue`, `nuxt`, `pinia`, `vuetify-primevue`, or `nestjs` when stack-specific
 - `/e2e` -> `e2e-testing` + `technical-context-discovery`
 - `/code-quality-check` -> `codebase-analysis` + `code-review`
 

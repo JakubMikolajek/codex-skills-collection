@@ -1,0 +1,4 @@
+interface:
+  display_name: "Rust"
+  short_description: "Build robust Rust and Tauri application logic"
+  default_prompt: "Use $rust to implement or review this Rust or Tauri task."

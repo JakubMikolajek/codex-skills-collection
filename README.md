@@ -63,6 +63,7 @@ All skills live under `skills/`:
 - `pinia`
 - `react`
 - `react-nextjs`
+- `rust`
 - `shadcn-tailwind`
 - `sql-and-database`
 - `swiftui`
@@ -97,6 +98,7 @@ Each skill includes:
 │   ├── pinia/
 │   ├── react/
 │   ├── react-nextjs/
+│   ├── rust/
 │   ├── shadcn-tailwind/
 │   ├── sql-and-database/
 │   ├── swiftui/
