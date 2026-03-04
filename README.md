@@ -54,6 +54,7 @@ All skills live under `skills/`:
 - `code-review`
 - `codebase-analysis`
 - `dev-docs-flow`
+- `docker`
 - `e2e-testing`
 - `frontend-implementation`
 - `implementation-gap-analysis`
@@ -90,6 +91,7 @@ Each skill includes:
 │   ├── code-review/
 │   ├── codebase-analysis/
 │   ├── dev-docs-flow/
+│   ├── docker/
 │   ├── e2e-testing/
 │   ├── frontend-implementation/
 │   ├── implementation-gap-analysis/

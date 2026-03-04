@@ -1,0 +1,4 @@
+interface:
+  display_name: "Docker"
+  short_description: "Build Dockerfile and Compose setups"
+  default_prompt: "Use $docker to build or review this Dockerfile and Docker Compose setup."
