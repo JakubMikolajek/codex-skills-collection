@@ -1,0 +1,4 @@
+interface:
+  display_name: "Swift Localization"
+  short_description: "Localize Swift apps across many languages"
+  default_prompt: "Use $swift-localization to implement or review this Swift localization task."

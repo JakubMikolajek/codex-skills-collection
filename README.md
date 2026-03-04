@@ -66,6 +66,7 @@ All skills live under `skills/`:
 - `rust`
 - `shadcn-tailwind`
 - `sql-and-database`
+- `swift-localization`
 - `swiftui`
 - `task-analysis`
 - `technical-context-discovery`
@@ -101,6 +102,7 @@ Each skill includes:
 │   ├── rust/
 │   ├── shadcn-tailwind/
 │   ├── sql-and-database/
+│   ├── swift-localization/
 │   ├── swiftui/
 │   ├── task-analysis/
 │   ├── technical-context-discovery/

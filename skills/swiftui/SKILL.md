@@ -142,6 +142,7 @@ Quality:
 
 ## Connected Skills
 
+- `swift-localization` - use when the task involves multilingual strings, String Catalogs, or locale-aware UI behavior
 - `technical-context-discovery` - follow project iOS conventions before editing
 - `frontend-implementation` - apply UI quality and accessibility rules
 - `ui-verification` - verify screen output against approved designs when relevant
