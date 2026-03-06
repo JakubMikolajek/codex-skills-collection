@@ -30,7 +30,8 @@ Discovery progress:
 
 **ALWAYS check first** for existing project instructions in the repository:
 
-- Search for `AGENTS.md` at the repository root.
+- Search for `AGENTS.md` — check `.codex/AGENTS.md` first (primary location in bootstrapped projects), then repo root as fallback.
+- If `AGENTS.md` contains a Skill Routing table, also read the `skills/routing/*.md` branch files (relative to `AGENTS.md`'s directory) to understand the full routing tree.
 - Search for `*.instructions.md` files in relevant directories (e.g., `src/`, `tests/`, `e2e/`, `backend/`, feature-specific folders).
 - Search for Codex-related project guidance folders or files if present.
 

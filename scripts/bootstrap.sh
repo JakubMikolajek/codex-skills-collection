@@ -65,9 +65,12 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SOURCE_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 SOURCE_AGENTS="$SOURCE_ROOT/AGENTS.md"
 SOURCE_SKILLS_DIR="$SOURCE_ROOT/skills"
+SOURCE_SCRIPTS_DIR="$SOURCE_ROOT/scripts"
 TARGET_DIR="$(cd "$TARGET_PATH" && pwd)"
-TARGET_AGENTS="$TARGET_DIR/AGENTS.md"
-TARGET_SKILLS_DIR="$TARGET_DIR/skills"
+TARGET_CODEX_DIR="$TARGET_DIR/.codex"
+TARGET_AGENTS="$TARGET_CODEX_DIR/AGENTS.md"
+TARGET_SKILLS_DIR="$TARGET_CODEX_DIR/skills"
+TARGET_SCRIPTS_DIR="$TARGET_CODEX_DIR/scripts"
 
 if [[ ! -f "$SOURCE_AGENTS" ]]; then
   echo "[ERROR] Source AGENTS.md not found: $SOURCE_AGENTS" >&2
@@ -107,7 +110,11 @@ else
   run_cmd cp "$SOURCE_AGENTS" "$TARGET_AGENTS"
 fi
 
-# skills/
+# .codex/ and skills/
+if [[ ! -d "$TARGET_CODEX_DIR" ]]; then
+  run_cmd mkdir -p "$TARGET_CODEX_DIR"
+fi
+
 if [[ ! -d "$TARGET_SKILLS_DIR" ]]; then
   run_cmd mkdir -p "$TARGET_SKILLS_DIR"
 fi
@@ -137,6 +144,37 @@ for src_skill in "$SOURCE_SKILLS_DIR"/*; do
 
   run_cmd cp -R "$src_skill" "$dest_skill"
 done
+
+# scripts/
+if [[ -d "$SOURCE_SCRIPTS_DIR" ]]; then
+  if [[ ! -d "$TARGET_SCRIPTS_DIR" ]]; then
+    run_cmd mkdir -p "$TARGET_SCRIPTS_DIR"
+  fi
+
+  for src_script in "$SOURCE_SCRIPTS_DIR"/*; do
+    [[ "$(basename "$src_script")" == "bootstrap.sh" ]] && continue
+    script_name="$(basename "$src_script")"
+    dest_script="$TARGET_SCRIPTS_DIR/$script_name"
+
+    if [[ -e "$dest_script" && "$FORCE" -ne 1 ]]; then
+      echo "[SKIP] $dest_script exists (use --force to replace)."
+      skipped=$((skipped + 1))
+      continue
+    fi
+
+    if [[ -e "$dest_script" ]]; then
+      run_cmd rm -f "$dest_script"
+      replaced=$((replaced + 1))
+      echo "[REPLACE] $dest_script"
+    else
+      copied=$((copied + 1))
+      echo "[COPY] $dest_script"
+    fi
+
+    run_cmd cp "$src_script" "$dest_script"
+    run_cmd chmod +x "$dest_script"
+  done
+fi
 
 echo
 echo "Bootstrap summary:"

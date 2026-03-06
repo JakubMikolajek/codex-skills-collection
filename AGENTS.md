@@ -26,6 +26,12 @@ These command-like requests are supported:
 - `/review <task-description>`
 - `/e2e <task-description>`
 - `/code-quality-check`
+- `/debug <bug-description>`
+- `/handoff`
+- `/changelog`
+- `/context`
+- `/new-skill <skill-name>`
+- `/multi-repo <task-description>`
 
 ## Expected Outputs
 
@@ -38,53 +44,54 @@ These command-like requests are supported:
 - `/review`: Findings-first review report ordered by severity (bugs, regressions, risk, test gaps).
 - `/e2e`: Scenario list, Page Object and test implementation guidance, execution report expectations.
 - `/code-quality-check`: Prioritized quality report with concrete action plan.
+- `/debug`: Debug Report (reproduce → isolate → trace → hypothesize → verify) followed by root-cause fix with regression test.
+- `/handoff`: `.codex-handoff.md` with status, in-progress, blocked, decisions, files modified, next steps, open questions.
+- `/changelog`: CHANGELOG block in Keep a Changelog format with version bump recommendation.
+- `/context`: Session Context Block (stack, test runner, package manager, conventions, constraints, uncertainties).
+- `/new-skill`: Scaffolded SKILL.md with quality gates enforced, routing tree updated in same task.
+- `/multi-repo`: Per-repo change plan with contract-owner-first ordering, cross-repo impact map, mandatory handoff.
 
-## Skills
+## Skill Routing
 
-Use the following skills from this repository:
+All `skills/...` paths in this file and in routing/skill files are **relative to the directory containing this `AGENTS.md` file**. If `AGENTS.md` lives at repo root, resolve from repo root. If it lives inside `.codex/`, resolve from `.codex/`.
 
-- `architecture-design` (file: `skills/architecture-design/SKILL.md`)
-- `code-review` (file: `skills/code-review/SKILL.md`)
-- `codebase-analysis` (file: `skills/codebase-analysis/SKILL.md`)
-- `dev-docs-flow` (file: `skills/dev-docs-flow/SKILL.md`)
-- `docker` (file: `skills/docker/SKILL.md`)
-- `e2e-testing` (file: `skills/e2e-testing/SKILL.md`)
-- `frontend-implementation` (file: `skills/frontend-implementation/SKILL.md`)
-- `implementation-gap-analysis` (file: `skills/implementation-gap-analysis/SKILL.md`)
-- `kotlin` (file: `skills/kotlin/SKILL.md`)
-- `nestjs` (file: `skills/nestjs/SKILL.md`)
-- `nuxt` (file: `skills/nuxt/SKILL.md`)
-- `pinia` (file: `skills/pinia/SKILL.md`)
-- `react` (file: `skills/react/SKILL.md`)
-- `react-nextjs` (file: `skills/react-nextjs/SKILL.md`)
-- `rust` (file: `skills/rust/SKILL.md`)
-- `shadcn-tailwind` (file: `skills/shadcn-tailwind/SKILL.md`)
-- `sql-and-database` (file: `skills/sql-and-database/SKILL.md`)
-- `swift-localization` (file: `skills/swift-localization/SKILL.md`)
-- `swiftui` (file: `skills/swiftui/SKILL.md`)
-- `task-analysis` (file: `skills/task-analysis/SKILL.md`)
-- `technical-context-discovery` (file: `skills/technical-context-discovery/SKILL.md`)
-- `ui-verification` (file: `skills/ui-verification/SKILL.md`)
-- `vue` (file: `skills/vue/SKILL.md`)
-- `vuetify-primevue` (file: `skills/vuetify-primevue/SKILL.md`)
+Do not load skills directly. Navigate the routing tree:
 
-## Trigger Rules
+| If the task involves... | Read first |
+|-------------------------|------------|
+| UI, components, styling, frontend frameworks (React, Vue, Nuxt, SwiftUI) | skills/routing/FRONTEND.md |
+| APIs, services, server-side logic (NestJS, Kotlin, Rust) | skills/routing/BACKEND.md |
+| Docker, deployment, containers, CI/CD | skills/routing/INFRA.md |
+| Databases, SQL, schemas, migrations, ORM | skills/routing/DATA.md |
+| Review, architecture, testing, docs, analysis, context discovery, debugging, handoff, changelog, multi-repo, skill creation | skills/routing/WORKFLOW.md |
 
-If a user explicitly names a skill (for example `architecture-design`), use that skill.
+### Routing rules
+- Always read the branch file BEFORE loading any skill
+- Never load a skill directly from this file — always go through the branch
+- If a task spans 2 domains, read both branch files, then load only the leaf skills that apply
+- If no branch matches, read skills/routing/WORKFLOW.md as fallback
+- If a user explicitly names a skill by name, you may load it directly as an override
 
-If a task clearly targets Docker, Dockerfile, Docker Compose, SwiftUI, Swift localization, Kotlin, Rust, React, Next.js, NestJS, Vue, Nuxt, Pinia, Vuetify/PrimeVue, or shadcn/ui + Tailwind, use the corresponding dedicated skill even when the user does not name it explicitly.
+### Preload rule
+- Before any non-trivial `/implement`, `/review`, or `/debug` task, always load `project-context` (for session-start context) or `technical-context-discovery` (for per-task conventions) first
+- This rule is enforced at root level — domain branches do not repeat it
+- Simple one-line answers and clarification questions are exempt
 
-If a user uses command-style requests, route as follows:
+### Routing examples
 
-- `/research` -> `task-analysis` + `codebase-analysis` (as needed)
-- `/plan` -> `architecture-design` + `implementation-gap-analysis`
-- `/docs-flow` -> `dev-docs-flow` (which composes dev skills contextually)
-- `/implement` -> `technical-context-discovery` + `implementation-gap-analysis`; add `sql-and-database` when data/storage is involved; add `docker`, `swiftui`, `swift-localization`, `kotlin`, `rust`, `react`, `react-nextjs`, `shadcn-tailwind`, `vue`, `nuxt`, `pinia`, `vuetify-primevue`, or `nestjs` when stack-specific
-- `/implement-ui` -> `technical-context-discovery` + `frontend-implementation` + `ui-verification`; add `react`, `react-nextjs`, `shadcn-tailwind`, `vue`, `nuxt`, `vuetify-primevue`, `swiftui`, or `swift-localization` when framework-specific
-- `/review-ui` -> `ui-verification`; add `react`, `react-nextjs`, `shadcn-tailwind`, `vue`, `nuxt`, `vuetify-primevue`, `swiftui`, or `swift-localization` when framework-specific
-- `/review` -> `code-review` + `technical-context-discovery`; add `docker`, `swiftui`, `swift-localization`, `kotlin`, `rust`, `react`, `react-nextjs`, `shadcn-tailwind`, `vue`, `nuxt`, `pinia`, `vuetify-primevue`, or `nestjs` when stack-specific
-- `/e2e` -> `e2e-testing` + `technical-context-discovery`
-- `/code-quality-check` -> `codebase-analysis` + `code-review`
+**Example 1: `/debug` — Nuxt page shows wrong data**
+`AGENTS.md` → WORKFLOW.md → `debug-trace` + `technical-context-discovery`
+After Debug Report: FRONTEND.md → VUE.md → `vue` + `nuxt` (for the fix)
+
+**Example 2: `/implement` — NestJS endpoint with new DB table**
+`AGENTS.md` → BACKEND.md → `nestjs` + WORKFLOW.md → `technical-context-discovery`
+Also: DATA.md → `sql-and-database` (cross-domain — two branches read)
+
+**Example 3: `/multi-repo` — API contract change + frontend consumer update**
+`AGENTS.md` → WORKFLOW.md → `multi-repo` + `project-context` (per repo)
+Owner repo: BACKEND.md → `nestjs`
+Consumer repo: FRONTEND.md → REACT.md → `react` + `react-nextjs`
+End: `session-handoff` (mandatory)
 
 ## Escalation and Validation Rules
 

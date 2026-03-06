@@ -45,41 +45,74 @@ E2E flow:
 - `/review`: Findings-first review with severity and risk
 - `/e2e`: E2E scenarios, Page Objects, fixtures, and execution expectations
 - `/code-quality-check`: Prioritized quality report and action plan
+- `/debug`: Debug Report (reproduce → isolate → trace → hypothesize → verify) + root-cause fix
+- `/handoff`: `.codex-handoff.md` with status, decisions, files, next steps
+- `/changelog`: CHANGELOG block in Keep a Changelog format + version bump recommendation
+- `/context`: Session Context Block (stack, runner, conventions, constraints)
+- `/new-skill`: Scaffold SKILL.md + update routing tree
+- `/multi-repo`: Per-repo change plan with contract-owner-first ordering + mandatory handoff
 
 ## Skills Included
 
-All skills live under `skills/`:
+All skills live under `skills/` and are routed through `skills/routing/`:
 
-- `architecture-design`
-- `code-review`
-- `codebase-analysis`
-- `dev-docs-flow`
-- `docker`
-- `e2e-testing`
-- `frontend-implementation`
-- `implementation-gap-analysis`
-- `kotlin`
-- `nestjs`
-- `nuxt`
-- `pinia`
-- `react`
-- `react-nextjs`
-- `rust`
-- `shadcn-tailwind`
-- `sql-and-database`
-- `swift-localization`
-- `swiftui`
-- `task-analysis`
-- `technical-context-discovery`
-- `ui-verification`
-- `vue`
-- `vuetify-primevue`
+### Domain Skills
+
+- `docker` — Dockerfiles, Compose, multi-stage builds, CI images
+- `kotlin` — Kotlin domain modeling, coroutines, null-safety
+- `nestjs` — NestJS modules, controllers, services, DTOs
+- `react` — React components, hooks, state, forms, rendering
+- `react-nextjs` — Next.js routing, server/client components, data fetching
+- `rust` — Rust ownership, async, Tauri, systems logic
+- `shadcn-tailwind` — shadcn/ui components, Tailwind CSS utilities
+- `sql-and-database` — SQL schema design, normalization, indexes, migrations, ORM
+- `swift-localization` — Swift String Catalogs, pluralization, locale-aware formatting
+- `swiftui` — SwiftUI views, MVVM, Observation API, Factory DI
+- `vue` — Vue 3 Composition API, composables, reactivity
+- `nuxt` — Nuxt 3 routing, SSR, middleware, composables
+- `pinia` — Pinia stores, shared state, async actions
+- `vuetify-primevue` — Vuetify/PrimeVue component composition, theming
+
+### Cross-Cutting Skills
+
+- `frontend-implementation` — UI patterns, accessibility, design system usage
+- `ui-verification` — Design spec comparison, pixel-level verification
+- `architecture-design` — Solution architecture, implementation planning
+- `code-review` — Code review, quality analysis, best practices
+- `codebase-analysis` — Full codebase audit, dependencies, architecture
+- `dev-docs-flow` — Documentation + execution flow artifacts
+- `e2e-testing` — E2E test patterns, Page Objects, CI readiness
+- `implementation-gap-analysis` — Plan-vs-code comparison
+- `task-analysis` — Task research, context gathering, PRD
+- `technical-context-discovery` — Project conventions, patterns, standards
+
+### New Workflow Skills
+
+- `skill-creator` — Scaffold new skills, wire into routing tree
+- `project-context` — Build structured project understanding at session start
+- `session-handoff` — Produce structured handoff documents at session end
+- `changelog-generator` — Generate CHANGELOG entries from git/PR/handoff
+- `multi-repo` — Coordinate changes spanning multiple repositories
+- `debug-trace` — Structured root cause analysis before writing fixes
 
 Each skill includes:
 
 - `SKILL.md` with triggerable instructions
-- `agents/openai.yaml` with UI metadata
 - optional `references/` for examples/templates
+
+## Skill Routing
+
+Skills are not loaded directly from `AGENTS.md`. Instead, the agent navigates a routing tree:
+
+```
+AGENTS.md (Root Router)
+└── skills/routing/
+    ├── FRONTEND.md → REACT.md / VUE.md / NATIVE.md / GENERIC_UI.md → leaf skills
+    ├── BACKEND.md → nestjs / kotlin / rust
+    ├── INFRA.md → docker
+    ├── DATA.md → sql-and-database
+    └── WORKFLOW.md → all cross-cutting and workflow skills
+```
 
 ## Repository Structure
 
@@ -87,22 +120,38 @@ Each skill includes:
 .
 ├── AGENTS.md
 ├── skills/
+│   ├── routing/
+│   │   ├── FRONTEND.md
+│   │   ├── BACKEND.md
+│   │   ├── INFRA.md
+│   │   ├── DATA.md
+│   │   ├── WORKFLOW.md
+│   │   ├── REACT.md
+│   │   ├── VUE.md
+│   │   ├── NATIVE.md
+│   │   └── GENERIC_UI.md
 │   ├── architecture-design/
+│   ├── changelog-generator/
 │   ├── code-review/
 │   ├── codebase-analysis/
+│   ├── debug-trace/
 │   ├── dev-docs-flow/
 │   ├── docker/
 │   ├── e2e-testing/
 │   ├── frontend-implementation/
 │   ├── implementation-gap-analysis/
 │   ├── kotlin/
+│   ├── multi-repo/
 │   ├── nestjs/
 │   ├── nuxt/
 │   ├── pinia/
+│   ├── project-context/
 │   ├── react/
 │   ├── react-nextjs/
 │   ├── rust/
+│   ├── session-handoff/
 │   ├── shadcn-tailwind/
+│   ├── skill-creator/
 │   ├── sql-and-database/
 │   ├── swift-localization/
 │   ├── swiftui/
@@ -131,7 +180,7 @@ cd codex-collections
 
 2. Open the repository in your Codex environment.
 3. Start with `/research <task>` and follow the workflow.
-4. Use `AGENTS.md` as the source of command routing and skill usage rules.
+4. Use `AGENTS.md` as the root router — it directs to `skills/routing/` branch files, which route to individual skills.
 
 ## Bootstrap Into Another Project
 
