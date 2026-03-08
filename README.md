@@ -216,7 +216,3 @@ Replaced with:
 - `AGENTS.md` workflow and routing contract
 - In-repo Codex skills under `skills/`
 - Local-first, task-description driven execution
-
-## License
-
-This project is licensed under the MIT License.
