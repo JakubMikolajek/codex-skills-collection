@@ -10,7 +10,6 @@ Focus on feature delivery while keeping execution consistent across projects.
 - Command-style interaction model for common delivery tasks
 - Reusable Codex skills stored in-repo
 - Shared multi-agent template stored under `templates/codex/` for downstream bootstrap into `.codex/`
-- Claude Code adapter stored under `claude/` with `CLAUDE.md` and workflow skills
 - Local-first workflow without external tracker/design integrations
 
 ## Workflow
