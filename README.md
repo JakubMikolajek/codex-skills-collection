@@ -121,9 +121,6 @@ AGENTS.md (Root Router)
 ```text
 .
 ├── AGENTS.md
-├── claude/
-│   ├── CLAUDE.md
-│   └── .claude/skills/
 ├── templates/
 │   └── codex/
 │       ├── config.toml
@@ -218,32 +215,3 @@ Examples:
 ./scripts/bootstrap.sh /path/to/your-project --dry-run
 ./scripts/bootstrap.sh /path/to/your-project --force
 ```
-
-## Claude Code Adapter
-
-This repository also ships a Claude Code compatibility layer under `claude/`.
-
-Contents:
-
-- `claude/CLAUDE.md` - root project memory template for Claude Code
-- `claude/.claude/skills/*` - workflow skills matching the command model from `AGENTS.md`
-
-This adapter is intentionally separate from the Codex bootstrap flow. To use it in a target project, copy:
-
-- `claude/CLAUDE.md` -> `CLAUDE.md`
-- `claude/.claude/skills/*` -> `.claude/skills/*`
-
-## Migration Notes
-
-This repository is now Codex-first.
-
-Removed from previous setup:
-
-- Legacy agent and prompt bundles
-- External integration-first workflow assumptions
-
-Replaced with:
-
-- `AGENTS.md` workflow and routing contract
-- In-repo Codex skills under `skills/`
-- Local-first, task-description driven execution
