@@ -1,0 +1,27 @@
+[agents]
+max_threads = 4
+max_depth = 1
+
+[agents.explorer]
+description = "Read-only codebase explorer for routing requests, mapping file ownership, and gathering evidence before planning, review, or implementation."
+config_file = "agents/explorer.toml"
+
+[agents.planner]
+description = "Read-only planner for architecture choices, phased implementation plans, implementation-gap analysis, and docs-flow structuring."
+config_file = "agents/planner.toml"
+
+[agents.builder_frontend]
+description = "Implementation agent for React, Next.js, Vue, Nuxt, SwiftUI, design-system work, and browser-facing E2E flows."
+config_file = "agents/builder_frontend.toml"
+
+[agents.builder_backend]
+description = "Implementation agent for NestJS, Kotlin, Rust, SQL, Docker, and backend-adjacent infrastructure changes."
+config_file = "agents/builder_backend.toml"
+
+[agents.auditor]
+description = "Read-only specialist for code review, root-cause debugging, UI verification, regressions, and risk analysis after code exists."
+config_file = "agents/auditor.toml"
+
+[agents.coordinator]
+description = "Workflow coordinator for docs-flow, skill scaffolding, changelogs, session handoffs, and multi-repo rollout planning."
+config_file = "agents/coordinator.toml"

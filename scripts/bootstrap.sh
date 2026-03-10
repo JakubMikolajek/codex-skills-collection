@@ -3,13 +3,13 @@ set -euo pipefail
 
 usage() {
   cat << 'USAGE'
-Bootstrap Codex workflow files into another project.
+Bootstrap Codex workflow, skills, and multi-agent templates into another project.
 
 Usage:
   ./scripts/bootstrap.sh <target-project-path> [--force] [--dry-run]
 
 Options:
-  --force    Overwrite existing AGENTS.md and replace existing skill folders.
+  --force    Overwrite existing .codex files and replace existing skill or agent folders.
   --dry-run  Print planned actions without modifying files.
   -h, --help Show this help message.
 USAGE
@@ -63,17 +63,22 @@ fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SOURCE_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-SOURCE_AGENTS="$SOURCE_ROOT/AGENTS.md"
+SOURCE_AGENTS_FILE="$SOURCE_ROOT/AGENTS.md"
 SOURCE_SKILLS_DIR="$SOURCE_ROOT/skills"
 SOURCE_SCRIPTS_DIR="$SOURCE_ROOT/scripts"
+SOURCE_CODEX_TEMPLATE_DIR="$SOURCE_ROOT/templates/codex"
+SOURCE_CODEX_CONFIG_FILE="$SOURCE_CODEX_TEMPLATE_DIR/config.toml"
+SOURCE_AGENT_TEMPLATES_DIR="$SOURCE_CODEX_TEMPLATE_DIR/agents"
 TARGET_DIR="$(cd "$TARGET_PATH" && pwd)"
 TARGET_CODEX_DIR="$TARGET_DIR/.codex"
-TARGET_AGENTS="$TARGET_CODEX_DIR/AGENTS.md"
+TARGET_AGENTS_FILE="$TARGET_CODEX_DIR/AGENTS.md"
 TARGET_SKILLS_DIR="$TARGET_CODEX_DIR/skills"
 TARGET_SCRIPTS_DIR="$TARGET_CODEX_DIR/scripts"
+TARGET_CODEX_CONFIG_FILE="$TARGET_CODEX_DIR/config.toml"
+TARGET_AGENT_CONFIGS_DIR="$TARGET_CODEX_DIR/agents"
 
-if [[ ! -f "$SOURCE_AGENTS" ]]; then
-  echo "[ERROR] Source AGENTS.md not found: $SOURCE_AGENTS" >&2
+if [[ ! -f "$SOURCE_AGENTS_FILE" ]]; then
+  echo "[ERROR] Source AGENTS.md not found: $SOURCE_AGENTS_FILE" >&2
   exit 1
 fi
 
@@ -93,31 +98,87 @@ run_cmd() {
 copied=0
 replaced=0
 skipped=0
+LAST_ACTION=""
 
-# AGENTS.md
-if [[ -e "$TARGET_AGENTS" && "$FORCE" -ne 1 ]]; then
-  echo "[SKIP] $TARGET_AGENTS exists (use --force to overwrite)."
-  skipped=$((skipped + 1))
-else
-  if [[ -e "$TARGET_AGENTS" ]]; then
-    run_cmd rm -f "$TARGET_AGENTS"
+ensure_dir() {
+  local dir_path="$1"
+
+  if [[ ! -d "$dir_path" ]]; then
+    run_cmd mkdir -p "$dir_path"
+  fi
+}
+
+copy_file_with_policy() {
+  local src_path="$1"
+  local dest_path="$2"
+
+  LAST_ACTION="none"
+
+  if [[ ! -f "$src_path" ]]; then
+    return 0
+  fi
+
+  ensure_dir "$(dirname "$dest_path")"
+
+  if [[ -e "$dest_path" && "$FORCE" -ne 1 ]]; then
+    echo "[SKIP] $dest_path exists (use --force to overwrite)."
+    skipped=$((skipped + 1))
+    LAST_ACTION="skipped"
+    return 0
+  fi
+
+  if [[ -e "$dest_path" ]]; then
+    run_cmd rm -f "$dest_path"
     replaced=$((replaced + 1))
-    echo "[REPLACE] $TARGET_AGENTS"
+    echo "[REPLACE] $dest_path"
+    LAST_ACTION="replaced"
   else
     copied=$((copied + 1))
-    echo "[COPY] $TARGET_AGENTS"
+    echo "[COPY] $dest_path"
+    LAST_ACTION="copied"
   fi
-  run_cmd cp "$SOURCE_AGENTS" "$TARGET_AGENTS"
-fi
 
-# .codex/ and skills/
-if [[ ! -d "$TARGET_CODEX_DIR" ]]; then
-  run_cmd mkdir -p "$TARGET_CODEX_DIR"
-fi
+  run_cmd cp "$src_path" "$dest_path"
+}
 
-if [[ ! -d "$TARGET_SKILLS_DIR" ]]; then
-  run_cmd mkdir -p "$TARGET_SKILLS_DIR"
-fi
+copy_dir_with_policy() {
+  local src_path="$1"
+  local dest_path="$2"
+
+  LAST_ACTION="none"
+
+  if [[ ! -d "$src_path" ]]; then
+    return 0
+  fi
+
+  ensure_dir "$(dirname "$dest_path")"
+
+  if [[ -e "$dest_path" && "$FORCE" -ne 1 ]]; then
+    echo "[SKIP] $dest_path exists (use --force to replace)."
+    skipped=$((skipped + 1))
+    LAST_ACTION="skipped"
+    return 0
+  fi
+
+  if [[ -e "$dest_path" ]]; then
+    run_cmd rm -rf "$dest_path"
+    replaced=$((replaced + 1))
+    echo "[REPLACE] $dest_path"
+    LAST_ACTION="replaced"
+  else
+    copied=$((copied + 1))
+    echo "[COPY] $dest_path"
+    LAST_ACTION="copied"
+  fi
+
+  run_cmd cp -R "$src_path" "$dest_path"
+}
+
+ensure_dir "$TARGET_CODEX_DIR"
+copy_file_with_policy "$SOURCE_AGENTS_FILE" "$TARGET_AGENTS_FILE"
+copy_file_with_policy "$SOURCE_CODEX_CONFIG_FILE" "$TARGET_CODEX_CONFIG_FILE"
+
+ensure_dir "$TARGET_SKILLS_DIR"
 
 for src_skill in "$SOURCE_SKILLS_DIR"/*; do
   if [[ ! -d "$src_skill" ]]; then
@@ -126,53 +187,43 @@ for src_skill in "$SOURCE_SKILLS_DIR"/*; do
 
   skill_name="$(basename "$src_skill")"
   dest_skill="$TARGET_SKILLS_DIR/$skill_name"
-
-  if [[ -e "$dest_skill" && "$FORCE" -ne 1 ]]; then
-    echo "[SKIP] $dest_skill exists (use --force to replace)."
-    skipped=$((skipped + 1))
-    continue
-  fi
-
-  if [[ -e "$dest_skill" ]]; then
-    run_cmd rm -rf "$dest_skill"
-    replaced=$((replaced + 1))
-    echo "[REPLACE] $dest_skill"
-  else
-    copied=$((copied + 1))
-    echo "[COPY] $dest_skill"
-  fi
-
-  run_cmd cp -R "$src_skill" "$dest_skill"
+  copy_dir_with_policy "$src_skill" "$dest_skill"
 done
 
-# scripts/
-if [[ -d "$SOURCE_SCRIPTS_DIR" ]]; then
-  if [[ ! -d "$TARGET_SCRIPTS_DIR" ]]; then
-    run_cmd mkdir -p "$TARGET_SCRIPTS_DIR"
-  fi
+if [[ -d "$SOURCE_AGENT_TEMPLATES_DIR" ]]; then
+  ensure_dir "$TARGET_AGENT_CONFIGS_DIR"
 
-  for src_script in "$SOURCE_SCRIPTS_DIR"/*; do
-    [[ "$(basename "$src_script")" == "bootstrap.sh" ]] && continue
-    script_name="$(basename "$src_script")"
-    dest_script="$TARGET_SCRIPTS_DIR/$script_name"
-
-    if [[ -e "$dest_script" && "$FORCE" -ne 1 ]]; then
-      echo "[SKIP] $dest_script exists (use --force to replace)."
-      skipped=$((skipped + 1))
+  for src_agent in "$SOURCE_AGENT_TEMPLATES_DIR"/*; do
+    if [[ -d "$src_agent" ]]; then
+      dest_agent_dir="$TARGET_AGENT_CONFIGS_DIR/$(basename "$src_agent")"
+      copy_dir_with_policy "$src_agent" "$dest_agent_dir"
       continue
     fi
 
-    if [[ -e "$dest_script" ]]; then
-      run_cmd rm -f "$dest_script"
-      replaced=$((replaced + 1))
-      echo "[REPLACE] $dest_script"
-    else
-      copied=$((copied + 1))
-      echo "[COPY] $dest_script"
+    if [[ ! -f "$src_agent" ]]; then
+      continue
     fi
 
-    run_cmd cp "$src_script" "$dest_script"
-    run_cmd chmod +x "$dest_script"
+    dest_agent_file="$TARGET_AGENT_CONFIGS_DIR/$(basename "$src_agent")"
+    copy_file_with_policy "$src_agent" "$dest_agent_file"
+  done
+fi
+
+if [[ -d "$SOURCE_SCRIPTS_DIR" ]]; then
+  ensure_dir "$TARGET_SCRIPTS_DIR"
+
+  for src_script in "$SOURCE_SCRIPTS_DIR"/*; do
+    [[ "$(basename "$src_script")" == "bootstrap.sh" ]] && continue
+    [[ ! -f "$src_script" ]] && continue
+
+    script_name="$(basename "$src_script")"
+    dest_script="$TARGET_SCRIPTS_DIR/$script_name"
+
+    copy_file_with_policy "$src_script" "$dest_script"
+
+    if [[ "$LAST_ACTION" == "copied" || "$LAST_ACTION" == "replaced" ]]; then
+      run_cmd chmod +x "$dest_script"
+    fi
   done
 fi
 

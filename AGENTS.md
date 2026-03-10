@@ -100,3 +100,106 @@ End: `session-handoff` (mandatory)
 - For implementation tasks, run relevant tests and checks before handoff.
 - For review tasks, report findings first and include residual risk/testing gaps.
 - Keep outputs concise, explicit, and directly actionable.
+
+## Multi-Agent Workflows
+
+### 1. Roll out the shared multi-agent template in this repo
+
+**Prompt**
+`Implement the shared multi-agent template for this repository.`
+
+**Spawn order**
+- Parallel: `explorer` maps the routing tree, current workflow contract, and template injection surface; `auditor` checks current bootstrap and workflow risks
+- Sequential: `planner` turns those findings into the final role split and validation gates
+- Parallel: `builder_backend` updates bootstrap/template wiring while `coordinator` updates docs and evaluation scenarios
+- Sequential: `auditor` runs the final read-only quality gate
+
+**Responsibilities**
+- `explorer`: identify source files, template locations, and any routing constraints that must stay intact
+- `planner`: lock role boundaries, handoffs, and validation criteria
+- `builder_backend`: implement script and template-copy logic
+- `coordinator`: update docs, workflows, and evaluation artifacts
+- `auditor`: review correctness, overwrite behavior, and residual risk
+
+**Consolidated output**
+- Template files added under `templates/codex/`
+- Bootstrap support for injecting target `.codex/config.toml` and `.codex/agents/*.toml`
+- Updated docs and validation summary
+
+### 2. Review a branch that changes routing, skills, and bootstrap
+
+**Prompt**
+`Review this branch against main. Focus on routing correctness, skill reachability, and bootstrap safety.`
+
+**Spawn order**
+- Parallel: `explorer` + `auditor`
+- Sequential: `planner` only if the branch appears to break the workflow contract or routing logic
+
+**Responsibilities**
+- `explorer`: map affected routing branches, skills, and bootstrap paths
+- `auditor`: report correctness, regression, security, and missing-test findings ordered by severity
+- `planner`: decide whether the branch creates deeper architecture or contract issues
+
+**Consolidated output**
+- Findings-first review report with affected files
+- Explicit note on whether the Research -> Plan -> Implement -> Review flow still holds
+
+### 3. Debug bootstrap failures in a target project
+
+**Prompt**
+`Investigate why bootstrap.sh copied AGENTS and skills but the target project still lacks a working multi-agent setup.`
+
+**Spawn order**
+- Parallel: `explorer` traces the script and target paths while `auditor` reproduces and isolates the failure
+- Sequential: `builder_backend` implements the smallest defensible fix
+- Sequential: `auditor` verifies the fix and any overwrite edge cases
+
+**Responsibilities**
+- `explorer`: map source template paths, destination `.codex/` paths, and overwrite behavior
+- `auditor`: complete `Reproduce -> Isolate -> Trace -> Hypothesize -> Verify` before any code change
+- `builder_backend`: patch the script without changing unrelated workflow behavior
+
+**Consolidated output**
+- Root cause summary
+- Minimal bootstrap fix
+- Validation notes for dry-run and real copy modes
+
+### 4. Add a new skill and wire it into routing
+
+**Prompt**
+`Create a new skill, place it in the routing tree, and make sure it bootstraps cleanly into downstream projects.`
+
+**Spawn order**
+- Parallel: `explorer` audits overlap in existing skills while `planner` checks where the new capability belongs
+- Sequential: `coordinator` scaffolds the skill, updates routing, and adjusts any bootstrap-facing docs
+- Sequential: `auditor` verifies reachability and duplication risk
+
+**Responsibilities**
+- `explorer`: find similar skills and combination rules that already exist
+- `planner`: validate domain placement and required handoffs
+- `coordinator`: scaffold files, update routing, and keep reachability intact in the same task
+- `auditor`: verify no duplicate scope or missing routing path remains
+
+**Consolidated output**
+- New skill files
+- Updated routing entries
+- Verification that the skill is reachable from `AGENTS.md`
+
+### 5. Prepare a release after workflow and bootstrap changes
+
+**Prompt**
+`Prepare the next release after routing, skill, template, and bootstrap updates.`
+
+**Spawn order**
+- Parallel: `explorer` summarizes shipped surface area while `auditor` checks for release-blocking risks
+- Sequential: `coordinator` writes the handoff and changelog artifacts
+
+**Responsibilities**
+- `explorer`: summarize what changed and where
+- `auditor`: flag release blockers, missing validations, or regression risk
+- `coordinator`: generate handoff status and changelog-ready release notes
+
+**Consolidated output**
+- Release-focused summary of shipped changes
+- Handoff document and changelog draft
+- Residual risks that must be resolved before tagging

@@ -9,6 +9,8 @@ Focus on feature delivery while keeping execution consistent across projects.
 - Shared delivery workflow: `Research -> Plan -> Implement -> Review`
 - Command-style interaction model for common delivery tasks
 - Reusable Codex skills stored in-repo
+- Shared multi-agent template stored under `templates/codex/` for downstream bootstrap into `.codex/`
+- Claude Code adapter stored under `claude/` with `CLAUDE.md` and workflow skills
 - Local-first workflow without external tracker/design integrations
 
 ## Workflow
@@ -119,6 +121,13 @@ AGENTS.md (Root Router)
 ```text
 .
 ├── AGENTS.md
+├── claude/
+│   ├── CLAUDE.md
+│   └── .claude/skills/
+├── templates/
+│   └── codex/
+│       ├── config.toml
+│       └── agents/
 ├── skills/
 │   ├── routing/
 │   │   ├── FRONTEND.md
@@ -186,6 +195,14 @@ cd codex-collections
 
 Use the bootstrap script from this repository to copy the Codex setup into an existing project.
 
+Bootstrap writes the following into the target project's `.codex/` directory:
+
+- `AGENTS.md`
+- `skills/`
+- `scripts/`
+- `config.toml` from `templates/codex/config.toml` when present
+- `agents/*.toml` from `templates/codex/agents/` when present
+
 ```bash
 ./scripts/bootstrap.sh /path/to/your-project
 ```
@@ -193,7 +210,7 @@ Use the bootstrap script from this repository to copy the Codex setup into an ex
 Useful options:
 
 - `--dry-run` to preview changes
-- `--force` to overwrite existing `AGENTS.md` and replace existing skill directories
+- `--force` to overwrite existing `.codex/AGENTS.md`, `.codex/config.toml`, agent templates, and replace existing skill directories
 
 Examples:
 
@@ -201,6 +218,20 @@ Examples:
 ./scripts/bootstrap.sh /path/to/your-project --dry-run
 ./scripts/bootstrap.sh /path/to/your-project --force
 ```
+
+## Claude Code Adapter
+
+This repository also ships a Claude Code compatibility layer under `claude/`.
+
+Contents:
+
+- `claude/CLAUDE.md` - root project memory template for Claude Code
+- `claude/.claude/skills/*` - workflow skills matching the command model from `AGENTS.md`
+
+This adapter is intentionally separate from the Codex bootstrap flow. To use it in a target project, copy:
+
+- `claude/CLAUDE.md` -> `CLAUDE.md`
+- `claude/.claude/skills/*` -> `.claude/skills/*`
 
 ## Migration Notes
 
