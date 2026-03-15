@@ -15,7 +15,13 @@
 - Task involves changes spanning multiple repositories
 - Task involves debugging, tracing errors, or root cause analysis
 - Task involves clarifying user goals, writing acceptance criteria, or verifying feature value
-- User uses command-style requests: `/research`, `/plan`, `/docs-flow`, `/review`, `/e2e`, `/code-quality-check`, `/debug`, `/handoff`, `/changelog`, `/context`, `/new-skill`, `/multi-repo`, `/intent`
+- Task involves security review, hardening, or OWASP compliance check
+- Task involves API contract design, versioning, or breaking change assessment
+- Task involves CI/CD pipeline setup, quality gates, or deployment workflow
+- Task involves observability instrumentation, logging, metrics, or alerting
+- Task involves database migration planning, rollback strategy, or zero-downtime schema changes
+- Task involves cross-cutting error handling design, retry strategy, or circuit breakers
+- User uses command-style requests: `/research`, `/plan`, `/docs-flow`, `/review`, `/e2e`, `/code-quality-check`, `/debug`, `/handoff`, `/changelog`, `/context`, `/new-skill`, `/multi-repo`, `/intent`, `/security`, `/migrate`, `/observe`
 
 ## When NOT to enter this branch
 - Task is about implementing frontend UI — use FRONTEND
@@ -29,8 +35,14 @@
 For tasks matching this branch, read the next level:
 
 | If the task involves... | Read next |
-|-------------------------|-----------| 
+|---|---|
 | `/intent`, feature purpose is unclear, "what should this do", acceptance criteria needed | skills/product-intent/SKILL.md |
+| `/security`, security review, OWASP, auth vulnerabilities, secrets audit | skills/security-hardening/SKILL.md |
+| `/migrate`, database migration, zero-downtime schema change, migration rollback | skills/migration-strategy/SKILL.md |
+| `/observe`, logging setup, metrics, tracing, health endpoints, alerting | skills/observability/SKILL.md |
+| API contract design, OpenAPI spec, versioning, breaking change assessment | skills/api-contract/SKILL.md |
+| CI/CD pipeline, GitHub Actions, quality gates, deployment workflow | skills/ci-cd/SKILL.md |
+| Error handling design, retry strategy, circuit breaker, graceful degradation | skills/error-handling/SKILL.md |
 | `/research`, task analysis, context gathering, PRD creation | skills/task-analysis/SKILL.md |
 | `/plan`, architecture design, solution planning, implementation phases | skills/architecture-design/SKILL.md |
 | `/docs-flow`, documentation artifacts, execution flow generation | skills/dev-docs-flow/SKILL.md |
@@ -48,11 +60,23 @@ For tasks matching this branch, read the next level:
 | Unclear / cross-cutting workflow task | skills/task-analysis/SKILL.md |
 
 ## Combination rules
-- `/intent` → load `product-intent`; run BEFORE `task-analysis` and `architecture-design` when feature purpose is ambiguous
+- `/security` → load `security-hardening`; combine with `code-review` when reviewing existing backend code
+- `/security` + backend implementation → load `security-hardening` + domain skill (nestjs, python-fastapi, rust)
+- `/migrate` → load `migration-strategy` + `sql-and-database`
+- `/migrate` + API change → load `migration-strategy` + `api-contract` (coordinate schema + API versioning)
+- `/observe` → load `observability`; combine with `error-handling` for complete production instrumentation
+- API contract review → load `api-contract` + `security-hardening` (auth/authZ contract is security-relevant)
+- CI/CD setup → load `ci-cd` + `docker` (pipeline needs containers); add `security-hardening` for audit gates
+- Error handling design → load `error-handling` + `observability` (errors need to be observable)
+- `security-hardening` runs DURING: every backend code review — add as supplement to `code-review` on backend tasks
+- `migration-strategy` runs BEFORE: any `sql-and-database` task that involves changing existing production tables
+- `observability` runs BEFORE: any service ships to production for the first time
+
+- `/intent` → load `product-intent`; run BEFORE `task-analysis` and `architecture-design` when feature purpose is unclear
 - `/research` → load `task-analysis` + `codebase-analysis` (as needed)
 - `/plan` → load `architecture-design` + `implementation-gap-analysis`
 - `/docs-flow` → load `dev-docs-flow` (which internally composes other skills)
-- `/review` → load `code-review` + `technical-context-discovery`; add domain-specific skills from other branches when the code under review targets a specific stack
+- `/review` → load `code-review` + `technical-context-discovery` + `security-hardening` (for backend code); add domain-specific skills from other branches
 - `/code-quality-check` → load `codebase-analysis` + `code-review`
 - `/e2e` → load `e2e-testing` + `technical-context-discovery`
 - `technical-context-discovery` is a supporting skill that should always be loaded before implementation tasks from any other branch — it is not exclusive to WORKFLOW
@@ -60,8 +84,6 @@ For tasks matching this branch, read the next level:
 - `product-intent` runs BEFORE: `task-analysis`, `architecture-design` when feature purpose is unclear
 - `product-intent` runs AFTER: implementation — to verify user-value correctness alongside `implementation-gap-analysis`
 - When `/implement` is used, route through the appropriate domain branch (FRONTEND, BACKEND, etc.) and load `technical-context-discovery` + `implementation-gap-analysis` as supporting skills from this branch
-- When `/implement-ui` is used, route through FRONTEND and load `technical-context-discovery` + `frontend-implementation` + `ui-verification` from the FRONTEND branch
-- When `/review-ui` is used, load `ui-verification` from FRONTEND and add framework-specific skills as needed
 - `project-context` runs BEFORE: `architecture-design`, `code-review`, `implementation-gap-analysis`, `multi-repo`
 - `debug-trace` runs BEFORE: any fix or patch implementation
 - `session-handoff` runs AFTER: any completed implementation or review session
