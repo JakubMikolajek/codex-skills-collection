@@ -14,7 +14,8 @@
 - Task involves changelog generation, release prep, or sprint close
 - Task involves changes spanning multiple repositories
 - Task involves debugging, tracing errors, or root cause analysis
-- User uses command-style requests: `/research`, `/plan`, `/docs-flow`, `/review`, `/e2e`, `/code-quality-check`, `/debug`, `/handoff`, `/changelog`, `/context`, `/new-skill`, `/multi-repo`
+- Task involves clarifying user goals, writing acceptance criteria, or verifying feature value
+- User uses command-style requests: `/research`, `/plan`, `/docs-flow`, `/review`, `/e2e`, `/code-quality-check`, `/debug`, `/handoff`, `/changelog`, `/context`, `/new-skill`, `/multi-repo`, `/intent`
 
 ## When NOT to enter this branch
 - Task is about implementing frontend UI — use FRONTEND
@@ -28,7 +29,8 @@
 For tasks matching this branch, read the next level:
 
 | If the task involves... | Read next |
-|-------------------------|-----------|
+|-------------------------|-----------| 
+| `/intent`, feature purpose is unclear, "what should this do", acceptance criteria needed | skills/product-intent/SKILL.md |
 | `/research`, task analysis, context gathering, PRD creation | skills/task-analysis/SKILL.md |
 | `/plan`, architecture design, solution planning, implementation phases | skills/architecture-design/SKILL.md |
 | `/docs-flow`, documentation artifacts, execution flow generation | skills/dev-docs-flow/SKILL.md |
@@ -46,6 +48,7 @@ For tasks matching this branch, read the next level:
 | Unclear / cross-cutting workflow task | skills/task-analysis/SKILL.md |
 
 ## Combination rules
+- `/intent` → load `product-intent`; run BEFORE `task-analysis` and `architecture-design` when feature purpose is ambiguous
 - `/research` → load `task-analysis` + `codebase-analysis` (as needed)
 - `/plan` → load `architecture-design` + `implementation-gap-analysis`
 - `/docs-flow` → load `dev-docs-flow` (which internally composes other skills)
@@ -54,6 +57,8 @@ For tasks matching this branch, read the next level:
 - `/e2e` → load `e2e-testing` + `technical-context-discovery`
 - `technical-context-discovery` is a supporting skill that should always be loaded before implementation tasks from any other branch — it is not exclusive to WORKFLOW
 - `implementation-gap-analysis` is a supporting skill commonly loaded together with `architecture-design` during planning
+- `product-intent` runs BEFORE: `task-analysis`, `architecture-design` when feature purpose is unclear
+- `product-intent` runs AFTER: implementation — to verify user-value correctness alongside `implementation-gap-analysis`
 - When `/implement` is used, route through the appropriate domain branch (FRONTEND, BACKEND, etc.) and load `technical-context-discovery` + `implementation-gap-analysis` as supporting skills from this branch
 - When `/implement-ui` is used, route through FRONTEND and load `technical-context-discovery` + `frontend-implementation` + `ui-verification` from the FRONTEND branch
 - When `/review-ui` is used, load `ui-verification` from FRONTEND and add framework-specific skills as needed
@@ -69,4 +74,3 @@ For tasks matching this branch, read the next level:
 - `/context` → load `project-context`
 - `/new-skill` → load `skill-creator` + `task-analysis`
 - `/multi-repo` → load `multi-repo` + `project-context` (per repo); always end with `session-handoff`
-
