@@ -51,6 +51,9 @@ Output file: `.codex-handoff.md` in repo root — always overwrite, never append
 
 ### Open Questions
 [Unresolved questions requiring human input or further research.]
+
+### Observed Patterns
+[NEW — see pattern extraction section below]
 ```
 
 ### Writing Rules
@@ -73,7 +76,8 @@ Handoff progress:
 - [ ] Step 4: Record decisions made with rationale
 - [ ] Step 5: Write actionable next steps
 - [ ] Step 6: List open questions
-- [ ] Step 7: Write .codex-handoff.md
+- [ ] Step 7: Extract observed patterns (see below)
+- [ ] Step 8: Write .codex-handoff.md
 ```
 
 **Step 1: Collect list of files modified**
@@ -100,9 +104,76 @@ Write an ordered list of next steps. Each step must be specific enough that some
 
 Document any unresolved questions that require human input or further research.
 
-**Step 7: Write .codex-handoff.md**
+**Step 7: Extract observed patterns**
+
+This is the pattern extraction step for the self-improving workflow. Its output feeds the skill system over time — human-reviewed before being promoted to a permanent skill.
+
+Look back at the work done this session and extract patterns that were either:
+- **Discovered**: conventions, idioms, or structures already in the codebase that are not yet in any skill
+- **Established**: new conventions created during this session that future work should follow
+- **Violated**: existing patterns that were deliberately not followed, with reason
+
+For each observed pattern, assess its **promotion signal**: how strongly does this pattern deserve to be in a skill file?
+
+| Signal Level | Criteria |
+|---|---|
+| `promote` | Pattern appears 3+ times in codebase, is consistent, and is clearly intentional |
+| `watch` | Pattern appeared this session, looks like a convention but needs 1-2 more data points |
+| `reject` | Observed but should not be followed — legacy code, workaround, or accidental |
+
+**Only extract patterns you observed directly** — do not infer patterns from code you did not read.
+
+Format each observed pattern as:
+
+```
+- [PROMOTE/WATCH/REJECT] [pattern name]: [description of the pattern]
+  Source: [file or module where observed]
+  Candidate skill: [which skill file this belongs in, if promoted]
+```
+
+**Step 8: Write .codex-handoff.md**
 
 Assemble all sections into `.codex-handoff.md` in the repo root. Overwrite any existing handoff file.
+
+## Observed Patterns Section Template
+
+```markdown
+### Observed Patterns
+<!-- 
+  Extracted by agent for human review. Promoted patterns feed back into skill files.
+  Review and promote/reject before next skill update cycle.
+-->
+
+#### [PROMOTE] [Pattern Name]
+Description: [What the pattern is and when it applies]
+Source: [path/to/file.py or module name]
+Candidate skill: [skill-name/SKILL.md — section: [section name]]
+Evidence: [Why this deserves promotion — frequency, consistency, intentionality]
+
+#### [WATCH] [Pattern Name]
+Description: [What was observed]
+Source: [where]
+Candidate skill: [target skill if promoted]
+Note: [What additional evidence would confirm this pattern]
+
+#### [REJECT] [Pattern Name]
+Description: [What was observed]
+Source: [where]
+Reason: [Why this should not be followed]
+```
+
+## Pattern Promotion Workflow
+
+This is the **human-in-the-loop** part of the self-improving workflow. Agent extracts → human reviews → skill gets updated.
+
+1. After session ends, review the `Observed Patterns` section in `.codex-handoff.md`
+2. For each `PROMOTE` candidate: decide if it belongs in an existing skill or needs a new one
+3. Use `skill-creator` to scaffold a new skill, or edit an existing `SKILL.md` directly
+4. For each `WATCH` candidate: note it for the next session; do not promote yet
+5. For each `REJECT` candidate: document the anti-pattern in the relevant skill's anti-patterns table
+6. After promoting, clear the pattern from the handoff file to avoid re-processing
+
+This workflow ensures that the agent's pattern recognition feeds the skill system incrementally, without risk of contaminating skill quality with poorly-observed or incorrect patterns.
 
 ## Anti-Patterns to Avoid
 
@@ -114,9 +185,13 @@ Assemble all sections into `.codex-handoff.md` in the repo root. Overwrite any e
 | Vague Next Steps ("continue the work") | Specific Next Steps ("implement `POST /sessions` endpoint per plan section 3") |
 | Skipping handoff on "small" sessions | Always produce handoff if any file was modified |
 | Appending to existing handoff file | Always overwrite — each handoff is a clean snapshot |
+| Extracting patterns from code not read this session | Only report patterns directly observed |
+| Promoting patterns after a single occurrence | Mark as `watch`; promote after 3+ occurrences |
+| Human skipping pattern review | Pattern extraction only has value if reviewed and actioned |
 
 ## Connected Skills
 
 - `project-context` — include Session Context Block in handoff when available
 - `multi-repo` — multi-repo tasks must always trigger session-handoff
 - `changelog-generator` — run after handoff on release sessions
+- `skill-creator` — use to promote `PROMOTE`-level observed patterns into skill files
