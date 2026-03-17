@@ -7,7 +7,8 @@
 - Task involves accessibility (a11y), keyboard navigation, ARIA attributes
 - Task involves frontend state management (hooks, composables, Pinia stores)
 - Task involves UI verification or comparing implementation against a design spec
-- Task involves Swift/SwiftUI localization, String Catalogs, or locale-aware UI
+- Task involves web internationalization (i18n), locale routing, or translation files
+- Task involves Swift/SwiftUI localization, String Catalogs, or locale-aware Apple platform UI
 - Files being edited are `.tsx`, `.jsx`, `.vue`, `.swift`, `.css`, `.scss`, or component files
 
 ## When NOT to enter this branch
@@ -19,24 +20,23 @@
 
 ## Decision tree
 
-For tasks matching this branch, read the next level:
-
 | If the task involves... | Read next |
-|-------------------------|-----------|
+|---|---|
 | React components, hooks, JSX, Next.js routing, server/client components | skills/routing/REACT.md |
-| Vue components, composables, Nuxt routing, Pinia stores, Vuetify, PrimeVue | skills/routing/VUE.md |
-| SwiftUI views, iOS 17+ MVVM, Swift localization, String Catalogs, Apple platforms | skills/routing/NATIVE.md |
-| Framework-agnostic UI patterns, design system usage, accessibility, UI verification | skills/routing/GENERIC_UI.md |
+| Vue components, composables, Nuxt routing, Pinia, Vuetify, PrimeVue | skills/routing/VUE.md |
+| SwiftUI views, iOS 17+ MVVM, Swift localization, Apple platforms | skills/routing/NATIVE.md |
+| Web i18n, i18next, ICU messages, locale routing, translation files | skills/i18n/SKILL.md |
+| Framework-agnostic UI, accessibility, design system, UI verification, unit tests | skills/routing/GENERIC_UI.md |
 | Unclear / cross-cutting frontend task | skills/routing/GENERIC_UI.md |
 
 ## Combination rules
-- When implementing React UI against a design spec, load both `react` (or `react-nextjs`) and `ui-verification`
-- When implementing Vue UI against a design spec, load both `vue` (or `nuxt`) and `ui-verification`
-- When implementing SwiftUI UI against a design spec, load both `swiftui` and `ui-verification`
-- `frontend-implementation` is always loaded together with any framework-specific skill when building new UI components
-- `swift-localization` and `swiftui` are always loaded together when the task involves localized SwiftUI screens
-- `shadcn-tailwind` and `react` are always loaded together when the UI uses shadcn/ui components
-- `pinia` and `vue` are always loaded together when the task involves Vue store logic
-- `vuetify-primevue` and `vue` are always loaded together when the task involves Vuetify or PrimeVue components
-- `nuxt` and `vue` are always loaded together when the task involves Nuxt routing or app-level behavior
-- Framework-specific skills (`react`, `vue`, `swiftui`) and library-specific skills (`shadcn-tailwind`, `vuetify-primevue`, `pinia`) are mutually exclusive across ecosystems — never combine React skills with Vue skills or vice versa
+- `i18n` combines with any framework skill when adding multi-language support
+- `frontend-implementation` always loaded alongside framework skills when building new UI
+- `accessibility` loaded alongside framework skills for any interactive custom components
+- When implementing React UI against a design spec, load `react` + `ui-verification` + `accessibility`
+- When implementing Vue UI against a design spec, load `vue` + `ui-verification` + `accessibility`
+- `shadcn-tailwind` + `react` when the UI uses shadcn/ui components
+- `pinia` + `vue` when the task involves Vue store logic
+- `nuxt` + `vue` for Nuxt routing or app-level behavior
+- `swift-localization` + `swiftui` for localized SwiftUI screens
+- Framework skills are mutually exclusive across ecosystems — never combine React and Vue skills
