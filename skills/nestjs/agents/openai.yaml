@@ -1,4 +1,0 @@
-interface:
-  display_name: "NestJS"
-  short_description: "Build maintainable NestJS services and APIs"
-  default_prompt: "Use $nestjs to implement or review this NestJS task."

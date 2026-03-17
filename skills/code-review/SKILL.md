@@ -1,6 +1,6 @@
 ---
 name: code-review
-description: Perform code review. Quality analysis. Acceptance criteria verification. Best practices review.
+description: Perform code review. Quality analysis. Acceptance criteria verification. Best practices review. Includes security lens for backend code — covers OWASP Top 10 patterns, injection, auth/authZ, and secrets hygiene as part of every review.
 ---
 
 # Code review
@@ -65,7 +65,42 @@ Make sure to run linters, static code analysis tools and formatting tools.
 
 **Step 8: Validate the solution is secure**
 
-Focus on security. Check for potential OWASP TOP10 issues. Check for potential critical security issues that allows other users to take control over the system.
+For backend code, run through the following security lens. Skip items that are not applicable to the task scope.
+
+**Injection (OWASP A03)**
+- SQL: all queries use parameterized statements or ORM — no string concatenation into SQL
+- Command injection: no user input passed to `exec`, `spawn`, or shell commands without a strict allowlist
+- Path traversal: file paths constructed from user input are resolved and validated against a safe base directory
+
+**Authentication and Authorization (OWASP A01, A07)**
+- Every route/handler that accesses user data has an explicit authorization check
+- Object-level authorization: verify the requesting user owns or has access to the specific resource (not just "is logged in")
+- Token signatures are verified cryptographically, not just decoded; expiry (`exp`) checked explicitly
+- No credentials or tokens stored in localStorage — httpOnly cookies or server-side sessions only
+
+**Sensitive Data Exposure (OWASP A02)**
+- No secrets, API keys, or credentials in source code or committed config files
+- `.env` files are in `.gitignore` — verify, do not assume
+- Sensitive fields (passwords, tokens, PII) are not logged or included in error responses
+- Passwords stored as hashed values (bcrypt/argon2), never plaintext
+
+**Security Misconfiguration (OWASP A05)**
+- Security headers present: `Content-Security-Policy`, `X-Content-Type-Options`, `Strict-Transport-Security`
+- CORS `Access-Control-Allow-Origin` is not `*` for authenticated endpoints — explicit allowlist only
+- Rate limiting applied to authentication endpoints (login, register, password reset)
+- No debug endpoints, stack traces, or internal error details exposed to clients
+
+**Vulnerable Components (OWASP A06)**
+- Run `npm audit`, `pip audit`, or `cargo audit` — zero high/critical CVEs
+- No `eval()`, `Function()`, or dynamic code execution from user-controlled input
+
+**Severity classification for findings:**
+- CRITICAL: exploitable without authentication, leads to data breach or full compromise
+- HIGH: exploitable by authenticated users, significant data or privilege impact
+- MEDIUM: requires specific conditions, limited direct impact
+- LOW: defense-in-depth improvement
+
+Load `security-hardening` for a full standalone security review when security is the primary task.
 
 **Step 9: Validate the solution is scalable**
 
@@ -76,3 +111,5 @@ Analyse if the implemented solution is scalable. Focus on areas like being able 
 - `implementation-gap-analysis`
 - `technical-context-discovery` - for understanding project conventions and standards to review against
 - `sql-and-database` - for validating SQL quality, index coverage, query performance, schema design, and ORM usage patterns
+- `security-hardening` - load for a full dedicated security review; Step 8 above is the inline lens for standard reviews
+- `observability` - validate that logging, structured error context, and health endpoints are present and correct
