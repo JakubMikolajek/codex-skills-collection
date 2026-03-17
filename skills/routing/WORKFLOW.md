@@ -68,8 +68,6 @@
 | Unclear / cross-cutting workflow task | skills/task-analysis/SKILL.md |
 
 ## Combination rules
-
-### Ordering rules (BEFORE / AFTER / DURING)
 - `product-intent` BEFORE `task-analysis`, `architecture-design` — when feature purpose is unclear
 - `security-hardening` DURING every backend code review — supplement `code-review` on all backend tasks
 - `migration-strategy` BEFORE any `sql-and-database` task changing existing production tables
@@ -80,8 +78,6 @@
 - `changelog-generator` AFTER `session-handoff` on release tasks
 - `skill-creator` MUST update routing files in the same task — never deferred
 - `multi-repo` ALWAYS ends with `session-handoff`
-
-### New skill combinations
 - `/security` → `security-hardening`; + `code-review` for backend review; + domain skill for implementation
 - `/migrate` → `migration-strategy` + `sql-and-database`; + `api-contract` when schema and API change together
 - `/observe` → `observability`; + `error-handling` for complete production instrumentation
@@ -94,8 +90,6 @@
 - Error handling design → `error-handling` + `observability`
 - API contract review → `api-contract` + `security-hardening`
 - CI/CD setup → `ci-cd` + `docker`; + `security-hardening` for audit gates; + `kubernetes` for k8s deploy
-
-### Standard command expansions
 - `/intent` → `product-intent`
 - `/research` → `task-analysis` + `codebase-analysis`
 - `/plan` → `architecture-design` + `implementation-gap-analysis`
