@@ -1,6 +1,6 @@
 # Codex Collections
 
-Opinionated Codex setup for delivery teams with shared workflow commands and reusable skills.
+Codex setup for delivery teams with shared workflow commands and reusable skills.
 
 Focus on feature delivery while keeping execution consistent across projects.
 
