@@ -60,6 +60,9 @@ All skills live under `skills/` and are routed through `skills/routing/`:
 ### Domain Skills
 
 - `docker` — Dockerfiles, Compose, multi-stage builds, CI images
+- `c-embedded` — Embedded C patterns: volatile, ISR safety, memory/bitwise discipline
+- `embedded-toolchain` — CMake cross-compilation, linker scripts, GCC toolchains, OpenOCD
+- `freertos` — Task architecture, queues, semaphores, mutexes, timers, stack sizing
 - `kotlin` — Kotlin domain modeling, coroutines, null-safety
 - `nestjs` — NestJS modules, controllers, services, DTOs
 - `react` — React components, hooks, state, forms, rendering
@@ -69,6 +72,7 @@ All skills live under `skills/` and are routed through `skills/routing/`:
 - `sql-and-database` — SQL schema design, normalization, indexes, migrations, ORM
 - `swift-localization` — Swift String Catalogs, pluralization, locale-aware formatting
 - `swiftui` — SwiftUI views, MVVM, Observation API, Factory DI
+- `stm32-hal` — STM32 HAL/LL drivers, CubeMX integration, DMA/interrupt patterns
 - `vue` — Vue 3 Composition API, composables, reactivity
 - `nuxt` — Nuxt 3 routing, SSR, middleware, composables
 - `pinia` — Pinia stores, shared state, async actions
@@ -110,6 +114,7 @@ AGENTS.md (Root Router)
 └── skills/routing/
     ├── FRONTEND.md → REACT.md / VUE.md / NATIVE.md / GENERIC_UI.md → leaf skills
     ├── BACKEND.md → nestjs / kotlin / rust
+    ├── EMBEDDED.md → c-embedded / freertos / stm32-hal / embedded-toolchain
     ├── INFRA.md → docker
     ├── DATA.md → sql-and-database
     └── WORKFLOW.md → all cross-cutting and workflow skills
@@ -128,6 +133,7 @@ AGENTS.md (Root Router)
 │   ├── routing/
 │   │   ├── FRONTEND.md
 │   │   ├── BACKEND.md
+│   │   ├── EMBEDDED.md
 │   │   ├── INFRA.md
 │   │   ├── DATA.md
 │   │   ├── WORKFLOW.md
@@ -143,6 +149,9 @@ AGENTS.md (Root Router)
 │   ├── dev-docs-flow/
 │   ├── docker/
 │   ├── e2e-testing/
+│   ├── embedded-toolchain/
+│   ├── c-embedded/
+│   ├── freertos/
 │   ├── frontend-implementation/
 │   ├── implementation-gap-analysis/
 │   ├── kotlin/
@@ -158,6 +167,7 @@ AGENTS.md (Root Router)
 │   ├── shadcn-tailwind/
 │   ├── skill-creator/
 │   ├── sql-and-database/
+│   ├── stm32-hal/
 │   ├── swift-localization/
 │   ├── swiftui/
 │   ├── task-analysis/

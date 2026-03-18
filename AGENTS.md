@@ -61,6 +61,7 @@ Do not load skills directly. Navigate the routing tree:
 |-------------------------|------------|
 | UI, components, styling, frontend frameworks (React, Vue, Nuxt, SwiftUI) | skills/routing/FRONTEND.md |
 | APIs, services, server-side logic (NestJS, Kotlin, Rust) | skills/routing/BACKEND.md |
+| Embedded firmware, microcontrollers, FreeRTOS, HAL drivers, linker/toolchain | skills/routing/EMBEDDED.md |
 | Docker, deployment, containers, CI/CD | skills/routing/INFRA.md |
 | Databases, SQL, schemas, migrations, ORM | skills/routing/DATA.md |
 | Review, architecture, testing, docs, analysis, context discovery, debugging, handoff, changelog, multi-repo, skill creation | skills/routing/WORKFLOW.md |

@@ -49,24 +49,48 @@ while IFS= read -r ref; do
 done < <(grep -oE 'skills/routing/[A-Z_]+\.md' "$AGENTS_FILE" | sort -u)
 echo ""
 
+# --- Check 1b: Every routing file is reachable from AGENTS.md or another routing file ---
+echo "--- Check 1b: Routing files are reachable ---"
+while IFS= read -r routing_file; do
+  rel_path="skills/routing/$(basename "$routing_file")"
+
+  if grep -q "$rel_path" "$AGENTS_FILE"; then
+    continue
+  fi
+
+  parent_ref=$(grep -rl "$rel_path" "$ROUTING_DIR"/ 2>/dev/null | grep -v "^$routing_file$" | head -1 || true)
+  if [ -z "$parent_ref" ]; then
+    echo "  ❌ ORPHAN ROUTING FILE: $rel_path is not referenced from AGENTS.md or any routing branch"
+    errors=$((errors + 1))
+  fi
+done < <(find "$ROUTING_DIR" -maxdepth 1 -name "*.md" | sort)
+echo "  Done."
+echo ""
+
 # --- Check 2: All leaf skill paths in routing files exist ---
 echo "--- Check 2: Routing files → leaf skill paths resolve ---"
+check2_errors=0
 while IFS= read -r ref; do
   full_path="$AGENTS_DIR/$ref"
   if [ ! -f "$full_path" ]; then
     echo "  ❌ Referenced '$ref' but $full_path does not exist"
     errors=$((errors + 1))
+    check2_errors=$((check2_errors + 1))
   fi
 done < <(grep -rohE 'skills/[a-z0-9-]+/SKILL\.md' "$ROUTING_DIR"/ | sort -u)
 ref_count=$(grep -rohE 'skills/[a-z0-9-]+/SKILL\.md' "$ROUTING_DIR"/ | sort -u | wc -l | tr -d ' ')
-echo "  Found $ref_count leaf references, all resolved."
+if [ "$check2_errors" -eq 0 ]; then
+  echo "  ✅ Found $ref_count leaf references, all resolved."
+else
+  echo "  ❌ Found $check2_errors unresolved leaf reference(s) out of $ref_count."
+fi
 echo ""
 
 # --- Check 3: All SKILL.md files on disk are reachable from routing ---
 echo "--- Check 3: Coverage — every SKILL.md is reachable ---"
 while IFS= read -r skill_path; do
   skill_name=$(echo "$skill_path" | sed "s|$AGENTS_DIR/skills/||;s|/SKILL.md||")
-  found=$(grep -rl "skills/$skill_name/SKILL.md" "$ROUTING_DIR"/ 2>/dev/null | head -1)
+  found=$(grep -rl "skills/$skill_name/SKILL.md" "$ROUTING_DIR"/ 2>/dev/null | head -1 || true)
   if [ -z "$found" ]; then
     echo "  ❌ ORPHAN: $skill_name exists on disk but is not referenced in any routing file"
     errors=$((errors + 1))
@@ -81,9 +105,10 @@ echo ""
 echo "--- Check 4: No duplicate ownership across branches ---"
 while IFS= read -r skill_path; do
   skill_name=$(echo "$skill_path" | sed "s|$AGENTS_DIR/skills/||;s|/SKILL.md||")
-  count=$(grep -rl "skills/$skill_name/SKILL.md" "$ROUTING_DIR"/ 2>/dev/null | wc -l | tr -d ' ')
+  owner_files=$(grep -rl "skills/$skill_name/SKILL.md" "$ROUTING_DIR"/ 2>/dev/null || true)
+  count=$(printf "%s\n" "$owner_files" | sed '/^$/d' | wc -l | tr -d ' ')
   if [ "$count" -gt 1 ]; then
-    owners=$(grep -rl "skills/$skill_name/SKILL.md" "$ROUTING_DIR"/ | sed "s|$ROUTING_DIR/||" | tr '\n' ', ' | sed 's/,$//')
+    owners=$(printf "%s\n" "$owner_files" | sed '/^$/d' | sed "s|$ROUTING_DIR/||" | tr '\n' ', ' | sed 's/,$//')
     echo "  ⚠️  $skill_name appears in $count files: $owners"
     warnings=$((warnings + 1))
   fi

@@ -17,6 +17,7 @@
 - Task is about database schemas or SQL — use DATA (but often combined with BACKEND)
 - Task is about code review, architecture, or testing without a specific backend scope — use WORKFLOW
 - Task is about React, Vue, or SwiftUI code — use FRONTEND even if it involves TypeScript
+- Task is about firmware, MCU peripherals, or RTOS device code — use EMBEDDED
 
 ## Decision tree
 
@@ -28,6 +29,7 @@
 | Python core patterns, typing, async, config, shared library logic | skills/python/SKILL.md |
 | Python + FastAPI: routes, DI, middleware, HTTP API | skills/python/SKILL.md + skills/python-fastapi/SKILL.md |
 | Python + LLM/RAG/embeddings/vector stores/AI pipelines | skills/python/SKILL.md + skills/python-ai-ml/SKILL.md |
+| Python testing: pytest, async tests, fixtures, mocking, coverage | skills/python/SKILL.md + skills/python-testing/SKILL.md |
 | WebSocket server, SSE streaming, real-time connections, presence | skills/websocket-realtime/SKILL.md |
 | RabbitMQ, AMQP, message queue topology, consumers, dead-letter | skills/message-queue/SKILL.md |
 | Unclear / cross-cutting backend task | skills/nestjs/SKILL.md (most common backend stack) |
