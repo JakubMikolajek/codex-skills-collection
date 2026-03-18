@@ -1,4 +1,4 @@
-# Codex Collections
+# Codex Skills Collections
 
 Codex setup for delivery teams with shared workflow commands and reusable skills.
 
@@ -199,8 +199,8 @@ All workflows should be executable from task descriptions, local files, and repo
 Clone repository:
 
 ```bash
-git clone <this-repo-url> codex-collections
-cd codex-collections
+git clone <this-repo-url> codex-skills-collections
+cd codex-skills-collections
 ```
 
 ## Bootstrap Into Another Project
