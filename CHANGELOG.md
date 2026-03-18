@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.2.0] - 2026-03-18
+
+### Added
+- Added new workflow and platform skills for Python, API governance, reliability, and delivery (`python`, `python-fastapi`, `python-ai-ml`, `python-testing`, `api-contract`, `security-hardening`, `ci-cd`, `error-handling`, `observability`, `migration-strategy`, `product-intent`, `unit-testing`, `performance-profiling`, `monorepo-tooling`, `feature-flags`, `graphql`, `accessibility`).
+- Added data and integration skills (`data-modeling`, `message-queue`, `websocket-realtime`) plus `i18n` and `kubernetes`.
+- Added embedded domain support with a dedicated routing branch `skills/routing/EMBEDDED.md` and new skills (`c-embedded`, `embedded-toolchain`, `freertos`, `stm32-hal`).
+
+### Changed
+- Expanded routing coverage in `skills/routing/*` to include Python, AI pipelines, data/infrastructure skills, and embedded workflows.
+- Updated shared template agent model in `templates/codex/agents/explorer.toml` to `gpt-5.3-codex`.
+- Updated `AGENTS.md`, `README.md`, and `scripts/validate-routing-tree.sh` to reflect new routing/skill coverage and validation expectations.
+- Refined skill docs in `skills/nestjs/SKILL.md`, `skills/code-review/SKILL.md`, `skills/frontend-implementation/SKILL.md`, and `skills/session-handoff/SKILL.md`.
+
+### Removed
+- Removed deprecated per-skill agent configs for `code-review`, `frontend-implementation`, and `nestjs` (`skills/*/agents/openai.yaml`).
+
+## [1.1.0] - 2026-03-11
+
 ### Added
 - Added routing-tree based skill navigation with new branch routers under `skills/routing/` (FRONTEND, BACKEND, INFRA, DATA, WORKFLOW, REACT, VUE, NATIVE, GENERIC_UI).
 - Added new workflow skills: `debug-trace`, `session-handoff`, `changelog-generator`, `project-context`, `multi-repo`, and `skill-creator`.
@@ -13,3 +31,12 @@
 - Updated `scripts/bootstrap.sh` to bootstrap `.codex/AGENTS.md`, `.codex/skills/`, and `.codex/scripts/` (including executable script copy behavior), then improved overwrite/skip handling for copied `.codex` assets.
 - Updated `AGENTS.md` and `README.md` with expanded command coverage, routing-first workflow documentation, and refreshed repository structure details.
 - Performed README cleanup in follow-up commits to remove outdated sections and keep docs aligned with the Codex-first workflow.
+
+## [1.0.0] - 2026-02-28
+
+### Added
+- Initial release of the Codex-first repository structure with core workflow documentation and base skill set.
+- Initial frontend skill pack for Vue ecosystem (`vue`, `nuxt`, `pinia`, `vuetify-primevue`) and follow-up language/platform skills (`rust`, `swift-localization`, `docker`).
+
+### Changed
+- Established initial routing-first direction for skills, later expanded in subsequent releases.

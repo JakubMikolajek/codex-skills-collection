@@ -4,6 +4,16 @@ Opinionated Codex setup for delivery teams with shared workflow commands and reu
 
 Focus on feature delivery while keeping execution consistent across projects.
 
+## About
+
+This repository is a reusable Codex operating model:
+
+- process contract (`Research -> Plan -> Implement -> Review`)
+- routing-first skill loading model
+- shared templates for multi-agent execution
+
+It is designed to be bootstrapped into downstream projects via `scripts/bootstrap.sh`.
+
 ## What This Repository Provides
 
 - Shared delivery workflow: `Research -> Plan -> Implement -> Review`
@@ -186,16 +196,12 @@ All workflows should be executable from task descriptions, local files, and repo
 
 ## Getting Started
 
-1. Clone repository:
+Clone repository:
 
 ```bash
 git clone <this-repo-url> codex-collections
 cd codex-collections
 ```
-
-2. Open the repository in your Codex environment.
-3. Start with `/research <task>` and follow the workflow.
-4. Use `AGENTS.md` as the root router — it directs to `skills/routing/` branch files, which route to individual skills.
 
 ## Bootstrap Into Another Project
 
@@ -206,8 +212,8 @@ Bootstrap writes the following into the target project's `.codex/` directory:
 - `AGENTS.md`
 - `skills/`
 - `scripts/`
-- `config.toml` from `templates/codex/config.toml` when present
-- `agents/*.toml` from `templates/codex/agents/` when present
+- `config.toml`
+- `agents/*.toml`
 
 ```bash
 ./scripts/bootstrap.sh /path/to/your-project
@@ -224,3 +230,18 @@ Examples:
 ./scripts/bootstrap.sh /path/to/your-project --dry-run
 ./scripts/bootstrap.sh /path/to/your-project --force
 ```
+
+## Versioning and Releases
+
+- Versioning follows SemVer (`MAJOR.MINOR.PATCH`).
+- Release history is tracked in `CHANGELOG.md`.
+- New skills and routing-capability expansions are treated as minor releases.
+- Fix-only updates are patch releases.
+
+## Roadmap
+
+High-level update plan is tracked in [`ROADMAP.md`](ROADMAP.md).
+
+## License
+
+Licensed under the [MIT License](LICENSE).
