@@ -1,6 +1,8 @@
 # WORKFLOW Branch
 
 ## When to enter this branch
+- Task involves defining a testing strategy before writing any tests
+- Task involves recording skill system failures, routing quality, or missing coverage after a session
 - Task involves code review, architecture design, or implementation planning
 - Task involves codebase analysis, quality checks, or dead code detection
 - Task involves research, task analysis, or context gathering
@@ -25,7 +27,7 @@
 - Task involves feature flag design, rollout strategy, or flag lifecycle
 - Task involves monorepo tooling, Turborepo/Nx setup, or workspace dependency management
 - Task involves GraphQL schema, resolvers, N+1 problem, or subscriptions
-- User uses command-style requests: `/research`, `/plan`, `/docs-flow`, `/review`, `/e2e`, `/test`, `/code-quality-check`, `/debug`, `/handoff`, `/changelog`, `/context`, `/new-skill`, `/multi-repo`, `/intent`, `/security`, `/migrate`, `/observe`, `/profile`, `/flags`, `/a11y`, `/graph`
+- User uses command-style requests: `/research`, `/plan`, `/docs-flow`, `/review`, `/e2e`, `/test`, `/code-quality-check`, `/debug`, `/handoff`, `/changelog`, `/context`, `/new-skill`, `/multi-repo`, `/intent`, `/security`, `/migrate`, `/observe`, `/profile`, `/flags`, `/a11y`, `/graph`, `/learn`, `/test-strategy`
 
 ## When NOT to enter this branch
 - Task is about implementing frontend UI — use FRONTEND
@@ -39,6 +41,8 @@
 | If the task involves... | Read next |
 |---|---|
 | `/intent`, feature purpose unclear, "what should this do", acceptance criteria | skills/product-intent/SKILL.md |
+| `/test-strategy`, defining what to test before writing tests, fragile test suite, new module with no tests | skills/test-strategy/SKILL.md |
+| `/learn`, session close, recording skill failures, routing quality assessment | skills/session-learning/SKILL.md |
 | `/security`, security review, OWASP, auth vulnerabilities, secrets audit | skills/security-hardening/SKILL.md |
 | `/migrate`, database migration, zero-downtime schema change, rollback | skills/migration-strategy/SKILL.md |
 | `/observe`, logging setup, metrics, tracing, health endpoints, alerting | skills/observability/SKILL.md |
@@ -69,6 +73,10 @@
 
 ## Combination rules
 - `product-intent` BEFORE `task-analysis`, `architecture-design` — when feature purpose is unclear
+- `product-intent` BEFORE `/plan` — always, not only when purpose is unclear; skip only for pure infra/refactor tasks
+- `test-strategy` BEFORE `unit-testing`, `e2e-testing`, `python-testing` — when no strategy exists for the module
+- `session-learning` AFTER every `/implement` and `/review` — automatic, no user prompt needed
+- `session-learning` AFTER `session-handoff` when both run in the same session close
 - `security-hardening` DURING every backend code review — supplement `code-review` on all backend tasks
 - `migration-strategy` BEFORE any `sql-and-database` task changing existing production tables
 - `observability` BEFORE any service ships to production for the first time

@@ -32,6 +32,8 @@ These command-like requests are supported:
 - `/context`
 - `/new-skill <skill-name>`
 - `/multi-repo <task-description>`
+- `/test-strategy <module-or-project>`
+- `/learn`
 
 ## Expected Outputs
 
@@ -50,6 +52,8 @@ These command-like requests are supported:
 - `/context`: Session Context Block (stack, test runner, package manager, conventions, constraints, uncertainties).
 - `/new-skill`: Scaffolded SKILL.md with quality gates enforced, routing tree updated in same task.
 - `/multi-repo`: Per-repo change plan with contract-owner-first ordering, cross-repo impact map, mandatory handoff.
+- `/test-strategy`: `test-strategy.md` with risk map, test levels per zone, coverage targets, tooling, and quality gates.
+- `/learn`: Appended entries in per-skill `references/failure-patterns.md` and global `skills/routing/FAILURES.md`.
 
 ## Skill Routing
 
@@ -64,7 +68,7 @@ Do not load skills directly. Navigate the routing tree:
 | Embedded firmware, microcontrollers, FreeRTOS, HAL drivers, linker/toolchain | skills/routing/EMBEDDED.md |
 | Docker, deployment, containers, CI/CD | skills/routing/INFRA.md |
 | Databases, SQL, schemas, migrations, ORM | skills/routing/DATA.md |
-| Review, architecture, testing, docs, analysis, context discovery, debugging, handoff, changelog, multi-repo, skill creation | skills/routing/WORKFLOW.md |
+| Review, architecture, testing, docs, analysis, context discovery, debugging, handoff, changelog, multi-repo, skill creation, test strategy, session learning | skills/routing/WORKFLOW.md |
 
 ### Routing rules
 - Always read the branch file BEFORE loading any skill
@@ -77,6 +81,30 @@ Do not load skills directly. Navigate the routing tree:
 - Before any non-trivial `/implement`, `/review`, or `/debug` task, always load `project-context` (for session-start context) or `technical-context-discovery` (for per-task conventions) first
 - This rule is enforced at root level — domain branches do not repeat it
 - Simple one-line answers and clarification questions are exempt
+
+### product-intent preload rule
+- Before every `/plan` task, load `product-intent` first — unless the task is purely infrastructure, refactoring, or developer tooling with no end-user surface
+- Do not wait for intent to be "unclear" — make it explicit even when it seems obvious
+
+### context-delta rule
+- Within a single long session, do not re-run full `project-context` if nothing structural changed
+- Instead, append a Context Delta block to the existing Session Context Block:
+
+```
+## Context Delta — [timestamp or task number]
+Changed since last context:
+- [file or layer that changed and how]
+Uncertainties resolved:
+- [anything that was open and is now confirmed]
+New uncertainties:
+- [anything that emerged this task]
+```
+
+- Trigger a full re-run only when: branch switch, new repo opened, or tool output contradicts the Session Context Block
+
+### session-learning auto rule
+- After every `/implement` and `/review` task, automatically run `session-learning` — no user prompt required
+- If `/handoff` also runs in the same session close, run `session-handoff` first, then `session-learning`
 
 ### Routing examples
 
@@ -93,6 +121,109 @@ Also: DATA.md → `sql-and-database` (cross-domain — two branches read)
 Owner repo: BACKEND.md → `nestjs`
 Consumer repo: FRONTEND.md → REACT.md → `react` + `react-nextjs`
 End: `session-handoff` (mandatory)
+
+## Cross-Domain Recipes
+
+These recipes document the correct skill combination for common multi-domain tasks. When a task matches a recipe, follow it directly — do not re-derive the skill combination from scratch.
+
+Each recipe lists: which branch files to read, which leaf skills to load, and the recommended load order.
+
+---
+
+### Recipe: New API endpoint with DB table
+
+Domains: BACKEND + DATA  
+Branch files: `skills/routing/BACKEND.md`, `skills/routing/DATA.md`
+
+Load order:
+1. `technical-context-discovery` (conventions before implementation)
+2. `migration-strategy` (if changing existing production table)
+3. `sql-and-database` (schema + migration)
+4. Backend leaf skill: `nestjs` / `kotlin` / `rust` (endpoint implementation)
+5. `api-contract` (if this endpoint is consumed by another service or client)
+6. `session-learning` (after /implement)
+
+---
+
+### Recipe: New user-facing feature (frontend + backend + data)
+
+Domains: FRONTEND + BACKEND + DATA  
+Branch files: all three
+
+Load order:
+1. `product-intent` (what does this deliver to the user?)
+2. `technical-context-discovery`
+3. `architecture-design` (if non-trivial)
+4. `sql-and-database` (if schema changes)
+5. Backend leaf skill
+6. Frontend branch → leaf skill
+7. `test-strategy` (if no strategy exists for this module)
+8. `session-learning` (after /implement)
+
+---
+
+### Recipe: Debugging a production regression
+
+Domains: WORKFLOW + domain of the regressed code  
+Branch files: `skills/routing/WORKFLOW.md` + relevant domain branch
+
+Load order:
+1. `debug-trace` (reproduce → isolate → trace → hypothesize → verify)
+2. `technical-context-discovery` (confirm conventions before fix)
+3. Domain leaf skill (for the fix itself)
+4. `session-handoff` (document root cause and fix)
+5. `session-learning` (record if skill content was missing or routing was slow)
+
+---
+
+### Recipe: New service going to production for the first time
+
+Domains: BACKEND + INFRA + WORKFLOW  
+Branch files: `skills/routing/BACKEND.md`, `skills/routing/INFRA.md`, `skills/routing/WORKFLOW.md`
+
+Load order:
+1. `test-strategy` (define coverage before wiring CI)
+2. `observability` (logging, metrics, health endpoint — before first deploy)
+3. `ci-cd` (pipeline + quality gates)
+4. `docker` / `kubernetes` (container and deployment config)
+5. `security-hardening` (supplement every backend review)
+6. `session-handoff` + `session-learning` after deploy
+
+---
+
+### Recipe: Cross-repo contract change (API owner + consumer)
+
+Domains: WORKFLOW + BACKEND + FRONTEND  
+Branch files: all three
+
+Load order:
+1. `project-context` per repo
+2. `multi-repo` (change plan with contract-owner-first ordering)
+3. Owner repo: `api-contract` + backend leaf skill
+4. Consumer repo: frontend branch → leaf skill
+5. `session-handoff` (mandatory for multi-repo)
+6. `session-learning`
+
+---
+
+### Recipe: Performance investigation
+
+Domains: WORKFLOW + domain of the slow code  
+Branch files: `skills/routing/WORKFLOW.md` + relevant domain branch
+
+Load order:
+1. `performance-profiling` (flamegraph, latency, memory — before touching code)
+2. Domain leaf skill (for the fix)
+3. `observability` (if metrics are missing that would have caught this earlier)
+4. `session-learning`
+
+---
+
+### Adding a new recipe
+
+When a multi-domain task required non-obvious skill combination that is likely to recur, add it here. Minimum content: domains, branch files, load order. Use `session-learning` MISSING entries as input.
+
+---
 
 ## Escalation and Validation Rules
 
