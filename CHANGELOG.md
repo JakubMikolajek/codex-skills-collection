@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.3.1] - 2026-03-27
+
+### Added
+- Expanded anti-pattern coverage in skill docs for `react`, `vue`, `python`, `rust`, `security-hardening`, `observability`, `freertos`, and `nestjs`.
+- Added `skills/session-learning/references/failure-patterns.md` with session-learning record for this update batch.
+
+### Changed
+- Updated `skills/session-learning/SKILL.md` with repository-aware path handling (`[SKILLS_ROOT]`) and explicit tooling/environment signal guidance.
+- Appended global learning rollup entries in `skills/routing/FAILURES.md` to reflect recent skill-system improvements.
+
 ## [1.3.0] - 2026-03-27
 
 ### Added
