@@ -1,6 +1,6 @@
 ---
 name: session-learning
-description: Produce a structured learning record after any /implement or /review session. Captures which skills were loaded, what worked, what routing was ambiguous, and what failure patterns were observed. Output feeds both per-skill references/failure-patterns.md and the global skills/routing/FAILURES.md. Run automatically at the end of every /implement and /review task — no user prompt required.
+description: Produce a structured learning record after any /implement or /review session. Captures which skills were loaded, what worked, what routing was ambiguous, and what failure patterns were observed. Output feeds both per-skill references/failure-patterns.md and the global routing FAILURES rollup under the repository skill root. Run automatically at the end of every /implement and /review task — no user prompt required.
 ---
 
 # Session Learning
@@ -26,11 +26,20 @@ This skill closes the feedback loop on the skill system itself. After every impl
 
 Only record patterns directly observed this session. Do not infer failure patterns from code not read, or routing quality from paths not taken.
 
+### Repository-Aware Paths
+
+Do not hardcode skill paths. Resolve a workspace skill root first:
+
+- Use `.codex/skills` when the repository is bootstrapped under `.codex`
+- Use `skills` when skills live at repository root
+
+Use `[SKILLS_ROOT]` in all instructions and outputs below.
+
 ### Two Destinations, One Pass
 
 Every session-learning run produces output in two places:
-1. **Per-skill**: `skills/<skill-name>/references/failure-patterns.md` — appended, never overwritten
-2. **Global rollup**: `skills/routing/FAILURES.md` — appended with session date and skill reference
+1. **Per-skill**: `[SKILLS_ROOT]/<skill-name>/references/failure-patterns.md` — appended, never overwritten
+2. **Global rollup**: `[SKILLS_ROOT]/routing/FAILURES.md` — appended with session date and skill reference
 
 Both are updated in the same pass. Never defer one to a later session.
 
@@ -56,6 +65,24 @@ These are separate dimensions:
 
 Always distinguish between them in the learning record. A routing problem is fixed in `AGENTS.md` or a routing branch file. A skill quality problem is fixed in the skill's `SKILL.md`.
 
+### Tooling/Environment Signals
+
+Treat operational failures as a separate signal type from routing and skill quality.
+
+- Examples: `EMFILE`, file descriptor limits, CI runner limits, package registry outage, local permission errors
+- These signals are not automatically a skill failure; classify them separately and attach evidence
+- Record them under `session-learning` unless another skill explicitly owns the operational context
+
+Severity guidance for tooling/environment signals:
+- Use `WARN` when validation can continue with workaround or retry
+- Use `CRITICAL` when required validation or delivery is blocked
+- Use `MISSING` only when the skill system lacks guidance for a recurring operational pattern
+
+Required evidence fields for tooling/environment entries:
+- **Command**: exact command that failed
+- **Key output**: minimal error line proving the signal
+- **Scope**: local machine, CI runner, container, or shared environment
+
 ---
 
 ## Session Learning Process
@@ -67,8 +94,9 @@ Session Learning progress:
 - [ ] Step 3: Assess skill content quality per skill
 - [ ] Step 4: Identify failure patterns
 - [ ] Step 5: Identify missing skills or sections
-- [ ] Step 6: Append to per-skill failure-patterns.md
-- [ ] Step 7: Append to global FAILURES.md
+- [ ] Step 6: Identify tooling/environment signals
+- [ ] Step 7: Append to per-skill failure-patterns.md
+- [ ] Step 8: Append to global FAILURES.md
 ```
 
 **Step 1: List all skills loaded this session**
@@ -77,9 +105,9 @@ Enumerate every skill file that was read during the session. Include routing bra
 
 ```
 Skills loaded this session:
-- skills/routing/WORKFLOW.md (routing branch)
-- skills/debug-trace/SKILL.md (leaf skill)
-- skills/nestjs/SKILL.md (leaf skill)
+- [SKILLS_ROOT]/routing/WORKFLOW.md (routing branch)
+- [SKILLS_ROOT]/debug-trace/SKILL.md (leaf skill)
+- [SKILLS_ROOT]/nestjs/SKILL.md (leaf skill)
 ```
 
 **Step 2: Assess routing quality per skill**
@@ -119,9 +147,17 @@ Record any task requirements that no skill covered:
 - Was there a workflow scenario not handled by any routing branch?
 - Was there a combination of skills that should be a documented recipe but isn't?
 
-**Step 6: Append to per-skill failure-patterns.md**
+**Step 6: Identify tooling/environment signals**
 
-For each skill that has a non-OK entry, append to `skills/<skill-name>/references/failure-patterns.md`.
+Record operational signals that affect execution quality but are not direct routing/content issues.
+
+- Capture at least command, key output, and scope
+- Confirm whether issue is local/transient or reproducible in shared environments
+- If issue exposed a skill gap, add a paired `MISSING` entry with specific wording for the skill fix
+
+**Step 7: Append to per-skill failure-patterns.md**
+
+For each skill that has a non-OK entry, append to `[SKILLS_ROOT]/<skill-name>/references/failure-patterns.md`.
 
 Create the file if it does not exist. Always append — never overwrite.
 
@@ -137,9 +173,17 @@ Format:
 **Status**: [open | fixed in vX.Y.Z]
 ```
 
-**Step 7: Append to global FAILURES.md**
+For tooling/environment entries, add evidence lines:
 
-Append a compact entry to `skills/routing/FAILURES.md`.
+```markdown
+**Command**: [exact command]
+**Key output**: [single representative error line]
+**Scope**: [local | CI | container | shared]
+```
+
+**Step 8: Append to global FAILURES.md**
+
+Append a compact entry to `[SKILLS_ROOT]/routing/FAILURES.md`.
 
 Create the file if it does not exist. Always append — never overwrite.
 
@@ -149,7 +193,7 @@ Format:
 ## [YYYY-MM-DD] — [severity] — [skill-name]
 
 [One-line summary of the failure or signal]
-Detail: skills/[skill-name]/references/failure-patterns.md
+Detail: [SKILLS_ROOT]/[skill-name]/references/failure-patterns.md
 ```
 
 ---
