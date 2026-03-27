@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.3.0] - 2026-03-27
+
+### Added
+- Added new workflow skills: `test-strategy` and `session-learning`.
+- Added `skills/routing/FAILURES.md` for failure-oriented skill routing.
+- Added repository-level `LICENSE` and `ROADMAP.md`.
+
+### Changed
+- Updated `AGENTS.md` and `skills/routing/WORKFLOW.md` to include new workflow routing for added skills.
+- Updated `README.md` project naming and repository overview text.
+
 ## [1.2.0] - 2026-03-18
 
 ### Added
