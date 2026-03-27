@@ -364,6 +364,8 @@ Memory:
 | Mutex from ISR context | Binary semaphore for ISR signaling |
 | `xSemaphoreTake` with `portMAX_DELAY` in production | Set timeout + handle failure |
 | Calling `printf` / `malloc` from ISR | Signal task — work done outside ISR |
+| Guessing task stack sizes with no runtime checks | Measure `uxTaskGetStackHighWaterMark` and tune with margin |
+| Sharing mutable task data without mutex/queue/event synchronization | Use FreeRTOS primitives to protect ownership and ordering |
 | Creating queue inside a task | Create all objects at startup (e.g. in main before scheduler) |
 | No `configASSERT` on object creation | Assert immediately — fail loudly |
 | Magic priority numbers in xTaskCreate | Named constants: `PRIORITY_HIGH` |

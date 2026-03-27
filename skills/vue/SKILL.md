@@ -78,6 +78,9 @@ Quality:
 | Anti-Pattern | Instead Do |
 |---|---|
 | One massive SFC doing everything | Split into focused components and composables |
+| Mutating props directly in child components | Emit updates to parent and keep one-way data flow |
+| Using `reactive()` for primitives | Use `ref()` for primitive values |
+| Using `v-if` and `v-for` on the same element | Filter before render or wrap with `<template v-for>` |
 | Reusable logic duplicated across views | Extract a focused composable |
 | Watchers as default state management tool | Use direct reactive ownership and `computed` first |
 | Derived values stored and synced manually | Derive them with `computed` |

@@ -100,6 +100,8 @@ Quality:
 |---|---|
 | One massive Tauri command doing everything | Delegate to focused Rust services |
 | Generic `String` errors everywhere | Use structured errors or explicit variants |
+| `unwrap()` in production request or command paths | Propagate typed errors with `?` and map at boundaries |
+| Cloning to silence borrow checker issues | Refactor ownership/borrowing instead of allocating around the problem |
 | Shared mutable state spread across tasks | Isolate ownership and coordinate intentionally |
 | Blocking IO inside latency-sensitive async paths | Offload or separate blocking work clearly |
 | Giant global app state for all IDE capabilities | Split state by capability and ownership |

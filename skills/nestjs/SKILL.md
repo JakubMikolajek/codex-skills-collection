@@ -273,6 +273,8 @@ Testing:
 | Ad hoc validation inside service methods | Validate at the framework boundary first |
 | Circular module/provider wiring | Reshape boundaries or extract shared concern |
 | Generic catch-and-log-everything blocks | Map errors intentionally and preserve useful context |
+| Service catches and silently returns `null` / fallback on real failures | Translate to explicit domain/HTTP exception with context |
+| Treating `@Global()` modules as default sharing mechanism | Keep imports explicit; use global scope only for cross-cutting infrastructure with intent |
 | `noAck: true` on microservice consumer | Explicit ack/nack — message loss on crash |
 | No timeout on `client.send()` | `pipe(timeout(5000))` — always set a deadline |
 | Business logic in `@EventPattern` handler | Delegate to service; handler only acks/nacks |

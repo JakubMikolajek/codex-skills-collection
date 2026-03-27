@@ -84,6 +84,10 @@ Quality:
 | Syncing props to state without a hard reason | Derive directly from props or lift ownership properly |
 | Huge all-purpose component | Split by responsibility and data flow |
 | `useEffect` as default control flow tool | Prefer direct render logic, handlers, or dedicated data hooks |
+| Missing dependencies in `useEffect` / `useCallback` | Declare full dependency arrays or refactor to avoid stale closures |
+| Using list index as `key` for dynamic collections | Use stable item identity keys to avoid reorder/delete bugs |
+| Creating inline object/array props in hot render paths | Use stable references (`const` or memoized values) |
+| Using global Context for rapidly changing local state | Keep fast-changing state local or in dedicated stores |
 | Blanket memoization | Fix unstable boundaries or measure real bottlenecks |
 | One-off styles/components that bypass the system | Extend existing shared UI patterns |
 

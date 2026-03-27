@@ -212,6 +212,7 @@ Dependencies:
 | `SELECT * FROM users WHERE id = '${userId}'` | Parameterized query or ORM |
 | Trusting user-supplied `role` or `isAdmin` from JWT payload | Verify against database at request time |
 | `Access-Control-Allow-Origin: *` on authenticated API | Explicit origin allowlist |
+| Plain-text or reversibly encrypted passwords | One-way password hashing (`argon2` or `bcrypt`) with strong parameters |
 | Hardcoded `SECRET_KEY = "dev-secret"` in source | Environment variable, fail fast if missing |
 | Logging `Authorization: Bearer <token>` for debugging | Log presence/absence only, never token value |
 | File path: `path.join(uploadDir, userFilename)` | `path.resolve` + check result starts with `uploadDir` |

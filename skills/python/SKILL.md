@@ -150,6 +150,8 @@ Quality:
 | `print()` for observability | Use `logging` with structured context |
 | Star imports (`from module import *`) | Explicit imports only |
 | Mutable default arguments | Use `None` sentinel and create inside function |
+| String concatenation inside loops for large payloads | Accumulate and `''.join(...)` to avoid quadratic behavior |
+| Manual path concatenation with `'/'` and string ops | Use `pathlib.Path` for cross-platform paths |
 
 ## Sub-Skills
 

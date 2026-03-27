@@ -298,6 +298,7 @@ Alerting:
 | Alert with no runbook | Every alert links to a runbook with triage steps |
 | Trace sampling at 100% in production | Sample at 10–20%, always sample errors |
 | Unique request URL as span name | Route template as span name (avoid high cardinality) |
+| Logging secrets, tokens, or full credential payloads | Redact sensitive fields at logger boundary before writing logs |
 | Missing `request_id` in error response | Return `request_id` in every error response |
 
 ## Connected Skills
