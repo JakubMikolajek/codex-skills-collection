@@ -35,6 +35,10 @@ Do not hardcode skill paths. Resolve a workspace skill root first:
 
 Use `[SKILLS_ROOT]` in all instructions and outputs below.
 
+Path guardrail:
+- Never emit mixed paths in one entry (for example both `skills/...` and `.codex/skills/...`)
+- Resolve `[SKILLS_ROOT]` once per session-learning run, then reuse it everywhere (skill list, per-skill detail path, global rollup detail path)
+
 ### Two Destinations, One Pass
 
 Every session-learning run produces output in two places:
@@ -77,6 +81,14 @@ Severity guidance for tooling/environment signals:
 - Use `WARN` when validation can continue with workaround or retry
 - Use `CRITICAL` when required validation or delivery is blocked
 - Use `MISSING` only when the skill system lacks guidance for a recurring operational pattern
+
+Operational classification examples:
+
+| Signal | Classification | Why |
+|---|---|---|
+| `EMFILE: too many open files` during build/test, rerun works | `WARN` | Execution degraded but delivery can continue |
+| `EMFILE` reproducible and blocks mandatory test/build gate | `CRITICAL` | Required validation is blocked |
+| Repeated `EMFILE`/runner-limit incidents with no guidance in skills | `MISSING` (+ paired `WARN`/`CRITICAL`) | Skill system needs durable troubleshooting instructions |
 
 Required evidence fields for tooling/environment entries:
 - **Command**: exact command that failed
@@ -146,6 +158,9 @@ Record any task requirements that no skill covered:
 - Was there a technical pattern used that belongs in an existing skill but is absent?
 - Was there a workflow scenario not handled by any routing branch?
 - Was there a combination of skills that should be a documented recipe but isn't?
+
+Recurring desktop-shell regression rule:
+- If the same UI/native shell issue repeats (for example custom titlebar drag, maximize on double-click, startup window bounds), record a `MISSING` entry and explicitly propose a dedicated skill section or new skill + routing update.
 
 **Step 6: Identify tooling/environment signals**
 

@@ -52,6 +52,18 @@ Rust progress:
 - Keep app state injection and shared service ownership clear.
 - Move heavy desktop capabilities such as file scanning, process launching, indexing, and project analysis into focused Rust services rather than command handlers.
 
+### Command-to-Service Decomposition
+
+When Tauri command count grows, enforce this split:
+
+- Command handler: boundary parsing, auth/guard checks, error mapping, response DTO
+- Service: business workflow and orchestration
+- Repository/adapter: IO boundaries (filesystem, process, network, toolchain)
+
+Rule of thumb:
+- if a command handler exceeds ~40-60 LOC or owns multiple failure branches, extract a service method
+- avoid commands calling other commands; share service functions instead
+
 ## Custom IDE-Oriented Concerns
 
 - Keep editor features separated by capability: workspace, files, diagnostics, search, indexing, processes, language tooling.
@@ -67,12 +79,46 @@ Rust progress:
 - Avoid prematurely splitting crates if module boundaries are sufficient.
 - Keep public APIs small and intention-revealing.
 
+### Large Module Split Patterns
+
+For large desktop Rust modules:
+
+- split by capability (`commands`, `service`, `types`, `errors`, `tests`) before splitting by technical layer
+- keep `mod.rs` (or top module) as composition root, not implementation dump
+- isolate pure logic into testable leaf modules and keep side-effectful adapters thin
+- maintain explicit ownership map for managers to avoid cross-module mutable coupling
+
 ## Performance and Memory
 
 - Allocate consciously in hot paths, but do not micro-optimize before the design is clear.
 - Prefer clear ownership and correct behavior before low-level tuning.
 - Avoid unnecessary cloning in critical paths, but do not contort code to eliminate harmless clones.
 - Make cache and indexing invalidation rules explicit.
+
+## Async Background Worker Patterns
+
+- model worker lifecycle explicitly: `init -> running -> stopping -> stopped`
+- pair every spawned task with cancellation and join/cleanup path
+- avoid detached `spawn` without owner; assign each worker to manager/supervisor
+- protect long-running loops with backoff + error reporting instead of tight retry loops
+- expose runtime health/state for UI-facing workflows (ready, busy, degraded)
+
+## Test Matrix (Rust + Tauri Runtime)
+
+```
+Boundary:
+- [ ] Tauri command DTO and error mapping tests
+- [ ] Command handlers remain thin and delegate correctly
+
+Lifecycle:
+- [ ] Manager init/startup path covered
+- [ ] Worker cancellation and shutdown path covered
+- [ ] Relaunch/restart path does not duplicate workers/listeners
+
+Reliability:
+- [ ] Failure path tests for IO/process boundaries
+- [ ] Concurrency/race-prone paths validated with deterministic tests where possible
+```
 
 ## Rust Review Checklist
 
@@ -99,6 +145,7 @@ Quality:
 | Anti-Pattern | Instead Do |
 |---|---|
 | One massive Tauri command doing everything | Delegate to focused Rust services |
+| Command handler orchestrates business logic + IO + mapping | Split into boundary handler + service + adapter |
 | Generic `String` errors everywhere | Use structured errors or explicit variants |
 | `unwrap()` in production request or command paths | Propagate typed errors with `?` and map at boundaries |
 | Cloning to silence borrow checker issues | Refactor ownership/borrowing instead of allocating around the problem |
@@ -106,6 +153,7 @@ Quality:
 | Blocking IO inside latency-sensitive async paths | Offload or separate blocking work clearly |
 | Giant global app state for all IDE capabilities | Split state by capability and ownership |
 | Over-abstracting lifetimes and generics too early | Keep APIs concrete until a real abstraction appears |
+| Detached background task with no cancellation path | Assign owner manager and implement stop/join cleanup |
 
 ## Connected Skills
 

@@ -9,6 +9,7 @@
 - Task involves UI verification or comparing implementation against a design spec
 - Task involves web internationalization (i18n), locale routing, or translation files
 - Task involves Swift/SwiftUI localization, String Catalogs, or locale-aware Apple platform UI
+- Task involves frontend behavior in Tauri desktop apps (custom titlebar, window controls, invoke integration)
 - Files being edited are `.tsx`, `.jsx`, `.vue`, `.swift`, `.css`, `.scss`, or component files
 
 ## When NOT to enter this branch
@@ -23,6 +24,7 @@
 | If the task involves... | Read next |
 |---|---|
 | React components, hooks, JSX, Next.js routing, server/client components | skills/routing/REACT.md |
+| React frontend in Tauri desktop app (window shell, command invoke contracts, plugin usage) | skills/routing/TAURI.md |
 | Vue components, composables, Nuxt routing, Pinia, Vuetify, PrimeVue | skills/routing/VUE.md |
 | SwiftUI views, iOS 17+ MVVM, Swift localization, Apple platforms | skills/routing/NATIVE.md |
 | Web i18n, i18next, ICU messages, locale routing, translation files | skills/i18n/SKILL.md |
@@ -39,4 +41,5 @@
 - `pinia` + `vue` when the task involves Vue store logic
 - `nuxt` + `vue` for Nuxt routing or app-level behavior
 - `swift-localization` + `swiftui` for localized SwiftUI screens
+- For Tauri desktop tasks that cross frontend/runtime boundaries, route through `TAURI` branch first
 - Framework skills are mutually exclusive across ecosystems — never combine React and Vue skills

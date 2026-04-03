@@ -52,6 +52,66 @@ NestJS progress:
 - Keep external API calls and message publishing visible in orchestration code.
 - Avoid mixing persistence, authorization, validation, and mapping logic in one method.
 
+## Module DI Wiring (Imports vs Providers vs Exports)
+
+Use this section when extracting repositories/services to dedicated modules to avoid runtime DI regressions.
+
+- Register a class in `providers` only in its owner module.
+- Use `exports` only for providers that other modules must consume.
+- Consuming modules should import the owner module in `imports`; do not re-declare the same provider locally.
+- If a provider uses custom tokens (`provide: 'TOKEN'`), export the token from the owner module and import that module where injected.
+- After extraction, verify constructor injection from every consuming module path (not only the module where the provider was created).
+
+Minimal ownership pattern:
+
+```typescript
+// users-repository.module.ts (owner)
+@Module({
+  providers: [UsersRepository],
+  exports: [UsersRepository],
+})
+export class UsersRepositoryModule {}
+
+// users.module.ts (consumer)
+@Module({
+  imports: [UsersRepositoryModule],
+  providers: [UsersService],
+})
+export class UsersModule {}
+```
+
+### DI Smoke Test Pattern
+
+When refactoring modules/providers, add a fast compile-time DI test to catch broken wiring before feature tests:
+
+```typescript
+describe('UsersModule DI smoke', () => {
+  let moduleRef: TestingModule;
+
+  it('compiles module graph with repository wiring', async () => {
+    moduleRef = await Test.createTestingModule({
+      imports: [UsersModule], // import real module under test
+    })
+      // override external infrastructure if needed
+      .overrideProvider(DatabaseConnectionToken)
+      .useValue(mockDbConnection)
+      .compile();
+
+    expect(moduleRef.get(UsersService)).toBeDefined();
+    expect(moduleRef.get(UsersRepository)).toBeDefined();
+  });
+
+  afterAll(async () => {
+    await moduleRef?.close();
+  });
+});
+```
+
+Use this pattern whenever:
+- repository/service ownership is moved between modules
+- provider tokens are renamed or extracted
+- module `imports/providers/exports` were edited
+
 ## Testing Checklist
 
 ```
@@ -67,6 +127,11 @@ Service layer:
 Design:
 - [ ] Controllers remain thin
 - [ ] Module boundaries stay cohesive
+- [ ] Provider owner module exports every cross-module dependency
+- [ ] Consumer modules import owner module (no duplicate provider registration)
+
+DI safety:
+- [ ] A DI smoke test compiles the target module graph after refactor
 ```
 
 ## Microservices
@@ -279,6 +344,9 @@ Testing:
 | No timeout on `client.send()` | `pipe(timeout(5000))` — always set a deadline |
 | Business logic in `@EventPattern` handler | Delegate to service; handler only acks/nacks |
 | Shared `ClientProxy` instance across tests | Mock per test — `{ provide: 'SERVICE', useValue: mockClient }` |
+| Repository extracted to a new module but still listed as local `provider` in consumer modules | Export from owner module, then wire via `imports` |
+| Injected provider not found after refactor | Check module metadata in order: owner `providers` -> owner `exports` -> consumer `imports` |
+| Refactor merged without a module-compile smoke test | Add fast `Test.createTestingModule(...).compile()` coverage for DI graph |
 
 ## Connected Skills
 

@@ -9,6 +9,7 @@
 - Task involves Python backend services, async APIs, LLM pipelines, RAG, or data processing
 - Task involves WebSocket or SSE server implementation
 - Task involves RabbitMQ producers, consumers, or queue topology
+- Task involves Rust services exposed through Tauri commands and desktop runtime managers
 - Files being edited are `.ts` (NestJS), `.kt`, `.rs`, `.py`, or backend module files
 
 ## When NOT to enter this branch
@@ -17,6 +18,7 @@
 - Task is about database schemas or SQL — use DATA (but often combined with BACKEND)
 - Task is about code review, architecture, or testing without a specific backend scope — use WORKFLOW
 - Task is about React, Vue, or SwiftUI code — use FRONTEND even if it involves TypeScript
+- Task is about Tauri desktop frontend shell only (titlebar, drag regions, window controls) — use FRONTEND -> TAURI
 - Task is about firmware, MCU peripherals, or RTOS device code — use EMBEDDED
 
 ## Decision tree
@@ -25,7 +27,8 @@
 |---|---|
 | NestJS, Node.js API, TypeScript backend services, modules, controllers | skills/nestjs/SKILL.md |
 | Kotlin, Android business logic, JVM services, coroutines | skills/kotlin/SKILL.md |
-| Rust, Tauri, systems programming, ownership, desktop backend services | skills/rust/SKILL.md |
+| Rust systems programming without Tauri boundary concerns | skills/rust/SKILL.md |
+| Rust + Tauri desktop runtime/command boundary (invoke contracts, plugin/runtime lifecycle) | skills/routing/TAURI.md |
 | Python core patterns, typing, async, config, shared library logic | skills/python/SKILL.md |
 | Python + FastAPI: routes, DI, middleware, HTTP API | skills/python/SKILL.md + skills/python-fastapi/SKILL.md |
 | Python + LLM/RAG/embeddings/vector stores/AI pipelines | skills/python/SKILL.md + skills/python-ai-ml/SKILL.md |
@@ -45,3 +48,4 @@
 - When containerizing a backend service, load `docker` from INFRA
 - `observability` loaded when adding logging, metrics, or health probes to a backend service
 - `error-handling` loaded when designing error propagation, retry, or circuit-breaker for a backend service
+- For Tauri backend/runtime tasks, route through `TAURI` branch before selecting leaf skills

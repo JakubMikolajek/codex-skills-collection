@@ -62,6 +62,8 @@ E2E flow:
 - `/context`: Session Context Block (stack, runner, conventions, constraints)
 - `/new-skill`: Scaffold SKILL.md + update routing tree
 - `/multi-repo`: Per-repo change plan with contract-owner-first ordering + mandatory handoff
+- `/test-strategy`: Risk-based test plan with levels, targets, and quality gates
+- `/learn`: Append session learnings into per-skill and global failure pattern logs
 
 ## Skills Included
 
@@ -78,6 +80,10 @@ All skills live under `skills/` and are routed through `skills/routing/`:
 - `react` — React components, hooks, state, forms, rendering
 - `react-nextjs` — Next.js routing, server/client components, data fetching
 - `rust` — Rust ownership, async, Tauri, systems logic
+- `tauri-window-shell` — Tauri window shell UX (titlebar, drag regions, maximize/minimize, bounds)
+- `tauri-command-contract` — Frontend `invoke` <-> Rust `#[tauri::command]` contracts
+- `tauri-plugin-integration` — Tauri plugin wiring, permissions/capabilities, drift checks
+- `tauri-runtime-lifecycle` — Tauri runtime managers, startup/shutdown, cancellation, lifecycle safety
 - `shadcn-tailwind` — shadcn/ui components, Tailwind CSS utilities
 - `sql-and-database` — SQL schema design, normalization, indexes, migrations, ORM
 - `swift-localization` — Swift String Catalogs, pluralization, locale-aware formatting
@@ -106,6 +112,8 @@ All skills live under `skills/` and are routed through `skills/routing/`:
 - `skill-creator` — Scaffold new skills, wire into routing tree
 - `project-context` — Build structured project understanding at session start
 - `session-handoff` — Produce structured handoff documents at session end
+- `session-learning` — Capture what worked/failed in skill routing and content after each session
+- `test-strategy` — Define risk-based test strategy before implementation/testing
 - `changelog-generator` — Generate CHANGELOG entries from git/PR/handoff
 - `multi-repo` — Coordinate changes spanning multiple repositories
 - `debug-trace` — Structured root cause analysis before writing fixes
@@ -124,6 +132,7 @@ AGENTS.md (Root Router)
 └── skills/routing/
     ├── FRONTEND.md → REACT.md / VUE.md / NATIVE.md / GENERIC_UI.md → leaf skills
     ├── BACKEND.md → nestjs / kotlin / rust
+    ├── TAURI.md → tauri-window-shell / tauri-command-contract / tauri-plugin-integration / tauri-runtime-lifecycle / rust
     ├── EMBEDDED.md → c-embedded / freertos / stm32-hal / embedded-toolchain
     ├── INFRA.md → docker
     ├── DATA.md → sql-and-database
@@ -143,6 +152,7 @@ AGENTS.md (Root Router)
 │   ├── routing/
 │   │   ├── FRONTEND.md
 │   │   ├── BACKEND.md
+│   │   ├── TAURI.md
 │   │   ├── EMBEDDED.md
 │   │   ├── INFRA.md
 │   │   ├── DATA.md
@@ -173,7 +183,12 @@ AGENTS.md (Root Router)
 │   ├── react/
 │   ├── react-nextjs/
 │   ├── rust/
+│   ├── tauri-window-shell/
+│   ├── tauri-command-contract/
+│   ├── tauri-plugin-integration/
+│   ├── tauri-runtime-lifecycle/
 │   ├── session-handoff/
+│   ├── session-learning/
 │   ├── shadcn-tailwind/
 │   ├── skill-creator/
 │   ├── sql-and-database/
@@ -182,6 +197,7 @@ AGENTS.md (Root Router)
 │   ├── swiftui/
 │   ├── task-analysis/
 │   ├── technical-context-discovery/
+│   ├── test-strategy/
 │   ├── ui-verification/
 │   ├── vue/
 │   └── vuetify-primevue/

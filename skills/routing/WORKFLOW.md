@@ -32,6 +32,7 @@
 ## When NOT to enter this branch
 - Task is about implementing frontend UI — use FRONTEND
 - Task is about implementing backend logic — use BACKEND
+- Task is about implementing cross-boundary Tauri desktop behavior (React + Rust runtime/contracts) — use TAURI
 - Task is about writing Dockerfiles or Kubernetes manifests — use INFRA
 - Task is about writing SQL or designing schemas — use DATA
 - Task is about implementing code (not reviewing or planning it) — use the appropriate domain branch
@@ -68,6 +69,7 @@
 | Wrapping up, `/handoff`, pausing, handing off, ending a session | skills/session-handoff/SKILL.md |
 | Release prep, `/changelog`, sprint close, documenting shipped changes | skills/changelog-generator/SKILL.md |
 | `/multi-repo`, changes spanning 2+ repos, coordinated releases | skills/multi-repo/SKILL.md |
+| Tauri desktop implementation/review/planning crossing React + Rust boundary | skills/routing/TAURI.md |
 | Bug, error, crash, `/debug`, failing test, unexpected behavior | skills/debug-trace/SKILL.md |
 | Unclear / cross-cutting workflow task | skills/task-analysis/SKILL.md |
 
@@ -111,4 +113,5 @@
 - `/context` → `project-context`
 - `/new-skill` → `skill-creator` + `task-analysis`
 - `/multi-repo` → `multi-repo` + `project-context` (per repo) + `session-handoff` at end
+- Tauri desktop tasks crossing React + Rust boundaries → `skills/routing/TAURI.md` first, then pair with workflow skills as needed (`architecture-design`, `code-review`, `debug-trace`)
 - `technical-context-discovery` — always load before implementation tasks from any branch

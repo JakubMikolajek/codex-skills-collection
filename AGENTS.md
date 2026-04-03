@@ -65,6 +65,7 @@ Do not load skills directly. Navigate the routing tree:
 |-------------------------|------------|
 | UI, components, styling, frontend frameworks (React, Vue, Nuxt, SwiftUI) | skills/routing/FRONTEND.md |
 | APIs, services, server-side logic (NestJS, Kotlin, Rust) | skills/routing/BACKEND.md |
+| Tauri desktop apps crossing React + Rust boundaries (window shell, invoke contracts, runtime lifecycle, plugins) | skills/routing/TAURI.md |
 | Embedded firmware, microcontrollers, FreeRTOS, HAL drivers, linker/toolchain | skills/routing/EMBEDDED.md |
 | Docker, deployment, containers, CI/CD | skills/routing/INFRA.md |
 | Databases, SQL, schemas, migrations, ORM | skills/routing/DATA.md |
@@ -216,6 +217,22 @@ Load order:
 2. Domain leaf skill (for the fix)
 3. `observability` (if metrics are missing that would have caught this earlier)
 4. `session-learning`
+
+---
+
+### Recipe: Tauri desktop feature (React + Rust)
+
+Domains: TAURI + WORKFLOW  
+Branch files: `skills/routing/TAURI.md`, `skills/routing/WORKFLOW.md`
+
+Load order:
+1. `technical-context-discovery`
+2. `tauri-command-contract` (stabilize invoke/DTO/error boundary first)
+3. `tauri-window-shell` (if window/titlebar UX is touched)
+4. `tauri-runtime-lifecycle` (if background managers/state lifecycle are touched)
+5. `tauri-plugin-integration` (if plugin wiring/permissions are touched)
+6. `rust` + `react` as implementation leaves
+7. `session-learning` (after /implement)
 
 ---
 

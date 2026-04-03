@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.4.0] - 2026-04-03
+
+### Added
+- Added new cross-branch router `skills/routing/TAURI.md` for tasks spanning React + Rust boundaries in Tauri desktop apps.
+- Added new Tauri skills: `tauri-command-contract`, `tauri-plugin-integration`, and `tauri-runtime-lifecycle`.
+- Added `tauri-window-shell` reference pack for Tauri v2 at `skills/tauri-window-shell/references/tauri-v2.md`.
+- Added a new Tauri cross-domain recipe to `AGENTS.md` for consistent load order and pairing rules.
+
+### Changed
+- Updated routing files (`AGENTS.md`, `skills/routing/FRONTEND.md`, `skills/routing/BACKEND.md`, `skills/routing/REACT.md`, `skills/routing/WORKFLOW.md`) to route Tauri work through the new branch.
+- Expanded `skills/rust/SKILL.md` with command-to-service decomposition, large-module split patterns, async worker lifecycle guidance, and runtime-focused test matrix.
+- Expanded `skills/nestjs/SKILL.md` with module DI wiring guardrails and a reusable DI smoke test pattern.
+- Updated `skills/session-learning/SKILL.md` with stricter path guardrails and clearer tooling/environment signal classification examples.
+- Updated `README.md` to document TAURI routing, new skills, and workflow command coverage.
+
 ## [1.3.1] - 2026-03-27
 
 ### Added
