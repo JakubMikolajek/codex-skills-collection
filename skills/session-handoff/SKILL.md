@@ -78,6 +78,7 @@ Handoff progress:
 - [ ] Step 6: List open questions
 - [ ] Step 7: Extract observed patterns (see below)
 - [ ] Step 8: Write .codex-handoff.md
+- [ ] Step 9: Write Obsidian session note (see obsidian-note skill)
 ```
 
 **Step 1: Collect list of files modified**
@@ -189,9 +190,23 @@ This workflow ensures that the agent's pattern recognition feeds the skill syste
 | Promoting patterns after a single occurrence | Mark as `watch`; promote after 3+ occurrences |
 | Human skipping pattern review | Pattern extraction only has value if reviewed and actioned |
 
+**Step 9: Write Obsidian session note**
+
+After `.codex-handoff.md` is written, invoke the `obsidian-note` skill to persist the session to the vault. Use the handoff content as source material — do not re-derive it.
+
+Map handoff sections to the session note template:
+- **Status** → `## Co zrobiono`
+- **Decisions Made** → `## Decyzje podjęte` (each decision with ADR number if applicable)
+- **Blocked** → `## Blokery`
+- **Next Steps** → `## Następna sesja` (convert to checkboxes)
+- **Observed Patterns** with `PROMOTE`/`WATCH` → add to `## Blokery` as note: `[pattern-watch]`
+
+Skip this step only when: no vault path is configured in `obsidian-note` skill, or user explicitly says "skip obsidian".
+
 ## Connected Skills
 
 - `project-context` — include Session Context Block in handoff when available
 - `multi-repo` — multi-repo tasks must always trigger session-handoff
 - `changelog-generator` — run after handoff on release sessions
 - `skill-creator` — use to promote `PROMOTE`-level observed patterns into skill files
+- `obsidian-note` — always run after Step 8 to persist session to vault

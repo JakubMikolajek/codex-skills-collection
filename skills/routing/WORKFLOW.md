@@ -67,6 +67,7 @@
 | Creating or extending a skill, `/new-skill`, updating routing tree | skills/skill-creator/SKILL.md |
 | Session start, `/context`, project context before implementation | skills/project-context/SKILL.md |
 | Wrapping up, `/handoff`, pausing, handing off, ending a session | skills/session-handoff/SKILL.md |
+| `/obsidian`, persisting session/ADR/debug/knowledge to Obsidian vault | skills/obsidian-note/SKILL.md |
 | Release prep, `/changelog`, sprint close, documenting shipped changes | skills/changelog-generator/SKILL.md |
 | `/multi-repo`, changes spanning 2+ repos, coordinated releases | skills/multi-repo/SKILL.md |
 | Tauri desktop implementation/review/planning crossing React + Rust boundary | skills/routing/TAURI.md |
@@ -85,6 +86,9 @@
 - `debug-trace` BEFORE any fix or patch implementation
 - `project-context` BEFORE `architecture-design`, `code-review`, `implementation-gap-analysis`, `multi-repo`
 - `session-handoff` AFTER any completed implementation or review session
+- `obsidian-note` AFTER `session-handoff` — always, automatically (session note)
+- `obsidian-note` AFTER `debug-trace` — when debug time > 15 min or non-obvious root cause (debug note)
+- `obsidian-note` when ADR is decided during `architecture-design` — write ADR note to vault
 - `changelog-generator` AFTER `session-handoff` on release tasks
 - `skill-creator` MUST update routing files in the same task — never deferred
 - `multi-repo` ALWAYS ends with `session-handoff`

@@ -34,6 +34,7 @@ These command-like requests are supported:
 - `/multi-repo <task-description>`
 - `/test-strategy <module-or-project>`
 - `/learn`
+- `/obsidian <session|adr|debug|knowledge>`
 
 ## Expected Outputs
 
@@ -47,13 +48,14 @@ These command-like requests are supported:
 - `/e2e`: Scenario list, Page Object and test implementation guidance, execution report expectations.
 - `/code-quality-check`: Prioritized quality report with concrete action plan.
 - `/debug`: Debug Report (reproduce → isolate → trace → hypothesize → verify) followed by root-cause fix with regression test.
-- `/handoff`: `.codex-handoff.md` with status, in-progress, blocked, decisions, files modified, next steps, open questions.
+- `/handoff`: `.codex-handoff.md` with status, in-progress, blocked, decisions, files modified, next steps, open questions. Followed automatically by `/obsidian session`.
 - `/changelog`: CHANGELOG block in Keep a Changelog format with version bump recommendation.
 - `/context`: Session Context Block (stack, test runner, package manager, conventions, constraints, uncertainties).
 - `/new-skill`: Scaffolded SKILL.md with quality gates enforced, routing tree updated in same task.
 - `/multi-repo`: Per-repo change plan with contract-owner-first ordering, cross-repo impact map, mandatory handoff.
 - `/test-strategy`: `test-strategy.md` with risk map, test levels per zone, coverage targets, tooling, and quality gates.
 - `/learn`: Appended entries in per-skill `references/failure-patterns.md` and global `skills/routing/FAILURES.md`.
+- `/obsidian <type>`: Markdown note written directly to Obsidian vault — type determines template and destination folder (session → `01-projects/{slug}/sessions/`, adr → `02-adr/`, debug → `04-debug/`, knowledge → `03-skills/domains/`).
 
 ## Skill Routing
 

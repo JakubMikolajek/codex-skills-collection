@@ -77,6 +77,7 @@ Debug trace progress:
 - [ ] Step 6: Output Debug Report
 - [ ] Step 7: Write fix addressing confirmed root cause
 - [ ] Step 8: Write regression test
+- [ ] Step 9: Write Obsidian debug note (if debug time > 15 min)
 ```
 
 ## After Debug Report — Fix Rules
@@ -85,6 +86,7 @@ Debug trace progress:
 - If fix touches more than 3 files: flag as potential architectural issue, recommend `architecture-design`
 - Write a regression test for the confirmed root cause alongside the fix
 - Re-run all related tests after the fix to confirm no secondary regressions
+- After Step 8, invoke `obsidian-note` skill with type `debug` when the investigation took more than ~15 minutes or revealed a non-obvious root cause worth preserving
 
 ## Cannot Reproduce
 
@@ -121,3 +123,4 @@ When the root cause is in an external dependency:
 - `technical-context-discovery` — understand project structure before tracing
 - `code-review` — review fix after debug-trace to catch secondary issues
 - `architecture-design` — escalate when fix scope exceeds 3 files
+- `obsidian-note` — run after Step 8 for non-trivial bugs (>15 min or non-obvious root cause); use Debug Report as source material for the note
