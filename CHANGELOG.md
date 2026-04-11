@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.5.0] - 2026-04-11
+
+### Added
+- Added the `obsidian-note` workflow skill for writing session, ADR, debug, and knowledge notes directly to the Obsidian vault.
+
+### Changed
+- Added `/obsidian <session|adr|debug|knowledge>` command support in the workflow contract and expected outputs.
+- Updated workflow routing to direct Obsidian note tasks through `skills/obsidian-note/SKILL.md`.
+- Updated `session-handoff` and `debug-trace` to require/trigger Obsidian notes for non-trivial handoffs and debug sessions.
+
 ## [1.4.0] - 2026-04-03
 
 ### Added
