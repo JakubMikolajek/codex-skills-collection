@@ -1,131 +1,136 @@
-# SKILL: obsidian-note
+---
+name: obsidian-note
+description: Creating notes in Obsidian according to the vault system
+---
 
-## Kiedy używać tego skilla
+## When to use this skill
 
-Użyj tego skilla **zawsze** gdy:
-- Kończysz sesję pracy nad projektem → twórz `session note`
-- Podejmujesz decyzję architektoniczną → twórz `ADR`
-- Naprawiasz nietrywialny bug → twórz `debug trace`
-- Uczysz się nowego wzorca/technologii → twórz `knowledge note` w `03-skills/domains/`
-- Zaczynasz nowy projekt → twórz `project index`
+Use this skill **always** when:
 
-**Nie twórz notatki** dla: trywialnych zmian, formatowania kodu, rutynowych CRUD.
+- You finish a work session on a project → create a `session note`
+- You make an architectural decision → create an `ADR`
+- You fix a non-trivial bug → create a `debug trace`
+- You learn a new pattern/technology → create a `knowledge note` in `03-skills/domains/`
+- You start a new project → create a `project index`
+
+**Do not create a note** for: trivial changes, code formatting, routine CRUD.
 
 ---
 
-## Ścieżki vault
+## Vault paths
 
-```
 VAULT_ROOT/
-├── 00-inbox/          # szkice, nieskategoryzowane — czyść co tydzień
+├── 00-inbox/ # drafts, uncategorized — clean weekly
 ├── 01-projects/
-│   └── {project-slug}/
-│       ├── _index.md          # hub projektu (twórz raz, aktualizuj)
-│       └── sessions/
-│           └── YYYY-MM-DD.md  # sesja dzienna
+│ └── {project-slug}/
+│ ├── _index.md # project hub (create once, update as needed)
+│ └── sessions/
+│ └── YYYY-MM-DD.md # daily session
 ├── 02-adr/
-│   └── ADR-{NNNN}-{slug}.md   # NNNN = 4-cyfrowy numer, auto-inkrementuj
+│ └── ADR-{NNNN}-{slug}.md # NNNN = 4-digit number, auto-increment
 ├── 03-skills/
-│   ├── domains/
-│   │   └── {technology}.md    # np. rust.md, nestjs.md, swiftui.md
-│   └── MOC.md                 # map of content — aktualizuj po każdym nowym skilu
+│ ├── domains/
+│ │ └── {technology}.md # e.g. rust.md, nestjs.md, swiftui.md
+│ └── MOC.md # map of content — update after each new skill
 └── 04-debug/
-    └── {YYYY-MM-DD}-{slug}.md
-```
+└── {YYYY-MM-DD}-{slug}.md
 
 **VAULT_ROOT** = ~/Desktop/Obsidian/Codex/
 
 ---
 
-## Zasady wikilinków [[...]]
+## Wikilink rules [[...]]
 
-### Linkuj zawsze:
-- Każda notatka linkuje do **project index**: `[[01-projects/{slug}/_index]]`
-- ADR linkuje do powiązanych skillów: `[[03-skills/domains/rust]]`
-- Session note linkuje do ADR z tej sesji: `[[ADR-0012-grpc-transport]]`
-- Debug trace linkuje do projektu + technologii: `[[FSS-IoT/_index]]` `[[03-skills/domains/redis]]`
-- Knowledge note w domains/ linkuje do projektów gdzie technologia jest używana
+### Always link:
 
-### Canonical nazwy projektów (używaj dokładnie tych slugów):
+- Every note links to the **project index**: `[[01-projects/{slug}/_index]]`
+- ADR links to related skills: `[[03-skills/domains/rust]]`
+- Session note links to ADRs from that session: `[[ADR-0012-grpc-transport]]`
+- Debug trace links to project + technology: `[[FSS-IoT/_index]]` `[[03-skills/domains/redis]]`
+- Knowledge note in domains/ links to projects where the technology is used
+
+### Canonical project names (use these slugs exactly):
+
 - `CodePath` → `01-projects/codepath/_index`
 - `FSS-IoT` → `01-projects/fss-iot/_index`
 - `NuvLock` → `01-projects/nuvlock/_index`
 - `codex-skills` → `01-projects/codex-skills/_index`
 - `thesis` → `01-projects/thesis/_index`
 
-### Tagi (#tag) — używaj spójnie:
-```
-Technologie:  #rust #nestjs #swift #react #python #mqtt #ble #grpc #redis
-Typ notatki:  #adr #session #debug #knowledge #project-index
-Domena:       #backend #ios #tvos #frontend #iot #ai #infra
-Status ADR:   #adr/accepted #adr/proposed #adr/superseded
-```
+### Tags (#tag) — use consistently:
+
+Technologies:  #rust #nestjs #swift #react #python #mqtt #ble #grpc #redis
+Note type:     #adr #session #debug #knowledge #project-index
+Domain:        #backend #ios #tvos #frontend #iot #ai #infra
+ADR status:    #adr/accepted #adr/proposed #adr/superseded
 
 ---
 
-## Frontmatter — obowiązkowy
+## Frontmatter — required
 
-Każda notatka MUSI mieć frontmatter:
+Every note MUST have frontmatter:
 
 ```yaml
 ---
 date: YYYY-MM-DD
 type: session | adr | debug | knowledge | project-index
-project: {canonical-slug}   # pomiń dla knowledge notes
-tags: [tag1, tag2]
-links:                       # explicit backlinks (uzupełnienie [[wikilinków]])
-  - "[[powiązana-notatka]]"
+project: { canonical-slug }   # omit for knowledge notes
+tags: [ tag1, tag2 ]
+links: # explicit backlinks (supplement to [[wikilinks]])
+  - "[[related-note]]"
 ---
 ```
 
 ---
 
-## Szablony — invoke
+## Templates — invoke
 
-Wywołaj odpowiedni szablon z `_templates/`:
+Invoke the appropriate template from `_templates/`:
 
-| Typ | Szablon | Kiedy |
-|-----|---------|-------|
-| Sesja | `_templates/session.md` | Po każdej sesji roboczej |
-| ADR | `_templates/adr.md` | Decyzja arch. z uzasadnieniem |
-| Debug | `_templates/debug.md` | Bug wymagał >15min debugowania |
-| Knowledge | `_templates/knowledge.md` | Nowy wzorzec / technologia |
-| Project index | `_templates/project-index.md` | Nowy projekt |
-
----
-
-## Algorytm tworzenia notatki
-
-```
-1. Określ typ notatki
-2. Ustal ścieżkę docelową (patrz: Ścieżki vault)
-3. Skopiuj odpowiedni szablon
-4. Wypełnij frontmatter (date, type, project, tags)
-5. Wypełnij sekcje szablonu — bądź konkretny, nie ogólny
-6. Dodaj [[wikilinki]] do:
-   - project index projektu
-   - powiązanych ADR
-   - powiązanych technologii w 03-skills/domains/
-   - poprzedniej sesji tego projektu (jeśli istnieje)
-7. Zaktualizuj MOC.md jeśli to nowa domena wiedzy
-8. Zaktualizuj _index.md projektu (dodaj link do nowej notatki)
-9. Zapisz plik pod właściwą ścieżką w vault
-```
+| Type          | Template                      | When                                  |
+|---------------|-------------------------------|---------------------------------------|
+| Session       | `_templates/session.md`       | After each work session               |
+| ADR           | `_templates/adr.md`           | Architectural decision with rationale |
+| Debug         | `_templates/debug.md`         | Bug required >15min of debugging      |
+| Knowledge     | `_templates/knowledge.md`     | New pattern / technology              |
+| Project index | `_templates/project-index.md` | New project                           |
 
 ---
 
-## Jakość notatek — zasady
+## Note creation algorithm
 
-- **Konkretność ponad ogólność**: zamiast "naprawiono bug MQTT" → "Redis SET NX race condition przy >1 instancji NestJS — fix: prefix klucza o `{instanceId}:`"
-- **Decyzje z kontekstem**: ADR zawiera `## Dlaczego NIE {alternatywa}` — to jest najcenniejsza część
-- **Linki jako nawigacja**: graf Obsidiana to wartość — im więcej sensownych linków, tym lepszy graph view
-- **Aktualizuj, nie duplikuj**: jeśli notatka projektu istnieje, zaktualizuj `_index.md`, nie twórz nowej
+Determine the note type
+Determine the target path (see: Vault paths)
+Copy the appropriate template
+Fill in frontmatter (date, type, project, tags)
+Fill in template sections — be specific, not generic
+Add [[wikilinks]] to:
+
+project index of the project
+related ADRs
+related technologies in 03-skills/domains/
+previous session for this project (if one exists)
+
+Update MOC.md if this is a new knowledge domain
+Update the project's _index.md (add link to the new note)
+Save the file at the correct path in the vault
+
 
 ---
 
-## Przykład minimalny — sesja
+## Note quality — principles
 
-Plik: `01-projects/codepath/sessions/2025-01-15.md`
+- **Specificity over generality**: instead of "fixed MQTT bug" → "Redis SET NX race condition with >1 NestJS instance —
+  fix: prefix key with `{instanceId}:`"
+- **Decisions with context**: ADR includes `## Why NOT {alternative}` — this is the most valuable part
+- **Links as navigation**: the Obsidian graph is valuable — the more meaningful links, the better the graph view
+- **Update, don't duplicate**: if a project note already exists, update `_index.md`, don't create a new one
+
+---
+
+## Minimal example — session
+
+File: `01-projects/codepath/sessions/2025-01-15.md`
 
 ```markdown
 ---
@@ -138,19 +143,23 @@ links:
   - "[[03-skills/domains/rust]]"
 ---
 
-# CodePath — sesja 2025-01-15
+# CodePath — session 2025-01-15
 
-## Co zrobiono
-- Zaimplementowano PSI node visitor dla Rust LSP
-- Naprawiono lifetime issue w `SemanticRuntime::resolve()`
+## What was done
 
-## Decyzje
-- Wybrano `Arc<RwLock<T>>` zamiast `Mutex` dla read-heavy cache → patrz [[ADR-0015-lsp-concurrency]]
+- Implemented PSI node visitor for Rust LSP
+- Fixed lifetime issue in `SemanticRuntime::resolve()`
 
-## Blokery
-- `tonic` streaming nie obsługuje graceful shutdown natywnie — do zbadania
+## Decisions
 
-## Następna sesja
-- [ ] Graceful shutdown w tonic
-- [ ] Testy integracyjne dla visitor pattern
+- Chose `Arc<RwLock<T>>` over `Mutex` for read-heavy cache → see [[ADR-0015-lsp-concurrency]]
+
+## Blockers
+
+- `tonic` streaming does not natively support graceful shutdown — needs investigation
+
+## Next session
+
+- [ ] Graceful shutdown in tonic
+- [ ] Integration tests for visitor pattern
 ```
