@@ -27,3 +27,8 @@ Human review cadence: before each minor version bump.
 | Date | Severity | Skill | Summary |
 |---|---|---|---|
 <!-- session-learning appends rows here -->
+| 2026-04-24 | WARN | session-learning | Downstream `.codex` bootstrap drift left Android on an older workflow without current context-preload rules. Detail: `[SKILLS_ROOT]/session-learning/references/failure-patterns.md` |
+| 2026-04-24 | OK | session-learning | Routing validator confirmed all 63 skills reachable after the GPT-5.5 template update. Detail: `[SKILLS_ROOT]/session-learning/references/failure-patterns.md` |
+| 2026-04-24 | WARN | session-learning | Historical downstream path-root drift (`skills/...` vs `.codex/skills/...`) is covered by `[SKILLS_ROOT]` guidance. Detail: `[SKILLS_ROOT]/session-learning/references/failure-patterns.md` |
+| 2026-04-24 | MISSING | session-learning | Historical `EMFILE` tooling/environment signal bucket is covered by dedicated operational signal guidance. Detail: `[SKILLS_ROOT]/session-learning/references/failure-patterns.md` |
+| 2026-04-24 | WARN | nestjs | Historical Nest repository extraction DI drift is covered by the Module DI Wiring checklist. Detail: `[SKILLS_ROOT]/nestjs/references/failure-patterns.md` |

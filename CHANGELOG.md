@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.6.0] - 2026-04-24
+
+### Changed
+- Updated shared multi-agent template models from `gpt-5.3-codex` to `gpt-5.5`.
+- Updated routing validation to treat documented cross-branch shared skills as intentional ownership instead of warnings.
+
 ## [1.5.0] - 2026-04-11
 
 ### Added
