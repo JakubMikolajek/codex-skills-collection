@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.7.0] - 2026-04-27
+
+### Added
+- Added `scripts/discover-codex-projects.sh` to discover downstream projects that use the bootstrapped Codex workflow.
+- Added `scripts/sync-skills.sh` to synchronize shared Codex workflow files, skills, config, and agent templates across multiple downstream projects from a local target list.
+- Added `codex-targets.example.txt` as a template for local downstream project lists.
+
+### Changed
+- Updated `scripts/bootstrap.sh` so downstream bootstrap copies validation scripts without copying central sync/discovery tooling.
+- Documented the multi-project skill sync workflow and target discovery commands in `README.md`.
+- Ignored local `codex-targets.txt` target lists so each machine can keep its own downstream project inventory.
+
 ## [1.6.0] - 2026-04-24
 
 ### Changed
