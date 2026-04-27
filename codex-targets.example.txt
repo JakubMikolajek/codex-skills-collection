@@ -1,0 +1,6 @@
+# Codex downstream target projects.
+# Copy this file to codex-targets.txt or generate one with:
+# ./scripts/discover-codex-projects.sh --write codex-targets.txt
+
+/absolute/path/to/project-a
+/absolute/path/to/project-b

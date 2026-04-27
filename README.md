@@ -247,6 +247,35 @@ Examples:
 ./scripts/bootstrap.sh /path/to/your-project --force
 ```
 
+## Sync Skills Across Projects
+
+For many downstream projects, keep a local target list in `codex-targets.txt`:
+
+```bash
+cp codex-targets.example.txt codex-targets.txt
+```
+
+You can also discover existing Codex projects and write the target list automatically:
+
+```bash
+./scripts/discover-codex-projects.sh --root /path/to/projects --write codex-targets.txt
+```
+
+Then sync the current workflow, skills, scripts, config, and agent templates into all targets:
+
+```bash
+./scripts/sync-skills.sh --all
+```
+
+Useful sync options:
+
+- `--dry-run` previews every bootstrap action without writing files
+- `--changed` only syncs targets whose `.codex/skills-sync.json` is behind this repository's current source version; dirty source trees are always treated as changed
+- `--repo <path-or-name>` syncs one target by path or basename from `codex-targets.txt`
+- `--no-validate` skips the routing validator after sync
+
+Each successful sync writes `.codex/skills-sync.json` in the target project with the source path, source commit, dirty state, and sync timestamp.
+
 ## Versioning and Releases
 
 - Versioning follows SemVer (`MAJOR.MINOR.PATCH`).

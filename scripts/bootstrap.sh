@@ -214,6 +214,8 @@ if [[ -d "$SOURCE_SCRIPTS_DIR" ]]; then
 
   for src_script in "$SOURCE_SCRIPTS_DIR"/*; do
     [[ "$(basename "$src_script")" == "bootstrap.sh" ]] && continue
+    [[ "$(basename "$src_script")" == "sync-skills.sh" ]] && continue
+    [[ "$(basename "$src_script")" == "discover-codex-projects.sh" ]] && continue
     [[ ! -f "$src_script" ]] && continue
 
     script_name="$(basename "$src_script")"
