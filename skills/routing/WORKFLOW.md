@@ -16,6 +16,7 @@
 - Task involves changelog generation, release prep, or sprint close
 - Task involves changes spanning multiple repositories
 - Task involves debugging, tracing errors, or root cause analysis
+- Task involves delegating bounded large-context research, exploration, advisory review, support, second opinions, or long log summarization to Gemini CLI
 - Task involves clarifying user goals, writing acceptance criteria, or verifying feature value
 - Task involves security review, hardening, or OWASP compliance check
 - Task involves API contract design, versioning, or breaking change assessment
@@ -65,6 +66,7 @@
 | Implementation gap analysis, plan-vs-code comparison | skills/implementation-gap-analysis/SKILL.md |
 | Technical context discovery, project conventions, pattern analysis | skills/technical-context-discovery/SKILL.md |
 | Creating or extending a skill, `/new-skill`, updating routing tree | skills/skill-creator/SKILL.md |
+| Gemini CLI delegation for 3+ files, large-file research, module exploration, advisory diff review, long logs, or second opinions | skills/gemini-delegate/SKILL.md |
 | Session start, `/context`, project context before implementation | skills/project-context/SKILL.md |
 | Wrapping up, `/handoff`, pausing, handing off, ending a session | skills/session-handoff/SKILL.md |
 | `/obsidian`, persisting session/ADR/debug/knowledge to Obsidian vault | skills/obsidian-note/SKILL.md |
@@ -116,6 +118,7 @@
 - `/changelog` → `changelog-generator` (after `session-handoff` on release sessions)
 - `/context` → `project-context`
 - `/new-skill` → `skill-creator` + `task-analysis`
+- Large-context research, exploratory reading, advisory review, support, second opinions, or long log summarization → `gemini-delegate`; Codex still owns implementation, security-sensitive work, and final review
 - `/multi-repo` → `multi-repo` + `project-context` (per repo) + `session-handoff` at end
 - Tauri desktop tasks crossing React + Rust boundaries → `skills/routing/TAURI.md` first, then pair with workflow skills as needed (`architecture-design`, `code-review`, `debug-trace`)
 - `technical-context-discovery` — always load before implementation tasks from any branch
