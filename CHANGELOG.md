@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.8.0] - 2026-05-23
+
+### Added
+- Added the `gemini-delegate` workflow skill for bounded Gemini CLI support with large-context research, advisory reviews, second opinions, and long-log summaries.
+
+### Changed
+- Updated workflow routing so Gemini delegation tasks resolve through `skills/gemini-delegate/SKILL.md` while Codex remains responsible for implementation, security-sensitive work, and final review.
+- Documented `gemini-delegate` in `README.md`, including the fallback expectation when Gemini CLI is unavailable.
+
 ## [1.7.0] - 2026-04-27
 
 ### Added
