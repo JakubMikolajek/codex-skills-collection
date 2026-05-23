@@ -1,6 +1,6 @@
 ---
 name: gemini-delegate
-description: Delegate bounded research, analysis, advisory review, and support work to Google Gemini CLI when Codex would otherwise spend excessive context on large files, unfamiliar modules, broad exploratory reading, long logs, stack traces, diffs, or independent second opinions. Use proactively for tasks spanning 3+ files, files over roughly 300 lines, research summaries, module explanations, trace/log summarization, diff risk scans, and design or refactor opinions. Do not use as the main coder, sole reviewer, final architecture decision-maker, or for security-sensitive code, auth, crypto, BLE/PKE protocols, or merge-gate reviews.
+description: Delegate bounded research, summarization, support, and advisory reviews to Gemini CLI for large files, broad exploration, long logs, diffs, or second opinions. Do not use for main coding, security-sensitive logic, or final reviews.
 ---
 
 # Gemini Delegate
@@ -27,16 +27,27 @@ Use Gemini CLI as a low-friction, large-context helper for bounded research, exp
 
 ## Delegation Workflow
 
-1. Confirm `gemini` exists before relying on it:
+1. Run every Gemini CLI invocation outside the sandbox. Gemini uses local credentials/session state that are not available inside the sandbox, so sandboxed calls can block or fail before doing useful work.
+2. Confirm `gemini` exists before relying on it:
 
 ```bash
-which gemini || echo "Gemini CLI not found"
+which gemini || { echo "Gemini CLI not found"; exit 1; }
 ```
 
-2. Scope the input tightly. Prefer one module or a focused file set over the whole repo.
-3. Ask for a concrete output format: JSON, bullet list, findings table, risk list, or concise recommendation.
-4. Treat Gemini output as an input to Codex reasoning, not as the answer of record.
-5. If Gemini is unavailable, continue with normal Codex workflow and mention that delegation was skipped.
+3. Scope the input tightly. Prefer one module or a focused file set over the whole repo.
+4. Ask for a concrete output format: JSON, bullet list, findings table, risk list, or concise recommendation.
+5. Treat Gemini output as an input to Codex reasoning, not as the answer of record.
+6. If Gemini is unavailable, continue with normal Codex workflow and mention that delegation was skipped.
+
+## Sandbox Rule
+
+Any command segment that executes `gemini` must be run with escalated permissions. In Codex, use `exec_command` with `sandbox_permissions: "require_escalated"` and a short justification such as "Allow Gemini CLI to use local credentials outside the sandbox." This applies even when `gemini` is behind a pipe, receives redirected stdin, or is only checking model access.
+
+For headless or automated calls, include `--skip-trust` unless the current directory is already trusted by Gemini CLI. Without it, Gemini can stop before model execution with a trusted-directory prompt.
+
+Do not retry a failed sandboxed Gemini call inside the sandbox. Retry once outside the sandbox; if credentials still fail, fall back to normal Codex workflow.
+
+When the response must be machine-parsed, protect the output from CLI diagnostics. Prefer a CLI-supported JSON/output mode if available; otherwise capture stdout and stderr separately so warnings do not corrupt JSON.
 
 ## Model Selection
 
@@ -50,12 +61,14 @@ Model names and access can change. Prefer Gemini CLI aliases unless the task nee
 
 If a concrete model fails, retry with `-m pro` or `-m flash`.
 
+If an alias produces weak results or maps to an unsuitable local default, use `/model` to inspect available models and pass the exact model name with `-m`.
+
 ## Invoke Patterns
 
 Single file as context:
 
 ```bash
-gemini -m pro -p "Analyze this module. Return: purpose, key dependencies, risks, and open questions. Max 300 words." < src/example.ts
+gemini --skip-trust -m pro -p "Analyze this module. Return: purpose, key dependencies, risks, and open questions. Max 300 words." < src/example.ts
 ```
 
 Multiple files with explicit labels:
@@ -66,19 +79,19 @@ Multiple files with explicit labels:
   cat src/ingest/mod.rs
   printf '%s\n' "=== src/storage/store.rs ==="
   cat src/storage/store.rs
-} | gemini -m pro -p "Explain the data flow between these modules. Be concise."
+} | gemini --skip-trust -m pro -p "Explain the data flow between these modules. Be concise."
 ```
 
 Advisory review or refactor opinion:
 
 ```bash
-gemini -m pro -p "Review this module as an advisory reviewer. Return: top 5 risks, missing tests, unclear assumptions, and refactor options. Do not write code." < src/services/devices.service.ts
+gemini --skip-trust -m pro -p "Review this module as an advisory reviewer. Return: top 5 risks, missing tests, unclear assumptions, and refactor options. Do not write code." < src/services/devices.service.ts
 ```
 
 Summarize logs:
 
 ```bash
-gemini -m flash -p "Identify root cause, responsible component, and one-line fix suggestion." < server.log
+gemini --skip-trust -m flash -p "Identify root cause, responsible component, and one-line fix suggestion." < server.log
 ```
 
 For very large stdin, keep the file set bounded and use the shell or project-standard timeout wrapper when available so the process cannot hang indefinitely.
