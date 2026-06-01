@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+- Replaced the active `gemini-delegate` workflow skill with `antigravity-delegate`, documenting Antigravity CLI delegation through the `agy` command.
+- Updated workflow routing and README references so new delegation tasks resolve through `skills/antigravity-delegate/SKILL.md`.
+
 ## [1.8.0] - 2026-05-23
 
 ### Added
