@@ -98,6 +98,7 @@ run_cmd() {
 copied=0
 replaced=0
 skipped=0
+reset=0
 LAST_ACTION=""
 
 ensure_dir() {
@@ -174,10 +175,23 @@ copy_dir_with_policy() {
   run_cmd cp -R "$src_path" "$dest_path"
 }
 
+reset_managed_dir() {
+  local dest_path="$1"
+
+  if [[ "$FORCE" -ne 1 || ! -d "$dest_path" ]]; then
+    return 0
+  fi
+
+  echo "[RESET] $dest_path"
+  run_cmd rm -rf "$dest_path"
+  reset=$((reset + 1))
+}
+
 ensure_dir "$TARGET_CODEX_DIR"
 copy_file_with_policy "$SOURCE_AGENTS_FILE" "$TARGET_AGENTS_FILE"
 copy_file_with_policy "$SOURCE_CODEX_CONFIG_FILE" "$TARGET_CODEX_CONFIG_FILE"
 
+reset_managed_dir "$TARGET_SKILLS_DIR"
 ensure_dir "$TARGET_SKILLS_DIR"
 
 for src_skill in "$SOURCE_SKILLS_DIR"/*; do
@@ -191,6 +205,7 @@ for src_skill in "$SOURCE_SKILLS_DIR"/*; do
 done
 
 if [[ -d "$SOURCE_AGENT_TEMPLATES_DIR" ]]; then
+  reset_managed_dir "$TARGET_AGENT_CONFIGS_DIR"
   ensure_dir "$TARGET_AGENT_CONFIGS_DIR"
 
   for src_agent in "$SOURCE_AGENT_TEMPLATES_DIR"/*; do
@@ -210,6 +225,7 @@ if [[ -d "$SOURCE_AGENT_TEMPLATES_DIR" ]]; then
 fi
 
 if [[ -d "$SOURCE_SCRIPTS_DIR" ]]; then
+  reset_managed_dir "$TARGET_SCRIPTS_DIR"
   ensure_dir "$TARGET_SCRIPTS_DIR"
 
   for src_script in "$SOURCE_SCRIPTS_DIR"/*; do
@@ -233,6 +249,7 @@ echo
 echo "Bootstrap summary:"
 echo "- copied: $copied"
 echo "- replaced: $replaced"
+echo "- reset: $reset"
 echo "- skipped: $skipped"
 
 if [[ "$DRY_RUN" -eq 1 ]]; then

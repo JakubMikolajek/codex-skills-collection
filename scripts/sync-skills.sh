@@ -189,6 +189,15 @@ target_matches_filter() {
     local filter_dir
     filter_dir="$(abs_path "$REPO_FILTER")"
     [[ "$target_dir" == "$filter_dir" ]] && return 0
+    [[ "$target_dir" == "$filter_dir"/* ]] && return 0
+  fi
+
+  if [[ "$REPO_FILTER" != */* ]]; then
+    local current_dir="$target_dir"
+    while [[ "$current_dir" != "/" ]]; do
+      [[ "$(basename "$current_dir")" == "$REPO_FILTER" ]] && return 0
+      current_dir="$(dirname "$current_dir")"
+    done
   fi
 
   return 1
