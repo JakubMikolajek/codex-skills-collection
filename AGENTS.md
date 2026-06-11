@@ -238,6 +238,23 @@ Load order:
 
 ---
 
+### Recipe: Polished React/Next.js UI from scratch
+
+Domains: FRONTEND + WORKFLOW  
+Branch files: `skills/routing/FRONTEND.md`, `skills/routing/WORKFLOW.md`
+
+Load order:
+1. `technical-context-discovery`
+2. `product-intent` (if user-facing feature)
+3. `react` + `react-nextjs` (framework patterns)
+4. `shadcn-tailwind` (if using shadcn/ui)
+5. `ui-design-quality` (visual quality, animation, micro-interactions)
+6. `frontend-implementation` (tokens, performance, semantic HTML)
+7. `accessibility` (interactive component a11y)
+8. `session-learning` (after /implement)
+
+---
+
 ### Adding a new recipe
 
 When a multi-domain task required non-obvious skill combination that is likely to recur, add it here. Minimum content: domains, branch files, load order. Use `session-learning` MISSING entries as input.

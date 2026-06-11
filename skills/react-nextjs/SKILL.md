@@ -7,6 +7,19 @@ description: React and Next.js implementation and review patterns for server-ren
 
 Use this skill when the task is specifically about Next.js behavior on top of React. Reuse the general `react` skill for component discipline and this skill for app-structure, rendering model, and data-fetching rules.
 
+## When to Use
+
+- Building, refactoring, or debugging Next.js routes, layouts, loading/error states, or server/client component boundaries
+- Implementing data fetching, server actions, route handlers, or cache/revalidation logic in Next.js
+- Working with Next.js metadata, SEO, Open Graph, or font optimization
+- Reviewing Next.js code for correct server/client boundary usage, runtime safety, or rendering model
+
+## When NOT to Use
+
+- Task is about React component logic, hooks, or state without Next.js specifics — use `react` alone
+- Task is about Vue, Nuxt, or non-React frameworks — use the appropriate framework skill
+- Task is about backend API logic in a separate service (not Next.js route handlers) — use backend skills
+
 ## Delivery Workflow
 
 Use the checklist below and track progress:
@@ -50,6 +63,53 @@ React Next.js progress:
 - Ensure loading and error boundaries match the route tree and user experience.
 - Treat redirects, not-found states, and auth gating as first-class route outcomes.
 
+### Metadata Best Practices
+
+- Export `metadata` object or `generateMetadata()` function from every route `page.tsx`.
+- Always include: `title`, `description`, `openGraph` (title, description, images), `twitter` (card type).
+- Use `generateMetadata()` for dynamic routes — construct titles and descriptions from params or fetched data.
+- Set `metadataBase` in root `layout.tsx` so all relative OG image URLs resolve correctly.
+- Use `robots: { index: true, follow: true }` explicitly on public pages.
+- Add `alternates.canonical` to prevent duplicate content issues.
+
+```typescript
+// Dynamic metadata pattern
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const product = await getProduct(params.slug);
+  return {
+    title: product.name,
+    description: product.summary,
+    openGraph: {
+      title: product.name,
+      description: product.summary,
+      images: [{ url: product.image, width: 1200, height: 630 }],
+    },
+    alternates: { canonical: `/products/${params.slug}` },
+  };
+}
+```
+
+### Font Loading
+
+- Always use `next/font/google` or `next/font/local` — never load fonts via `<link>` tags or `@import` in CSS. Next.js font optimization inlines font declarations and eliminates extra network requests.
+- Apply font variables to `<html>` or `<body>` via `className` — not via CSS custom properties manually.
+- Set `display: 'swap'` for body fonts (readability), `display: 'optional'` for decorative fonts (no layout shift).
+- Subset fonts when possible: `subsets: ['latin', 'latin-ext']`.
+- For Tailwind: extend `fontFamily` in config with the CSS variable from `next/font`.
+
+```typescript
+import { Inter } from 'next/font/google';
+
+const inter = Inter({
+  subsets: ['latin', 'latin-ext'],
+  display: 'swap',
+  variable: '--font-sans',
+});
+
+// In root layout
+<html className={inter.variable}>
+```
+
 ## Runtime and Integration Safety
 
 - Respect environment boundaries between server-only code and browser code.
@@ -90,5 +150,7 @@ Quality:
 
 - `react` - use for component, hooks, and client interaction discipline
 - `shadcn-tailwind` - use when UI is built with shadcn/ui and Tailwind CSS
+- `ui-design-quality` - apply visual design quality rules for typography, color, spacing, animation, and micro-interactions
 - `technical-context-discovery` - follow project Next.js conventions before editing
+- `frontend-implementation` - apply design-system tokens, performance, and accessibility guidance
 - `code-review` - validate routing, rendering, and integration quality

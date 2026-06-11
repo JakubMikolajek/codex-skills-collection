@@ -7,6 +7,7 @@
 - Task involves accessibility (a11y), keyboard navigation, ARIA attributes
 - Task involves frontend state management (hooks, composables, Pinia stores)
 - Task involves UI verification or comparing implementation against a design spec
+- Task involves visual design quality, typography, spacing, motion, or micro-interactions (ui-design-quality)
 - Task involves web internationalization (i18n), locale routing, or translation files
 - Task involves Swift/SwiftUI localization, String Catalogs, or locale-aware Apple platform UI
 - Task involves frontend behavior in Tauri desktop apps (custom titlebar, window controls, invoke integration)

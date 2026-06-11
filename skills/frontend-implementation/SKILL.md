@@ -69,6 +69,7 @@ This skill provides patterns and guidelines for implementing frontend features t
 - Minimum 4.5:1 contrast ratio for normal text
 - Minimum 3:1 contrast ratio for large text (18px+ or 14px+ bold)
 - Don't rely on color alone to convey information
+- For deeper color architecture rules (palette construction, semantic tokens, tinted neutrals, dark mode): see `ui-design-quality`
 
 ## Performance Guidelines
 
@@ -274,6 +275,7 @@ Code Quality:
 
 ## Connected Skills
 
+- `ui-design-quality` - for visual design quality rules: typography scales, color architecture, spacing systems, animation craft, and micro-interactions
 - `ui-verification` - for verifying implementation against approved design specifications
 - `technical-context-discovery` - for understanding project conventions before implementing
 - `accessibility` - for full WCAG 2.1 AA depth on interactive component patterns

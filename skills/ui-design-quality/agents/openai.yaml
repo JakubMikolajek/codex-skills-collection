@@ -1,0 +1,4 @@
+interface:
+  display_name: "UI Design Quality"
+  short_description: "Enforce intentional visual design decisions in UI code"
+  default_prompt: "Use $ui-design-quality to enforce design quality rules for typography, color, spacing, animation, and micro-interactions."

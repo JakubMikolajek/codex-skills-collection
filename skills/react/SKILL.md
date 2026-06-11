@@ -7,6 +7,19 @@ description: React implementation and review patterns for component-driven web U
 
 Use this skill to build React UI that is predictable, composable, and easy to reason about under change.
 
+## When to Use
+
+- Building, refactoring, or debugging React components, hooks, or client-side interaction flows
+- Reviewing React code for component design, state management, or rendering correctness
+- Implementing forms, interactive widgets, or data-driven UI with React
+- Optimizing React rendering performance (memoization, re-render analysis)
+
+## When NOT to Use
+
+- Task is about Next.js-specific routing, SSR, or server components — use `react-nextjs` (load alongside `react`)
+- Task is about shadcn/ui component styling or Tailwind class hygiene — use `shadcn-tailwind` (load alongside `react`)
+- Task is about Vue, Nuxt, or SwiftUI — use the appropriate framework skill
+
 ## Delivery Workflow
 
 Use the checklist below and track progress:
@@ -28,6 +41,28 @@ React progress:
 - Separate presentational pieces from data orchestration when complexity grows.
 - Reuse existing design-system and shared primitives before creating new ones.
 
+### Component Composition
+
+- Use compound components for complex widgets with shared context (Select, Tabs, Accordion).
+- Always use `forwardRef` when building components that wrap native HTML elements or Radix primitives — consumers may need ref access for focus management, scrolling, or measurement.
+- Prefer controlled components when the parent needs to read or reset state. Default to uncontrolled when internal state is sufficient and the parent does not observe it.
+- Keep one component per file. Export sub-components from the same file only for compound patterns.
+- Do not create wrapper components that just pass all props through — that adds indirection without value.
+
+```tsx
+// forwardRef pattern — required for any component wrapping a native element
+const Input = forwardRef<HTMLInputElement, InputProps>(
+  ({ label, error, ...props }, ref) => (
+    <div>
+      <label>{label}</label>
+      <input ref={ref} aria-invalid={!!error} {...props} />
+      {error && <span role="alert">{error}</span>}
+    </div>
+  )
+);
+Input.displayName = 'Input';
+```
+
 ## State and Effects
 
 - Treat derived data as derived data; do not duplicate it in state.
@@ -35,6 +70,14 @@ React progress:
 - Avoid effects that merely reshuffle props into state.
 - Keep async state explicit: idle, loading, success, empty, error.
 - Clean up subscriptions, timers, and in-flight async work where relevant.
+
+## Error Boundaries
+
+- Wrap route-level and critical feature sections with error boundaries — one per feature area, not one for the entire app.
+- Show meaningful fallback UI, not just "Something went wrong" — include what failed and what the user can do.
+- Log error details to monitoring (Sentry, LogRocket) inside the error boundary handler.
+- In Next.js App Router: prefer `error.tsx` route files over custom Error Boundary components.
+- Reset the boundary state when the user navigates or retries — use a `key` prop or `resetKeys` pattern.
 
 ## Hooks Guidance
 
@@ -95,6 +138,7 @@ Quality:
 
 - `react-nextjs` - use when the task is specifically about Next.js route and rendering behavior
 - `shadcn-tailwind` - use when the UI stack relies on shadcn/ui and Tailwind CSS
+- `ui-design-quality` - apply visual design quality rules for typography, color, spacing, animation, and micro-interactions
 - `technical-context-discovery` - follow project React conventions before editing
 - `frontend-implementation` - apply UI, design-system, and accessibility guidance
 - `ui-verification` - verify implementation against approved designs when relevant

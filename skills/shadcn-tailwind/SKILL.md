@@ -7,6 +7,19 @@ description: shadcn/ui and Tailwind CSS implementation and review patterns for R
 
 Use this skill when the UI stack is React or Next.js with shadcn/ui and Tailwind CSS. Reuse the general `react` or `react-nextjs` skill for application logic and use this skill for component styling, primitives, variants, and utility hygiene.
 
+## When to Use
+
+- Building or modifying UI with shadcn/ui components and Radix primitives
+- Styling components with Tailwind CSS utility classes in a React or Next.js project
+- Creating component variants, extending shadcn primitives, or composing design system elements
+- Reviewing Tailwind class hygiene, responsive behavior, or design token consistency
+
+## When NOT to Use
+
+- Task is about React logic, hooks, or state without styling specifics — use `react`
+- Task is about Vue/Nuxt with Vuetify or PrimeVue — use `vuetify-primevue`
+- Task is about visual design decisions (color palette, typography scale, animation craft) — use `ui-design-quality` alongside this skill
+
 ## Delivery Workflow
 
 Use the checklist below and track progress:
@@ -41,6 +54,41 @@ shadcn Tailwind progress:
 - Keep variant combinations predictable and limited.
 - Preserve Radix/shadcn accessibility behavior when composing triggers, content, and overlays.
 - Avoid burying behavior-critical classes in deeply nested wrappers.
+
+## Animation Integration
+
+- Use Radix `data-state` attributes (`open`, `closed`) as CSS animation triggers — no JavaScript animation library needed for basic transitions.
+- For complex animations (springs, layout transitions): wrap shadcn primitives with `motion` components from `motion/react`.
+- Keep animation timing consistent with project tokens (`--duration-normal: 200ms`, `--ease-out`).
+- Radix handles accessibility (focus trap, keyboard) — focus animation efforts on the visual layer only.
+- Tailwind `animate-*` utilities work for simple cases; use CSS custom properties for reusable easing and duration tokens.
+
+```css
+/* Animate Dialog content via Radix data-state */
+[data-state="open"] {
+  animation: dialogEnter 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+[data-state="closed"] {
+  animation: dialogExit 150ms cubic-bezier(0.55, 0, 1, 0.45);
+}
+
+@keyframes dialogEnter {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes dialogExit {
+  from { opacity: 1; transform: scale(1); }
+  to   { opacity: 0; transform: scale(0.96); }
+}
+```
+
+## Tailwind Version Awareness
+
+- Check the project's Tailwind version in `package.json` before generating configuration.
+- **v4 (CSS-first):** Config lives in CSS via `@theme {}` blocks. No `tailwind.config.js` needed. Use `@import "tailwindcss"` in the main CSS file. Custom colors, spacing, and fonts are defined as CSS theme variables.
+- **v3 (JS config):** Config in `tailwind.config.js` or `tailwind.config.ts`. Use `@tailwind base/components/utilities` directives.
+- Never mix v3 and v4 config patterns — check which version the project uses before writing any config.
+- In v4: use `@tailwindcss/postcss` or the Vite plugin, not the `tailwindcss` PostCSS plugin directly.
 
 ## Responsive and Visual Consistency
 
@@ -82,5 +130,6 @@ Accessibility:
 
 - `react` - use for component boundaries and interaction flow
 - `react-nextjs` - use when the app structure is Next.js-specific
+- `ui-design-quality` - apply visual design quality rules for typography, color, animation, and micro-interactions
 - `frontend-implementation` - apply accessibility and design-system rules
 - `ui-verification` - compare implementation against approved design output
