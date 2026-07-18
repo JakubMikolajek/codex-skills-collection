@@ -14,25 +14,25 @@ links:
   - "[[01-projects/{{project-slug}}/_index]]"
 ---
 
-# {{Jeden precyzyjny mechanizm/idea}}
+# {{One precise mechanism/idea}}
 
-## W skrócie
-<!-- 2-3 zdania — co to DOKŁADNIE jest, nie ogólnik -->
+## In short
+<!-- 2-3 sentences — what this EXACTLY is, not a generality -->
 
-## Kiedy to ma znaczenie
+## When it matters
 -
 
-## Jak to działa
-<!-- konkretny mechanizm, nie ogólna teoria -->
+## How it works
+<!-- the concrete mechanism, not general theory -->
 
-## Typowy błąd w rozumieniu
-<!-- co ludzie zwykle mylą w tym temacie -->
+## Common misunderstanding
+<!-- what people usually get wrong about this -->
 
-## Przykład
+## Example
 ```
-{{minimalny, konkretny przykład}}
+{{minimal, concrete example}}
 ```
 
-## Powiązane
+## Related
 <!-- [[03-skills/patterns/...]] [[03-skills/domains/...]] -->
 -

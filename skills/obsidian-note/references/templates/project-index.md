@@ -6,46 +6,46 @@ status: active | paused | completed
 tags: [project-index, {{tech-tags}}]
 ---
 
-# {{Nazwa projektu}}
+# {{Project name}}
 
-## Opis
-<!-- Jedno zdanie — co to jest i po co istnieje -->
+## Description
+<!-- One sentence — what it is and why it exists -->
 
 ## Stack
-<!-- np. Rust · NestJS · Swift · React -->
+<!-- e.g. Rust · NestJS · Swift · React -->
 
-## Repozytorium / lokalizacja
+## Repository / location
 -
 
-## Cel / definicja sukcesu
+## Goal / definition of success
 -
 
 ---
 
-## Aktywne wątki
-<!-- nad czym aktualnie pracujesz -->
+## Active threads
+<!-- what you're currently working on -->
 -
 
-## Kluczowe decyzje architektoniczne
-<!-- [[ADR-NNNN-slug]] — lista -->
+## Key architectural decisions
+<!-- [[ADR-NNNN-slug]] — list -->
 -
 
-## Sesje (od najnowszej)
+## Sessions (newest first)
 <!-- [[sessions/YYYY-MM-DD]] -->
 -
 
-## Ślady debugowania
+## Debug traces
 <!-- [[04-debug/YYYY-MM-DD-slug]] -->
 -
 
-## Powiązane skille
+## Related skills
 <!-- [[03-skills/domains/rust]] [[03-skills/domains/nestjs]] -->
 -
 
 ---
 
-## Historia / kontekst
-<!-- Skąd wziął się projekt, kluczowe kamienie milowe -->
+## History / context
+<!-- Where the project came from, key milestones -->
 
-## Otwarte pytania
+## Open questions
 - [ ]

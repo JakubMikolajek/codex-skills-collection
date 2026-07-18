@@ -20,9 +20,7 @@ sign the detail belongs in a linked note instead, not in `_context.md` itself.
 
 ## Template
 
-Note content is Polish, per the vault's language policy — see
-`skills/obsidian-note/references/templates/_context.md` for the canonical copy-paste template.
-Structure (English gloss, for this reference doc only):
+See `skills/obsidian-note/references/templates/_context.md` for the canonical copy-paste template:
 
 ```markdown
 ---
@@ -34,22 +32,22 @@ project: {{project-slug}}
 
 # {{Project name}} — current context
 
-## State (Stan)
+## State
 <!-- one short paragraph -->
 
-## Active constraints (Aktywne ograniczenia)
+## Active constraints
 -
 
-## Key contracts (Kluczowe kontrakty)
+## Key contracts
 - "[[ADR-NNNN-slug]]" / "[[05-systems/slug]]"
 
-## Accepted decisions (Zaakceptowane decyzje)
+## Accepted decisions
 - "[[ADR-NNNN-slug]]" — one line
 
-## Known traps (Znane pułapki)
+## Known traps
 - "[[04-debug/slug]]" / "[[03-skills/playbooks/slug]]"
 
-## Active threads (Aktywne wątki)
+## Active threads
 -
 ```
 

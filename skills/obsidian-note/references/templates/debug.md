@@ -9,41 +9,41 @@ links:
   - "[[03-skills/domains/{{primary-tech}}]]"
 ---
 
-# Debug: {{krótki tytuł — technologia + objaw}}
+# Debug: {{short title — technology + symptom}}
 
-## Objaw
-<!-- Co było widać? Stack trace, logi, zachowanie — konkretnie -->
+## Symptom
+<!-- What did you see? Stack trace, logs, behavior — be concrete -->
 ```
-{wklej error / log}
+{paste error / log}
 ```
 
-## Środowisko
-- Technologia:
-- Wersja:
-- Kontekst (prod/dev/test):
+## Environment
+- Technology:
+- Version:
+- Context (prod/dev/test):
 
-## Hipotezy (w kolejności testowania)
-1. [ ] {{hipoteza-1}} → wynik:
-2. [ ] {{hipoteza-2}} → wynik:
+## Hypotheses (in testing order)
+1. [ ] {{hypothesis-1}} → result:
+2. [ ] {{hypothesis-2}} → result:
 
-## Przyczyna źródłowa
-<!-- Jedno zdanie — co DOKŁADNIE to spowodowało -->
+## Root cause
+<!-- One line — what EXACTLY caused it -->
 
 ## Fix
 ```typescript
-// przed
+// before
 
-// po
+// after
 ```
 
-## Dlaczego tak się stało
-<!-- Głębsze zrozumienie — co w architekturze / bibliotece na to pozwoliło -->
+## Why this happened
+<!-- Deeper understanding — what in the architecture / library allowed this -->
 
-## Jak zapobiec w przyszłości
+## How to prevent in the future
 -
 
-## Czas debugowania
-<!-- np. 45 min — pomaga kalibrować przyszłe estymaty -->
+## Debugging time
+<!-- e.g. 45 min — helps calibrate future estimates -->
 
-## Powiązane
+## Related
 -

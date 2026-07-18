@@ -14,22 +14,22 @@ links:
   - "[[01-projects/{{project-slug}}/_index]]"
 ---
 
-# {{Sytuacja, którą ten playbook obsługuje}}
+# {{Situation this playbook handles}}
 
-## Kiedy to uruchomić
-<!-- konkretny objaw/sytuacja, po której poznasz że to ten przypadek -->
+## When to run this
+<!-- the concrete symptom/situation that tells you this is the case -->
 
-## Kroki
-1. {{krok 1}}
-2. {{krok 2}}
-3. {{krok 3}}
+## Steps
+1. {{step 1}}
+2. {{step 2}}
+3. {{step 3}}
 
-## Jak zweryfikować że zadziałało
+## How to verify it worked
 -
 
-## Jeśli to nie zadziała
-<!-- następny krok / eskalacja -->
+## If this doesn't work
+<!-- next step / escalation -->
 
-## Powiązane incydenty
+## Related incidents
 <!-- [[04-debug/...]] -->
 -

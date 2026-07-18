@@ -7,33 +7,33 @@ links:
   - "[[01-projects/{{project-slug}}/_index]]"
 ---
 
-# {{ProjectName}} — sesja {{date}}
+# {{ProjectName}} — session {{date}}
 
-## Co zostało zrobione
-<!-- konkretne, gotowe do commita zmiany — nie "pracowałem nad X" -->
+## What was done
+<!-- concrete, committable changes — not "worked on X" -->
 -
 
-## Podjęte decyzje
-<!-- każda architektoniczna decyzja powinna też stać się ADR w 02-adr/ -->
+## Decisions made
+<!-- every architectural decision should also become an ADR in 02-adr/ -->
 -
 
-## Powiązane ADR
-<!-- [[ADR-NNNN-slug]] jeśli podjęto decyzję architektoniczną -->
+## Related ADRs
+<!-- [[ADR-NNNN-slug]] if an architectural decision was made -->
 -
 
-## Problemy i rozwiązania
-<!-- błąd/problem → fix — wszystko co zajęło >5min -->
-| Problem | Rozwiązanie |
-|---------|-------------|
+## Problems and solutions
+<!-- bug / issue → fix — anything that took >5min -->
+| Problem | Solution |
+|---------|----------|
 | | |
 
-## Blokery (nierozwiązane)
+## Blockers (unresolved)
 -
 
-## Następna sesja
+## Next session
 - [ ]
 - [ ]
 
-## Linki
-<!-- inne notatki, z których korzystano lub powiązane -->
+## Links
+<!-- other notes you used or that are related -->
 -

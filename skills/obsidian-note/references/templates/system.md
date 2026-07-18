@@ -15,24 +15,24 @@ links:
   - "[[01-projects/{{project-slug}}/_index]]"
 ---
 
-# {{Nazwa systemu / granicy}}
+# {{System / boundary name}}
 
-## Co to jest
-<!-- jedno-dwa zdania — zakres tej mapy architektury -->
+## What this is
+<!-- one-two sentences — scope of this architecture map -->
 
-## Granice i kontrakty
-<!-- co wchodzi/wychodzi z tego systemu, w jakim kształcie -->
+## Boundaries and contracts
+<!-- what goes in/out of this system, in what shape -->
 -
 
-## Aktualny stan
-<!-- diagram (mermaid jeśli pomaga) lub opis bieżącej architektury -->
+## Current state
+<!-- diagram (mermaid if it helps) or description of the current architecture -->
 
-## Znane ograniczenia
+## Known limitations
 -
 
-## Historia zmian tego systemu
-<!-- [[ADR-NNNN-slug]] — kluczowe decyzje, które go ukształtowały -->
+## History of changes to this system
+<!-- [[ADR-NNNN-slug]] — key decisions that shaped it -->
 -
 
-## Powiązane
+## Related
 -

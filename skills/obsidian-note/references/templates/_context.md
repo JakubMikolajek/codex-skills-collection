@@ -5,22 +5,22 @@ type: context
 project: {{project-slug}}
 ---
 
-# {{Nazwa projektu}} — aktualny kontekst
+# {{Project name}} — current context
 
-## Stan
-<!-- jeden krótki akapit -->
+## State
+<!-- one short paragraph -->
 
-## Aktywne ograniczenia
+## Active constraints
 -
 
-## Kluczowe kontrakty
+## Key contracts
 - "[[ADR-NNNN-slug]]" / "[[05-systems/slug]]"
 
-## Zaakceptowane decyzje
-- "[[ADR-NNNN-slug]]" — jedno zdanie
+## Accepted decisions
+- "[[ADR-NNNN-slug]]" — one line
 
-## Znane pułapki
+## Known traps
 - "[[04-debug/slug]]" / "[[03-skills/playbooks/slug]]"
 
-## Aktywne wątki
+## Active threads
 -

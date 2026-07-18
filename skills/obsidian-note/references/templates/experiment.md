@@ -14,26 +14,26 @@ links:
   - "[[01-projects/{{project-slug}}/_index]]"
 ---
 
-# {{Co zostało zmierzone}}
+# {{What was measured}}
 
-## Hipoteza
-<!-- co spodziewano się zaobserwować, i dlaczego -->
+## Hypothesis
+<!-- what you expected to observe, and why -->
 
-## Metoda
-<!-- jak dokładnie to zmierzono — na tyle konkretnie, żeby powtórzyć -->
+## Method
+<!-- exactly how this was measured — concrete enough to repeat -->
 
-## Wynik
+## Result
 ```
-{{surowe dane / liczby}}
+{{raw data / numbers}}
 ```
 
-## Wniosek
-<!-- czy hipoteza się potwierdziła, i co z tego wynika -->
+## Conclusion
+<!-- did the hypothesis hold, and what follows from it -->
 
-## Zagrożenia dla trafności
-<!-- co mogło zniekształcić wynik -->
+## Threats to validity
+<!-- what could have skewed the result -->
 -
 
-## Powiązane
-<!-- [[ADR-NNNN-slug]] jeśli wynik napędził decyzję -->
+## Related
+<!-- [[ADR-NNNN-slug]] if this result drove a decision -->
 -

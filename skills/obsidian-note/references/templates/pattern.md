@@ -14,26 +14,26 @@ links:
   - "[[01-projects/{{project-slug}}/_index]]"
 ---
 
-# {{Nazwa wzorca}}
+# {{Pattern name}}
 
-## Problem, który rozwiązuje
-<!-- jaki powtarzający się problem to adresuje -->
+## Problem it solves
+<!-- what recurring problem this addresses -->
 
-## Kształt rozwiązania
-<!-- struktura, nie implementacja krok po kroku -->
+## Shape of the solution
+<!-- structure, not a step-by-step implementation -->
 
-## Implementacja
+## Implementation
 ```typescript
-// minimalny, kompletny przykład
+// minimal, complete example
 ```
 
-## Kiedy NIE stosować
+## When NOT to use
 -
 
-## Warianty
-<!-- inne konteksty, w których ten wzorzec się zmienia -->
+## Variants
+<!-- other contexts where this pattern changes shape -->
 -
 
-## Powiązane
+## Related
 <!-- [[03-skills/concepts/...]] [[03-skills/comparisons/...]] -->
 -

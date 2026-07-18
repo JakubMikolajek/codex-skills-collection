@@ -14,27 +14,27 @@ links:
   - "[[01-projects/{{project-slug}}/_index]]"
 ---
 
-# {{Opcja A}} vs {{Opcja B}} — {{kontekst decyzji}}
+# {{Option A}} vs {{Option B}} — {{decision context}}
 
-## Kryteria decyzji
-<!-- czym się kierować przy wyborze — max 5 -->
+## Decision criteria
+<!-- what to weigh when choosing — max 5 -->
 -
 
-## {{Opcja A}}
-**Plusy:**
+## {{Option A}}
+**Pros:**
 -
-**Minusy:**
--
-
-## {{Opcja B}}
-**Plusy:**
--
-**Minusy:**
+**Cons:**
 -
 
-## Rekomendacja
-<!-- kiedy wybrać którą — nie jedna uniwersalna odpowiedź -->
+## {{Option B}}
+**Pros:**
+-
+**Cons:**
+-
 
-## Projekty, które z tego korzystały
-<!-- [[ADR-NNNN-slug]] — który wybrał co i dlaczego -->
+## Recommendation
+<!-- when to pick which — not one universal answer -->
+
+## Projects that used this
+<!-- [[ADR-NNNN-slug]] — who picked what and why -->
 -

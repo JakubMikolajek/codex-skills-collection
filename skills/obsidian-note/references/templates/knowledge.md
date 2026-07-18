@@ -6,48 +6,48 @@ tags: [knowledge, {{tech-tags}}]
 links: []
 ---
 
-# {{Technologia / Wzorzec}}
+# {{Technology / Pattern}}
 
-## W skrócie
-<!-- 2-3 zdania — co to jest i kiedy tego używać -->
+## In short
+<!-- 2-3 sentences — what it is and when to use it -->
 
-## Kiedy używać
+## When to use
 -
 
-## Kiedy NIE używać
+## When NOT to use
 -
 
-## Kluczowe koncepcje
-<!-- max 5 — co trzeba wiedzieć, żeby dobrze tego używać -->
+## Key concepts
+<!-- max 5 — what you must know to use it well -->
 
-### {{Koncepcja 1}}
+### {{Concept 1}}
 
-### {{Koncepcja 2}}
+### {{Concept 2}}
 
-## Gotowe wzorce (snippety)
+## Ready-made patterns (snippets)
 
-### {{Wzorzec 1 — nazwa}}
+### {{Pattern 1 — name}}
 ```typescript
-// kontekst użycia
+// usage context
 
 ```
 
-### {{Wzorzec 2 — nazwa}}
+### {{Pattern 2 — name}}
 ```typescript
 
 ```
 
-## Pułapki i niuanse
-<!-- czego dokumentacja wprost nie mówi -->
+## Pitfalls and gotchas
+<!-- what the docs don't say outright -->
 -
 
-## Użyte w projektach
+## Used in projects
 <!-- [[01-projects/{{project-slug}}/_index]] -->
 -
 
-## Powiązane technologie
-<!-- [[03-skills/domains/powiazana-technologia]] -->
+## Related technologies
+<!-- [[03-skills/domains/related-tech]] -->
 -
 
-## Źródła
+## Sources
 -
