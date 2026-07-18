@@ -28,6 +28,7 @@
 - Task involves feature flag design, rollout strategy, or flag lifecycle
 - Task involves monorepo tooling, Turborepo/Nx setup, or workspace dependency management
 - Task involves GraphQL schema, resolvers, N+1 problem, or subscriptions
+- Task involves retrieving relevant prior knowledge from the Obsidian vault before planning or implementing (a bounded context pack, not a full vault dump)
 - User uses command-style requests: `/research`, `/plan`, `/docs-flow`, `/review`, `/e2e`, `/test`, `/code-quality-check`, `/debug`, `/handoff`, `/changelog`, `/context`, `/new-skill`, `/multi-repo`, `/intent`, `/security`, `/migrate`, `/observe`, `/profile`, `/flags`, `/a11y`, `/graph`, `/learn`, `/test-strategy`
 
 ## When NOT to enter this branch
@@ -70,6 +71,7 @@
 | Session start, `/context`, project context before implementation | skills/project-context/SKILL.md |
 | Wrapping up, `/handoff`, pausing, handing off, ending a session | skills/session-handoff/SKILL.md |
 | `/obsidian`, persisting session/ADR/debug/knowledge to Obsidian vault | skills/obsidian-note/SKILL.md |
+| Retrieving relevant prior knowledge from the vault, building a context pack before planning/implementing | skills/knowledge-retrieval/SKILL.md |
 | Release prep, `/changelog`, sprint close, documenting shipped changes | skills/changelog-generator/SKILL.md |
 | `/multi-repo`, changes spanning 2+ repos, coordinated releases | skills/multi-repo/SKILL.md |
 | Tauri desktop implementation/review/planning crossing React + Rust boundary | skills/routing/TAURI.md |
@@ -87,10 +89,12 @@
 - `observability` BEFORE any service ships to production for the first time
 - `debug-trace` BEFORE any fix or patch implementation
 - `project-context` BEFORE `architecture-design`, `code-review`, `implementation-gap-analysis`, `multi-repo`
+- `knowledge-retrieval` BEFORE `architecture-design` or `/plan` when the project has an established vault — pull a bounded context pack before proposing a design, don't rediscover decisions the vault already recorded
+- `knowledge-retrieval` runs standalone under Codex-only mode; in a hybrid Claude+Codex session, Claude orchestrates it before task compilation and decides what reaches the delegation prompt — see `skills/knowledge-retrieval/SKILL.md`
 - `session-handoff` AFTER any completed implementation or review session
-- `obsidian-note` AFTER `session-handoff` — always, automatically (session note)
-- `obsidian-note` AFTER `debug-trace` — when debug time > 15 min or non-obvious root cause (debug note)
-- `obsidian-note` when ADR is decided during `architecture-design` — write ADR note to vault
+- `obsidian-note` AFTER `session-handoff` — always, automatically (session note; writes directly only in standalone mode, emits `OBSIDIAN EVIDENCE` instead in hybrid mode — see `obsidian-note`'s `references/runtime-modes.md`)
+- `obsidian-note` AFTER `debug-trace` — when debug time > 15 min or non-obvious root cause (debug note; same standalone/hybrid mode split applies)
+- `obsidian-note` when ADR is decided during `architecture-design` — write ADR note to vault (same standalone/hybrid mode split applies)
 - `changelog-generator` AFTER `session-handoff` on release tasks
 - `skill-creator` MUST update routing files in the same task — never deferred
 - `multi-repo` ALWAYS ends with `session-handoff`

@@ -9,35 +9,35 @@ links:
   - "[[01-projects/{{project-slug}}/_index]]"
 ---
 
-# ADR-{{NNNN}}: {{Decision title}}
+# ADR-{{NNNN}}: {{Tytuł decyzji}}
 
 ## Status
 `proposed` | `accepted` | `superseded by [[ADR-XXXX]]`
 
-## Context
-<!-- What problem/situation forced this decision? What is changing? -->
+## Kontekst
+<!-- Jaki problem/sytuacja wymusiła tę decyzję? Co się zmienia? -->
 
-## Decision
-<!-- One sentence — what was decided -->
+## Decyzja
+<!-- Jedno zdanie — co zostało zdecydowane -->
 
-## Rationale
-<!-- Why THIS option? Key criteria: performance / maintainability / ecosystem / time -->
+## Uzasadnienie
+<!-- Dlaczego TA opcja? Kluczowe kryteria: wydajność / utrzymywalność / ekosystem / czas -->
 
-## Rejected alternatives
+## Odrzucone alternatywy
 
-### Option: {{alternative-1}}
-**Why NOT:** <!-- this is the most valuable part of the ADR -->
+### Opcja: {{alternatywa-1}}
+**Dlaczego NIE:** <!-- to jest najbardziej wartościowa część ADR -->
 
-### Option: {{alternative-2}}
-**Why NOT:**
+### Opcja: {{alternatywa-2}}
+**Dlaczego NIE:**
 
-## Consequences
-### Positive
+## Konsekwencje
+### Pozytywne
 -
 
-### Negative / trade-offs
+### Negatywne / trade-offy
 -
 
-## Related
-<!-- [[ADR-NNNN-previous-decision]] [[03-skills/domains/technology]] -->
+## Powiązane
+<!-- [[ADR-NNNN-poprzednia-decyzja]] [[03-skills/domains/technologia]] -->
 -

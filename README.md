@@ -118,6 +118,8 @@ All skills live under `skills/` and are routed through `skills/routing/`:
 - `changelog-generator` — Generate CHANGELOG entries from git/PR/handoff
 - `multi-repo` — Coordinate changes spanning multiple repositories
 - `debug-trace` — Structured root cause analysis before writing fixes
+- `obsidian-note` — Canonical Obsidian vault schema, note types, and standalone-mode writer
+- `knowledge-retrieval` — Bounded, justified context-pack retrieval from the Obsidian vault
 
 Each skill includes:
 

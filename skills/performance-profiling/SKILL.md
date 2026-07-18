@@ -14,7 +14,7 @@ Measure first. Optimize second. Every optimization that is not preceded by a mea
 - A specific operation is "slow" but the cause is unknown
 - Before any optimization work — to establish a baseline and confirm the bottleneck
 - After a deploy that introduced a performance regression
-- CodePath/IDE features with latency requirements (LSP response, indexing, PSI traversal)
+- IDE/developer-tooling features with latency requirements (LSP response, indexing, AST/tree traversal)
 
 ## When NOT to Use
 

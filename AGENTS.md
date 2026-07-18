@@ -57,6 +57,30 @@ These command-like requests are supported:
 - `/learn`: Appended entries in per-skill `references/failure-patterns.md` and global `skills/routing/FAILURES.md`.
 - `/obsidian <type>`: Markdown note written directly to Obsidian vault — type determines template and destination folder (session → `01-projects/{slug}/sessions/`, adr → `02-adr/`, debug → `04-debug/`, knowledge → `03-skills/domains/`).
 
+## Downstream Path Resolution Contract
+
+Any consumer of this workflow — Codex itself, or an external orchestrator such
+as Claude Code operating from `claude-skills-collections` — must resolve the
+active `[CODEX_ROOT]` for a target project in this order, and must never
+invent a path:
+
+1. `.codex/` — when `.codex/AGENTS.md` and `.codex/skills/routing/` both exist
+   (the standard bootstrapped downstream layout produced by `scripts/bootstrap.sh`).
+2. Repository root — when `AGENTS.md` and `skills/routing/` exist at the root
+   instead (this repository's own development layout, or a non-`.codex`
+   integration).
+3. An explicit, project-configured path, if the project documents a
+   non-standard layout.
+4. If none of the above resolve, fail clearly and say so. Do not guess a path
+   or silently fall back to stale assumptions.
+
+`scripts/validate-routing-tree.sh` already implements this exact detection
+order — treat it as the reference implementation, not a parallel one.
+`scripts/workflow-facts.sh` uses the same resolution and is the deterministic
+way to read the current skill count and per-role model/effort policy.
+Downstream consumers must read that script's output instead of hardcoding
+either value in prose.
+
 ## Skill Routing
 
 All `skills/...` paths in this file and in routing/skill files are **relative to the directory containing this `AGENTS.md` file**. If `AGENTS.md` lives at repo root, resolve from repo root. If it lives inside `.codex/`, resolve from `.codex/`.

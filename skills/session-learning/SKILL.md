@@ -39,6 +39,31 @@ Path guardrail:
 - Never emit mixed paths in one entry (for example both `skills/...` and `.codex/skills/...`)
 - Resolve `[SKILLS_ROOT]` once per session-learning run, then reuse it everywhere (skill list, per-skill detail path, global rollup detail path)
 
+### Run Evidence (if available)
+
+Some orchestrators (a hybrid Claude + Codex session, for example) persist a
+machine-readable run log for each delegation instead of relying purely on
+in-context memory. When such evidence exists, ground Step 1-2 in it rather
+than reconstructing everything from recollection:
+
+- Look for `.ai/runs/YYYY-MM.jsonl` (or the project's documented equivalent)
+  in the current project root before starting Step 1.
+- If present, treat its `start`/`completion` events (route, preloads,
+  model/effort actually used, `stop_reason`) as ground truth for what ran —
+  do not silently override them with a differently-remembered version.
+- Full event schema and the known gaps in what it captures (no timing, no
+  original prompt in the completion half) are documented in
+  `references/run-log-schema.md` in this skill.
+- If no run log exists for this session (a standalone Codex-only run, or an
+  orchestrator that doesn't produce one), proceed exactly as before — this
+  is a best-effort grounding source, not a hard requirement to run this
+  skill at all.
+- Run evidence and the append-only `references/failure-patterns.md` /
+  `routing/FAILURES.md` history are different things: evidence tells you
+  *what ran*; the failure-pattern files are *your judgment* about what that
+  run revealed. Consuming the former does not change how the latter is
+  written.
+
 ### Two Destinations, One Pass
 
 Every session-learning run produces output in two places:
