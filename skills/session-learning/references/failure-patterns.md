@@ -25,7 +25,7 @@ Human review is required before acting on any CRITICAL or WARN entry.
 ## 2026-04-24 — WARN: Historical downstream path-root drift
 
 **Task context**: Consolidate failure records from older `.codex` copies before GPT-5.5 re-bootstrap.
-**Observed**: `nuvlock-api` recorded that earlier `session-learning` guidance used `skills/...` examples while the bootstrapped repository stored skills in `.codex/skills/...`, requiring manual path translation.
+**Observed**: A downstream repository recorded that earlier `session-learning` guidance used `skills/...` examples while the bootstrapped repository stored skills in `.codex/skills/...`, requiring manual path translation.
 **Impact**: Learning updates could be appended to the wrong path or skipped when following the skill text literally.
 **Suggested fix**: Keep repository-aware `[SKILLS_ROOT]` guidance and path guardrails in `session-learning/SKILL.md`.
 **Status**: fixed in working tree
@@ -33,7 +33,7 @@ Human review is required before acting on any CRITICAL or WARN entry.
 ## 2026-04-24 — MISSING: Historical tooling/environment signal bucket
 
 **Task context**: Consolidate failure records from older `.codex` copies before GPT-5.5 re-bootstrap.
-**Observed**: `nuvlock-api` recorded an `EMFILE: too many open files, watch` verification failure, and the old `session-learning` template had no explicit bucket for non-skill operational signals.
+**Observed**: A downstream repository recorded an `EMFILE: too many open files, watch` verification failure, and the old `session-learning` template had no explicit bucket for non-skill operational signals.
 **Impact**: Environment failures could be incorrectly classified as skill-quality or routing failures.
 **Suggested fix**: Keep the dedicated Tooling/Environment Signals section with command, key output, and scope evidence fields.
 **Status**: fixed in working tree

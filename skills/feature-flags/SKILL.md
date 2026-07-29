@@ -218,7 +218,7 @@ Maintain a flag registry — a single file or doc listing every active flag:
 
 ```markdown
 | Flag | Type | Owner | Created | Removal Target | Status |
-|---|---|---|---|---|---|
+|---|---|-------|---|---|---|
 | enable-new-document-editor | Release | @jakub | 2025-03-15 | 2025-04-15 | 45% rollout |
 | max-embedding-batch-size | Ops | @jakub | 2025-01-10 | Permanent | active |
 | enable-ai-search-v2 | Release | @jakub | 2025-03-01 | 2025-03-22 | **cleanup needed** |

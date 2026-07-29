@@ -32,4 +32,5 @@ For tasks matching this branch, load the appropriate leaf skill(s):
 - For Nuxt + Pinia tasks, load all three: `vue` + `nuxt` + `pinia`
 - For Nuxt + Vuetify/PrimeVue tasks, load: `vue` + `nuxt` + `vuetify-primevue`
 - When implementing UI against a design spec, also load `frontend-implementation` and `ui-verification` from GENERIC_UI
+- When focusing on visual polish, animations, or micro-interactions, load `ui-design-quality` from GENERIC_UI alongside Vue skills
 - `vue` skills are mutually exclusive with `react`, `react-nextjs`, `shadcn-tailwind`, `swiftui`, and `swift-localization`

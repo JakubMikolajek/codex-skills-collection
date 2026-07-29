@@ -23,6 +23,7 @@ For tasks matching this branch, load the appropriate leaf skill(s):
 | UI component patterns, design system usage, performance guidelines | skills/frontend-implementation/SKILL.md |
 | WCAG 2.1 AA, ARIA, keyboard navigation, screen reader, focus management | skills/accessibility/SKILL.md |
 | UI verification, design spec comparison, pixel-level accuracy | skills/ui-verification/SKILL.md |
+| Visual design quality, typography, color, spacing, animation, micro-interactions | skills/ui-design-quality/SKILL.md |
 | Unit tests, component tests, React Testing Library, Vitest/Jest | skills/unit-testing/SKILL.md |
 | Unclear / general frontend guidance | skills/frontend-implementation/SKILL.md |
 
@@ -34,5 +35,8 @@ For tasks matching this branch, load the appropriate leaf skill(s):
 - For `/review-ui` command, load `ui-verification` + `accessibility` + the appropriate framework skill
 - For `/a11y` or accessibility audit, load `accessibility` alone or with the relevant framework skill
 - `frontend-implementation` is commonly loaded alongside any framework-specific skill (`react`, `vue`, `swiftui`) when building new UI components
+- `ui-design-quality` supplements `frontend-implementation` when building new UI — load together when design quality, visual polish, or animation craft is a focus
+- `ui-design-quality` + framework skill (`react` or `vue`) when building UI with emphasis on visual polish, animation, or micro-interactions
+- `ui-design-quality` is loaded alongside `shadcn-tailwind` when polishing Shadcn/UI components for production quality
 - `ui-verification` is commonly loaded alongside any framework-specific skill when verifying implementation against designs
 - `accessibility` is commonly loaded alongside `react` or `vue` for any feature with custom interactive components (modals, menus, comboboxes)

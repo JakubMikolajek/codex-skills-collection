@@ -103,6 +103,7 @@ All skills live under `skills/` and are routed through `skills/routing/`:
 - `codebase-analysis` — Full codebase audit, dependencies, architecture
 - `dev-docs-flow` — Documentation + execution flow artifacts
 - `e2e-testing` — E2E test patterns, Page Objects, CI readiness
+- `antigravity-delegate` — Antigravity CLI delegation through `agy` for bounded large-context research, advisory review, support, and log summaries
 - `implementation-gap-analysis` — Plan-vs-code comparison
 - `task-analysis` — Task research, context gathering, PRD
 - `technical-context-discovery` — Project conventions, patterns, standards
@@ -117,6 +118,8 @@ All skills live under `skills/` and are routed through `skills/routing/`:
 - `changelog-generator` — Generate CHANGELOG entries from git/PR/handoff
 - `multi-repo` — Coordinate changes spanning multiple repositories
 - `debug-trace` — Structured root cause analysis before writing fixes
+- `obsidian-note` — Canonical Obsidian vault schema, note types, and standalone-mode writer
+- `knowledge-retrieval` — Bounded, justified context-pack retrieval from the Obsidian vault
 
 Each skill includes:
 
@@ -173,6 +176,7 @@ AGENTS.md (Root Router)
 │   ├── c-embedded/
 │   ├── freertos/
 │   ├── frontend-implementation/
+│   ├── antigravity-delegate/
 │   ├── implementation-gap-analysis/
 │   ├── kotlin/
 │   ├── multi-repo/
@@ -208,6 +212,7 @@ AGENTS.md (Root Router)
 ## Scope
 
 This repository currently assumes no required external integrations.
+Optional helper skills, such as `antigravity-delegate`, must degrade back to normal Codex workflow when their external CLI is unavailable.
 All workflows should be executable from task descriptions, local files, and repository context.
 
 ## Getting Started

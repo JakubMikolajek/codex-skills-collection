@@ -31,4 +31,5 @@ For tasks matching this branch, load the appropriate leaf skill(s):
 - For React tasks inside Tauri desktop apps, route through `TAURI` branch to select `tauri-window-shell` / `tauri-command-contract` / `tauri-runtime-lifecycle` as needed
 - For Next.js + shadcn/ui tasks, load all three: `react` + `react-nextjs` + `shadcn-tailwind`
 - When implementing UI against a design spec, also load `frontend-implementation` and `ui-verification` from GENERIC_UI
+- When focusing on visual polish, animations, or micro-interactions, load `ui-design-quality` from GENERIC_UI alongside React skills
 - `react` skills are mutually exclusive with `vue`, `nuxt`, `pinia`, `vuetify-primevue`, `swiftui`, and `swift-localization`

@@ -147,7 +147,7 @@ NestJS has first-class support for microservice transport layers. Use this secti
 | `Redis` | Low-latency pub/sub, ephemeral messages where loss is acceptable |
 | `Kafka` | High-throughput event streaming, replay, ordered processing |
 
-For your stack (thesis + CodePath): RabbitMQ is the right choice for document processing pipelines. Redis transport for low-latency IDE service communication.
+RabbitMQ is the right choice for document/async processing pipelines needing durability. Redis transport suits low-latency internal service-to-service communication where occasional message loss is acceptable.
 
 ### Hybrid Application (HTTP + Microservice)
 
