@@ -76,6 +76,10 @@ All skills live under `skills/` and are routed through `skills/routing/`:
 - `embedded-toolchain` — CMake cross-compilation, linker scripts, GCC toolchains, OpenOCD
 - `freertos` — Task architecture, queues, semaphores, mutexes, timers, stack sizing
 - `kotlin` — Kotlin domain modeling, coroutines, null-safety
+- `android-core` — Android SDK, lifecycle, Gradle, Retrofit/OkHttp, Room/DataStore, Hilt/Dagger, background work, security, testing, and release concerns
+- `android-compose` — Android-only Jetpack Compose, MVVM/UDF, Route/Screen architecture, Navigation Compose, Material 3, performance, accessibility, and Compose testing
+- `android-xml` — Android XML layouts, Fragments, View Binding, RecyclerView, Navigation Component, MVP, Presenters, Views, resources, and lifecycle-safe UI
+- `kotlin-multiplatform` — Kotlin/Compose Multiplatform, source sets, Ktor, Koin, Kotlin/Native, shared persistence/testing, and SwiftUI/UIKit interoperability
 - `nestjs` — NestJS modules, controllers, services, DTOs
 - `react` — React components, hooks, state, forms, rendering
 - `react-nextjs` — Next.js routing, server/client components, data fetching
@@ -134,6 +138,7 @@ Skills are not loaded directly from `AGENTS.md`. Instead, the agent navigates a 
 AGENTS.md (Root Router)
 └── skills/routing/
     ├── FRONTEND.md → REACT.md / VUE.md / NATIVE.md / GENERIC_UI.md → leaf skills
+    ├── MOBILE.md → ANDROID.md / KOTLIN_MULTIPLATFORM.md → mobile leaf skills
     ├── BACKEND.md → nestjs / kotlin / rust
     ├── TAURI.md → tauri-window-shell / tauri-command-contract / tauri-plugin-integration / tauri-runtime-lifecycle / rust
     ├── EMBEDDED.md → c-embedded / freertos / stm32-hal / embedded-toolchain
@@ -141,6 +146,23 @@ AGENTS.md (Root Router)
     ├── DATA.md → sql-and-database
     └── WORKFLOW.md → all cross-cutting and workflow skills
 ```
+
+### Mobile Routing
+
+The mobile branch separates Android platform concerns, Android UI stacks, and shared Kotlin concerns:
+
+| Task | Skills |
+|---|---|
+| Android build, lifecycle, networking, Room, Hilt/Dagger, permissions, WorkManager, or release | `android-core` |
+| Android-only Jetpack Compose | `android-core` + `android-compose` |
+| Android XML, Fragments, View Binding, RecyclerView, or MVP | `android-core` + `android-xml` |
+| XML-to-Compose migration or `ComposeView`/`AndroidView` interop | `android-core` + `android-compose` + `android-xml` |
+| Shared Kotlin across Android and iOS, `commonMain`, Ktor, Koin, or Compose Multiplatform | `kotlin-multiplatform` |
+| KMP shared code hosted by Android Compose | `kotlin-multiplatform` + `android-core` + `android-compose` |
+| KMP shared code hosted by Android XML | `kotlin-multiplatform` + `android-core` + `android-xml` |
+| SwiftUI/UIKit host for shared Kotlin or `ComposeUIViewController` | `kotlin-multiplatform` + `swiftui` for substantial native host UI |
+
+Do not route Android-only Compose to Kotlin Multiplatform merely because it uses Kotlin. Do not load `android-compose` and `android-xml` together unless the task is a migration or interoperability change. Hilt/Dagger configuration belongs to `android-core`; Compose-specific ViewModel retrieval belongs to `android-compose`; shared Ktor/Koin modules belong to `kotlin-multiplatform`.
 
 ## Repository Structure
 
@@ -154,6 +176,9 @@ AGENTS.md (Root Router)
 ├── skills/
 │   ├── routing/
 │   │   ├── FRONTEND.md
+│   │   ├── MOBILE.md
+│   │   ├── ANDROID.md
+│   │   ├── KOTLIN_MULTIPLATFORM.md
 │   │   ├── BACKEND.md
 │   │   ├── TAURI.md
 │   │   ├── EMBEDDED.md
@@ -177,8 +202,12 @@ AGENTS.md (Root Router)
 │   ├── freertos/
 │   ├── frontend-implementation/
 │   ├── antigravity-delegate/
+│   ├── android-core/
+│   ├── android-compose/
+│   ├── android-xml/
 │   ├── implementation-gap-analysis/
 │   ├── kotlin/
+│   ├── kotlin-multiplatform/
 │   ├── multi-repo/
 │   ├── nestjs/
 │   ├── nuxt/

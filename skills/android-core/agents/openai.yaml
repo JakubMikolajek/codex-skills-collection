@@ -1,0 +1,4 @@
+interface:
+  display_name: "Android Core"
+  short_description: "Android platform architecture and infrastructure."
+  default_prompt: "Use $android-core to design or review Android platform architecture."

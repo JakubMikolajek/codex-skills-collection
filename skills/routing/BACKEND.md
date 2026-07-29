@@ -2,9 +2,9 @@
 
 ## When to enter this branch
 - Task involves server-side logic, APIs, services, or backend modules
-- Task targets a backend framework or language: NestJS, Kotlin, Rust, Python, FastAPI
+- Task targets a backend framework or language: NestJS, JVM Kotlin, Rust, Python, FastAPI
 - Task involves controllers, services, DTOs, guards, interceptors (NestJS)
-- Task involves domain modeling, coroutines, null-safety (Kotlin)
+- Task involves JVM/server domain modeling, coroutines, or null-safety (Kotlin)
 - Task involves ownership, async workflows, Tauri commands, system-level logic (Rust)
 - Task involves Python backend services, async APIs, LLM pipelines, RAG, or data processing
 - Task involves WebSocket or SSE server implementation
@@ -18,24 +18,25 @@
 - Task is about database schemas or SQL — use DATA (but often combined with BACKEND)
 - Task is about code review, architecture, or testing without a specific backend scope — use WORKFLOW
 - Task is about React, Vue, or SwiftUI code — use FRONTEND even if it involves TypeScript
-- Task is about Tauri desktop frontend shell only (titlebar, drag regions, window controls) — use FRONTEND -> TAURI
+- Task is about Tauri desktop frontend shell only (titlebar, drag regions, window controls) — use FRONTEND → TAURI
 - Task is about firmware, MCU peripherals, or RTOS device code — use EMBEDDED
+- Task is Android or Kotlin Multiplatform client work — use MOBILE
 
 ## Decision tree
 
-| If the task involves... | Read next |
-|---|---|
-| NestJS, Node.js API, TypeScript backend services, modules, controllers | skills/nestjs/SKILL.md |
-| Kotlin, Android business logic, JVM services, coroutines | skills/kotlin/SKILL.md |
-| Rust systems programming without Tauri boundary concerns | skills/rust/SKILL.md |
-| Rust + Tauri desktop runtime/command boundary (invoke contracts, plugin/runtime lifecycle) | skills/routing/TAURI.md |
-| Python core patterns, typing, async, config, shared library logic | skills/python/SKILL.md |
-| Python + FastAPI: routes, DI, middleware, HTTP API | skills/python/SKILL.md + skills/python-fastapi/SKILL.md |
-| Python + LLM/RAG/embeddings/vector stores/AI pipelines | skills/python/SKILL.md + skills/python-ai-ml/SKILL.md |
-| Python testing: pytest, async tests, fixtures, mocking, coverage | skills/python/SKILL.md + skills/python-testing/SKILL.md |
-| WebSocket server, SSE streaming, real-time connections, presence | skills/websocket-realtime/SKILL.md |
-| RabbitMQ, AMQP, message queue topology, consumers, dead-letter | skills/message-queue/SKILL.md |
-| Unclear / cross-cutting backend task | skills/nestjs/SKILL.md (most common backend stack) |
+| If the task involves...                                                                    | Read next                                               |
+|--------------------------------------------------------------------------------------------|---------------------------------------------------------|
+| NestJS, Node.js API, TypeScript backend services, modules, controllers                     | skills/nestjs/SKILL.md                                  |
+| JVM Kotlin services, backend business logic, coroutines, null-safety                       | skills/kotlin/SKILL.md                                  |
+| Rust systems programming without Tauri boundary concerns                                   | skills/rust/SKILL.md                                    |
+| Rust + Tauri desktop runtime/command boundary (invoke contracts, plugin/runtime lifecycle) | skills/routing/TAURI.md                                 |
+| Python core patterns, typing, async, config, shared library logic                          | skills/python/SKILL.md                                  |
+| Python + FastAPI: routes, DI, middleware, HTTP API                                         | skills/python/SKILL.md + skills/python-fastapi/SKILL.md |
+| Python + LLM/RAG/embeddings/vector stores/AI pipelines                                     | skills/python/SKILL.md + skills/python-ai-ml/SKILL.md   |
+| Python testing: pytest, async tests, fixtures, mocking, coverage                           | skills/python/SKILL.md + skills/python-testing/SKILL.md |
+| WebSocket server, SSE streaming, real-time connections, presence                           | skills/websocket-realtime/SKILL.md                      |
+| RabbitMQ, AMQP, message queue topology, consumers, dead-letter                             | skills/message-queue/SKILL.md                           |
+| Unclear / cross-cutting backend task                                                       | skills/nestjs/SKILL.md (most common backend stack)      |
 
 ## Combination rules
 - When a backend task involves database work, also load `sql-and-database` from DATA

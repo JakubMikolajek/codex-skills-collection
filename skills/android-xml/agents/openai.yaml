@@ -1,0 +1,4 @@
+interface:
+  display_name: "Android XML"
+  short_description: "Android XML, Fragment, View Binding, and MVP patterns."
+  default_prompt: "Use $android-xml to build or review an Android Fragment and XML feature."

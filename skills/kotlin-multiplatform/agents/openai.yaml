@@ -1,0 +1,4 @@
+interface:
+  display_name: "Kotlin Multiplatform"
+  short_description: "KMP, Compose Multiplatform, and native Apple interoperability."
+  default_prompt: "Use $kotlin-multiplatform to design shared Android and iOS Kotlin architecture."
