@@ -90,6 +90,7 @@ Do not load skills directly. Navigate the routing tree:
 | If the task involves... | Read first |
 |-------------------------|------------|
 | UI, components, styling, frontend frameworks (React, Vue, Nuxt, SwiftUI) | skills/routing/FRONTEND.md |
+| Android platform, Android UI, Jetpack Compose, XML/Fragments, Kotlin Multiplatform, Compose Multiplatform, or Android/iOS shared Kotlin | skills/routing/MOBILE.md |
 | APIs, services, server-side logic (NestJS, Kotlin, Rust) | skills/routing/BACKEND.md |
 | Tauri desktop apps crossing React + Rust boundaries (window shell, invoke contracts, runtime lifecycle, plugins) | skills/routing/TAURI.md |
 | Embedded firmware, microcontrollers, FreeRTOS, HAL drivers, linker/toolchain | skills/routing/EMBEDDED.md |

@@ -11,17 +11,17 @@
 - Task involves React, Next.js, or web UI — use skills/routing/REACT.md
 - Task involves Vue, Nuxt, or web UI — use skills/routing/VUE.md
 - Task is framework-agnostic UI guidance or UI verification only — use skills/routing/GENERIC_UI.md
-- Task involves Kotlin Android (not Apple platforms) — use skills/routing/BACKEND.md
+- Task involves Android or Kotlin Multiplatform client work — use skills/routing/MOBILE.md
 
 ## Decision tree
 
 For tasks matching this branch, load the appropriate leaf skill(s):
 
-| If the task involves... | Read next |
-|-------------------------|-----------|
-| SwiftUI views, MVVM, state management, navigation, Observation API, Factory DI | skills/swiftui/SKILL.md |
+| If the task involves...                                                          | Read next                          |
+|----------------------------------------------------------------------------------|------------------------------------|
+| SwiftUI views, MVVM, state management, navigation, Observation API, Factory DI   | skills/swiftui/SKILL.md            |
 | Swift localization, String Catalogs, pluralization, locale-aware formatting, RTL | skills/swift-localization/SKILL.md |
-| General iOS/Apple platform UI work | skills/swiftui/SKILL.md |
+| General iOS/Apple platform UI work                                               | skills/swiftui/SKILL.md            |
 
 ## Combination rules
 - `swiftui` and `swift-localization` are always loaded together when the task involves localized SwiftUI screens or multilingual content

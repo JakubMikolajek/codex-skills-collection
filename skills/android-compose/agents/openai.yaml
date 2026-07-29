@@ -1,0 +1,4 @@
+interface:
+  display_name: "Android Compose"
+  short_description: "Android Jetpack Compose architecture and UI patterns."
+  default_prompt: "Use $android-compose to build or review an Android Compose screen."
