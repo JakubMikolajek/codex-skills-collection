@@ -77,6 +77,7 @@ All skills live under `skills/` and are routed through `skills/routing/`:
 - `freertos` — Task architecture, queues, semaphores, mutexes, timers, stack sizing
 - `kotlin` — Kotlin domain modeling, coroutines, null-safety
 - `nestjs` — NestJS modules, controllers, services, DTOs
+- `express` — Express.js routers, middleware, controllers, services, validation, and error handling
 - `react` — React components, hooks, state, forms, rendering
 - `react-nextjs` — Next.js routing, server/client components, data fetching
 - `rust` — Rust ownership, async, Tauri, systems logic
@@ -173,6 +174,7 @@ AGENTS.md (Root Router)
 │   ├── docker/
 │   ├── e2e-testing/
 │   ├── embedded-toolchain/
+│   ├── express/
 │   ├── c-embedded/
 │   ├── freertos/
 │   ├── frontend-implementation/

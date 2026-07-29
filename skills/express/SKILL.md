@@ -5,9 +5,22 @@ description: Express.js implementation and review patterns for production TypeSc
 
 # Express Implementation Patterns
 
-Use this skill to keep Express applications modular, type-safe, secure, testable, and boring in the best possible way.
+Use this skill to keep Express applications modular, type-safe, secure, testable, and predictable.
 
-Express is intentionally minimal. That is not permission to put the entire backend inside `app.ts` and call it architecture.
+Express is intentionally minimal. Keep application structure explicit rather than concentrating the entire backend in `app.ts`. 
+
+## When to Use
+Use this skill when:
+- Implementing or refactoring an Express.js application, router, controller, service, repository, or middleware.
+- Designing runtime validation, authentication, error handling, file uploads, or request lifecycle behavior in Express.
+- Reviewing an Express TypeScript API for architecture, security, performance, observability, or test coverage.
+- Migrating between Express 4 and Express 5 or changing async route and error-handling behavior.
+
+## When NOT to Use
+Do not use this skill when:
+- The service is implemented with NestJS, FastAPI, Spring Boot, or another backend framework with its own dedicated skill.
+- The task is limited to frontend TypeScript, React, Vue, Angular, or browser-only code.
+- The task concerns only SQL, infrastructure, containerization, or CI configuration without Express application changes.
 
 ## Delivery Workflow
 
@@ -67,7 +80,7 @@ src/
 
 ## App Composition
 
-Keep middleware order explicit. Order bugs in Express are not charming, they are production incidents wearing a fake mustache.
+Keep middleware order explicit. Incorrect middleware ordering can cause production failures that are difficult to diagnose. 
 
 Recommended order:
 
@@ -177,7 +190,7 @@ export const usersService = {
 * Avoid `any`; prefer `unknown` plus narrowing.
 * Type request params, body, query, and response DTOs.
 * Derive input types from validation schemas when possible.
-* Do not rely on `Request` generics alone as validation. TypeScript does not protect runtime input, because apparently reality exists.
+* Do not rely on `Request` generics alone as validation. TypeScript does not validate runtime input.
 * Do not mutate `req` with custom properties unless Express types are augmented safely.
 
 Safe request augmentation:
