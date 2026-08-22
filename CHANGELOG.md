@@ -2,18 +2,30 @@
 
 ## [Unreleased]
 
+## [1.9.0] - 2026-08-22
+
 ### Added
 - Added the `knowledge-retrieval` skill: bounded, justified context-pack retrieval from the Obsidian vault before planning/implementation, routed through `skills/routing/WORKFLOW.md`. Degrades to keyword/frontmatter-based ranking without embeddings/vector infrastructure; designed for a future BM25 + embeddings + RRF backend without changing its calling interface.
 - Added a `Downstream Path Resolution Contract` section to `AGENTS.md` defining the canonical `[CODEX_ROOT]` resolution order for any consumer (Codex itself or an external orchestrator).
 - Added `scripts/workflow-facts.sh` — a deterministic, on-demand source for the current skill count and per-agent-role model/effort policy, so downstream documentation can read live values instead of hardcoding them.
-- Extended `obsidian-note`'s schema: six new durable atomic note types (`concept`, `pattern`, `playbook`, `comparison`, `experiment`, `system`) with extended frontmatter (`status`, `scope`, `confidence`, `source`, `last_verified`, `technologies`, `agent_priority`, `supersedes`), new vault folders (`05-systems/`, `06-experiments/`, `07-sources/`, `08-reviews/`, `03-skills/{concepts,patterns,playbooks,comparisons,MOC}/`), and new reference docs: `runtime-modes.md` (explicit hybrid vs. standalone vault-writer ownership and the `OBSIDIAN EVIDENCE` handoff format), `note-identity.md` (deterministic paths + duplicate-write prevention), `note-types.md`, `knowledge-distillation.md` (human-reviewed candidate pipeline for durable knowledge), and `context-file.md` (compact per-project `_context.md`).
+- Extended `obsidian-note`'s schema: six new durable atomic note types (`concept`, `pattern`, `playbook`, `comparison`, `experiment`, `system`) with extended frontmatter (`status`, `scope`, `confidence`, `source`, `last_verified`, `technologies`, `agent_priority`, `supersedes`), new vault folders (`05-systems/`, `06-experiments/`, `07-sources/`, `08-reviews/`, `03-skills/{concepts,patterns,playbooks,comparisons,MOC}/`), a quickstart and copy-ready configuration example, and new reference docs: `runtime-modes.md` (explicit hybrid vs. standalone vault-writer ownership and the `OBSIDIAN EVIDENCE` handoff format), `note-identity.md` (deterministic paths + duplicate-write prevention), `note-types.md`, `knowledge-distillation.md` (human-reviewed candidate pipeline for durable knowledge), and `context-file.md` (compact per-project `_context.md`).
 - Added `skills/session-learning/references/run-log-schema.md` documenting the machine-readable run-log event schema an orchestrator may persist per delegation, and how `session-learning` grounds itself in it when available.
+- Added the `ui-design-quality` skill and routing guidance for typography, color, spacing, animation, and micro-interactions in polished frontend work.
+- Added a feedback-loop construction menu to `debug-trace` to help select the tightest reproducible verification loop before diagnosis.
+- Added `CONTEXT.md` guidance to `project-context` so projects can supply their domain vocabulary as a source of truth.
+- Added the `wayfinder-map` Obsidian note type for mapping open decisions in large or uncertain initiatives before detailed decomposition is possible.
+- Added the `resolving-merge-conflicts` workflow skill for intent-traced merge and rebase conflict resolution.
+- Added writing-quality guidance to `skill-creator` for focused descriptions, single sources of truth, checkable completion criteria, and progressive disclosure.
+- Added the `express` backend skill and routing guidance for Express.js APIs, middleware, validation, error handling, and testing.
+- Added `CONSTITUTION.md` guidance to `project-context` so projects can supply binding engineering principles alongside `CONTEXT.md` domain vocabulary.
 
 ### Changed
 - Replaced the active `gemini-delegate` workflow skill with `antigravity-delegate`, documenting Antigravity CLI delegation through the `agy` command.
 - Updated workflow routing and README references so new delegation tasks resolve through `skills/antigravity-delegate/SKILL.md`.
-- Translated the five existing Obsidian note templates (`session`, `adr`, `debug`, `knowledge`, `project-index`) to Polish to match the vault's actual language policy, which the documentation had previously misstated.
+- Translated Obsidian note templates to English for consistent use across the collection.
 - Removed private-project-specific examples from `nestjs`, `performance-profiling`, and `feature-flags` skill content, and from `session-learning`/`nestjs` failure-pattern logs, ahead of this collection's open-source release.
+- Updated downstream agent templates to use the `gpt-5.6` `terra`, `luna`, and `sol` model variants for their assigned roles.
+- Updated forced downstream bootstraps to reset managed skills, agent-template, and script directories, and made repository-filtered synchronization include nested targets.
 
 ## [1.8.0] - 2026-05-23
 
