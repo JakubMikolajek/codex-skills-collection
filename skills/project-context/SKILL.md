@@ -112,3 +112,4 @@ Assemble the block. Mark anything confirmed from fewer than 2 sources as an open
 - `multi-repo` — run project-context per repo before cross-repo work
 - `session-handoff` — handoff document should include Session Context Block
 - `technical-context-discovery` — project-context is the session-start complement to technical-context-discovery's per-task focus
+- `CONTEXT.md` — if present at the project root, read it as the source of truth for domain vocabulary; this skill covers stack and conventions.

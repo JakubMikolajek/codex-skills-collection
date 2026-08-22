@@ -34,6 +34,21 @@ Follow these steps in order. Do not skip steps.
 
 Confirm the exact condition that triggers the bug: input, state, environment, user action sequence. If it cannot be reproduced, do not proceed to Step 2 — see "Cannot Reproduce" below.
 
+Construct the tightest feedback loop available, in this order:
+
+1. Failing test at the right seam
+2. HTTP script against a running dev server
+3. CLI invocation with a fixture, diffing output
+4. Headless browser automation
+5. Captured trace replay
+6. Minimal harness
+7. Property/fuzz loop with many random inputs
+8. Bisection harness between known-good and known-bad states
+9. Differential testing of old versus new behavior
+10. Human-in-the-loop bash script — last resort only
+
+Target a deterministic loop under 2 seconds; for flaky bugs, target a 50%+ reproduction rate before Step 2.
+
 **Step 2 — Isolate**
 
 Identify the smallest code unit responsible: function, component, query, middleware. Narrow by removing surrounding code mentally or via test.
