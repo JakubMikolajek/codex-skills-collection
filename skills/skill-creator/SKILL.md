@@ -45,6 +45,13 @@ This skill provides a systematic process for creating new skills and integrating
 - If no suitable sub-branch exists, evaluate whether to create one or attach directly to the domain branch
 - Verify reachability from `AGENTS.md` through the routing tree after updating
 
+### Writing Quality
+
+- Front-load the trigger word in `description` — routing and model invocation key off early words
+- Keep one source of truth — point to another skill or `references/` file instead of restating its content
+- Give every checklist step a sharp, checkable completion condition
+- Use progressive disclosure — keep universal guidance inline; move branch-specific material to a linked `references/` file
+
 ## Skill Creator Process
 
 Use the checklist below and track your progress:
@@ -111,6 +118,8 @@ Quality gates:
 | Skill that covers 3+ unrelated domains | Split into focused single-responsibility skills |
 | Naming by implementation detail (`use-hooks`) | Name by capability (`react-state-management`) |
 | Creating a skill folder without SKILL.md | Every folder must contain a complete SKILL.md |
+| Vague completion criteria on a checklist step | Give each step a sharp, checkable condition |
+| Duplicating another skill's or reference file's content inline | Point to the source instead of restating it |
 
 ## Connected Skills
 

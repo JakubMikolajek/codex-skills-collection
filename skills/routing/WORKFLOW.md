@@ -16,6 +16,7 @@
 - Task involves changelog generation, release prep, or sprint close
 - Task involves changes spanning multiple repositories
 - Task involves debugging, tracing errors, or root cause analysis
+- Task involves resolving an in-progress git merge or rebase conflict
 - Task involves delegating bounded large-context research, exploration, advisory review, support, second opinions, or long log summarization to Antigravity CLI through `agy`
 - Task involves clarifying user goals, writing acceptance criteria, or verifying feature value
 - Task involves security review, hardening, or OWASP compliance check
@@ -62,6 +63,7 @@
 | `/plan`, architecture design, solution planning, implementation phases | skills/architecture-design/SKILL.md |
 | `/docs-flow`, documentation artifacts, execution flow generation | skills/dev-docs-flow/SKILL.md |
 | `/review`, code review, quality analysis, best practices verification | skills/code-review/SKILL.md |
+| In-progress git merge/rebase conflict, resolving hunks, finishing a stuck merge | skills/resolving-merge-conflicts/SKILL.md |
 | `/code-quality-check`, codebase audit, dependency analysis, dead code | skills/codebase-analysis/SKILL.md |
 | `/e2e`, E2E test writing, Page Objects, flaky test debugging | skills/e2e-testing/SKILL.md |
 | Implementation gap analysis, plan-vs-code comparison | skills/implementation-gap-analysis/SKILL.md |
