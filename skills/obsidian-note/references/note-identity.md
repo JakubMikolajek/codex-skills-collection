@@ -14,6 +14,7 @@ already exist" is a reliable check, not a guess.
 | debug | `04-debug/{YYYY-MM-DD}-{kebab-slug}.md` | project + date + slug of the specific bug |
 | knowledge | `03-skills/domains/{technology}.md` | technology name (one file per technology — update in place) |
 | project-index | `01-projects/{slug}/_index.md` | project slug (exactly one per project) |
+| wayfinder-map | `01-projects/{slug}/wayfinder-map.md` | project slug (one file per project — always updated in place, same convention as `_context.md`) |
 | concept / pattern / playbook / comparison | `03-skills/{concepts,patterns,playbooks,comparisons}/{atomic-slug}.md` | the atomic slug itself — pick a specific, stable slug up front (e.g. `nestjs-config-runtime-env-precedence`), don't rename it casually later |
 | experiment | `06-experiments/{atomic-slug}.md` | atomic slug |
 | system | `05-systems/{atomic-slug}.md` | atomic slug |

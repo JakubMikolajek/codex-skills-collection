@@ -12,6 +12,7 @@ Use this skill **always** when:
 - You fix a non-trivial bug → create a `debug trace`
 - You learn a new pattern/technology → create a `knowledge note` in `03-skills/domains/`
 - You start a new project → create a `project index`
+- You are mapping open decisions for a large, foggy initiative before a decomposition is possible → create/update a `wayfinder-map`
 - You isolate one durable technical idea worth reusing later → create a `concept`, `pattern`,
   `playbook`, `comparison`, `experiment`, or `system` note (see `references/note-types.md` for
   which one fits and how it differs from a broad `knowledge` domain note)
@@ -67,6 +68,7 @@ VAULT_ROOT/
 │   └── {project-slug}/
 │       ├── _index.md          # project hub (create once, update as needed)
 │       ├── _context.md        # compact, preload-sized current-state summary (see references/context-file.md)
+│       ├── wayfinder-map.md   # open-decision map (one per project, update in place)
 │       └── sessions/
 │           └── YYYY-MM-DD.md  # daily session
 ├── 02-adr/
@@ -136,6 +138,7 @@ Resolution rules:
 - Session note links to ADRs from that session: `[[ADR-0012-{slug}]]`
 - Debug trace links to project + technology: `[[01-projects/{slug}/_index]]` `[[03-skills/domains/{technology}]]`
 - Knowledge note in domains/ links to projects where the technology is used
+- Wayfinder map links to the project index: `[[01-projects/{slug}/_index]]`
 
 ### Tags (#tag) — use consistently:
 
@@ -153,7 +156,7 @@ Every note MUST have frontmatter:
 ```yaml
 ---
 date: YYYY-MM-DD
-type: session | adr | debug | knowledge | project-index | concept | pattern | playbook | comparison | experiment | system
+type: session | adr | debug | knowledge | project-index | wayfinder-map | concept | pattern | playbook | comparison | experiment | system
 project: { canonical-slug }   # omit for knowledge / concept / pattern / comparison notes with scope: global
 tags: [ tag1, tag2 ]
 links: # explicit backlinks (supplement to [[wikilinks]])
@@ -196,6 +199,7 @@ Invoke the appropriate template from `VAULT_ROOT/_templates/` (copied once from 
 | Debug         | `_templates/debug.md`         | Bug required >15min of debugging      |
 | Knowledge     | `_templates/knowledge.md`     | New pattern / technology (broad domain note) |
 | Project index | `_templates/project-index.md` | New project                           |
+| Wayfinder map | `_templates/wayfinder-map.md` | Mapping open decisions for foggy/large initiatives before a decomposition is possible |
 | Concept       | `_templates/concept.md`       | One technical idea/mechanism, atomic  |
 | Pattern       | `_templates/pattern.md`       | Reusable implementation/architecture pattern |
 | Playbook      | `_templates/playbook.md`      | Executable troubleshooting/delivery procedure |
