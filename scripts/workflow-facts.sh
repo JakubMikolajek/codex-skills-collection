@@ -59,3 +59,4 @@ echo "Other canonical references (read these files directly - values are not dup
 echo "  ADR numbering:                    skills/obsidian-note/SKILL.md (LAST_ADR in _codex-config.md)"
 echo "  Debug note threshold:             skills/debug-trace/SKILL.md"
 echo "  Obsidian note language/templates: skills/obsidian-note/references/templates/"
+echo "  Model escalation tier (non-default, e.g. gpt-6-astra): AGENTS.md (Model Escalation Tier section)"

@@ -81,6 +81,20 @@ way to read the current skill count and per-role model/effort policy.
 Downstream consumers must read that script's output instead of hardcoding
 either value in prose.
 
+### Model Escalation Tier (non-default)
+
+`gpt-6-astra` is a real, more-capable-than-`sol` Codex model but is not a
+role default anywhere in `templates/codex/agents/*.toml` — its cost is a
+different order of magnitude from `gpt-5.6-sol`, the current ceiling for
+`planner`/`auditor`. Treat it strictly as an escalation-only override, never
+as a `config_file` default:
+- an orchestrator may pass `--model gpt-6-astra` for a fresh (non-`--resume`)
+  call after a role has already failed 3 resume rounds at its own
+  default model/effort, or
+- the requester explicitly names it for one specific call.
+Task nature or risk-override status alone must never select it — those
+still resolve to the role's default from `workflow-facts.sh`.
+
 ## Skill Routing
 
 All `skills/...` paths in this file and in routing/skill files are **relative to the directory containing this `AGENTS.md` file**. If `AGENTS.md` lives at repo root, resolve from repo root. If it lives inside `.codex/`, resolve from `.codex/`.

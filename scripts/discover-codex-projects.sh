@@ -110,7 +110,7 @@ for root in "${SCAN_ROOTS[@]}"; do
     fi
     print_result "$project_dir" ".codex" "$agents_file" >> "$results_file"
   done < <(find "$scan_root" \
-    \( -name .git -o -name node_modules -o -name .venv -o -name vendor -o -name build -o -name dist -o -name DerivedData -o -name Library -o -name .Trash -o -name .cache -o -name .gradle -o -name .npm -o -name .cargo -o -name .rustup -o -name Pods \) -prune \
+    \( -name .git -o -name node_modules -o -name .venv -o -name vendor -o -name build -o -name dist -o -name DerivedData -o -name Library -o -name .Trash -o -name .cache -o -name .gradle -o -name .npm -o -name .cargo -o -name .rustup -o -name Pods -o -name worktrees -o -name .worktrees \) -prune \
     -o -path "*/.codex/AGENTS.md" -type f -print 2>/dev/null)
 
   while IFS= read -r agents_file; do
@@ -123,7 +123,7 @@ for root in "${SCAN_ROOTS[@]}"; do
     fi
     print_result "$project_dir" "root" "$agents_file" >> "$results_file"
   done < <(find "$scan_root" \
-    \( -name .git -o -name node_modules -o -name .venv -o -name vendor -o -name build -o -name dist -o -name DerivedData -o -name Library -o -name .Trash -o -name .cache -o -name .gradle -o -name .npm -o -name .cargo -o -name .rustup -o -name Pods \) -prune \
+    \( -name .git -o -name node_modules -o -name .venv -o -name vendor -o -name build -o -name dist -o -name DerivedData -o -name Library -o -name .Trash -o -name .cache -o -name .gradle -o -name .npm -o -name .cargo -o -name .rustup -o -name Pods -o -name worktrees -o -name .worktrees \) -prune \
     -o -name AGENTS.md -type f -not -path "*/.codex/AGENTS.md" -print 2>/dev/null)
 done
 

@@ -1,6 +1,12 @@
 # Changelog
 
-## [Unreleased]
+## [1.10.0] - 2026-09-05
+
+### Added
+- Documented a `gpt-6-astra` model escalation tier in `AGENTS.md` (non-default, above `sol`): usable only as a round-3 resume-failure escalation or on an explicit request, never as a role default, given its cost relative to `gpt-5.6-sol`.
+
+### Fixed
+- Corrected `AGENTS.md`'s Downstream Path Resolution Contract to reference the sibling orchestrator repo by its actual name, `claude-miki-collections` (was `claude-skills-collections`).
 
 ## [1.9.0] - 2026-08-22
 
