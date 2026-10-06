@@ -83,11 +83,24 @@ either value in prose.
 
 ### Model Escalation Tier (non-default)
 
-`gpt-6-astra` is a real, more-capable-than-`sol` Codex model but is not a
-role default anywhere in `templates/codex/agents/*.toml` — its cost is a
-different order of magnitude from `gpt-5.6-sol`, the current ceiling for
-`planner`/`auditor`. Treat it strictly as an escalation-only override, never
-as a `config_file` default:
+The `gpt-6` generation (`gpt-6-sol`, `gpt-6-luna`, `gpt-6-astra`) replaced
+`gpt-5.6-{sol,luna}` as the `planner`/`auditor`/`explorer` role defaults:
+`gpt-6-sol` and `gpt-6-luna` are strict upgrades over their `gpt-5.6`
+predecessors (50% cheaper per-token at equivalent tier, and score higher on
+AutomationBench/FrontierCode at equal or lower cost per task), so they moved
+straight into `templates/codex/agents/*.toml` as defaults rather than sitting
+behind an escalation gate. `builder_backend`/`builder_frontend`/`coordinator`
+stayed on `gpt-5.6-terra` — no `gpt-6-terra` exists, and there is no
+comparable cost/benchmark data yet to justify moving them onto `gpt-6-sol`.
+
+`gpt-6-astra` is a real, more-capable-than-`sol` Codex model but is still not
+a role default anywhere in `templates/codex/agents/*.toml` — it costs
+roughly 4x `gpt-6-sol` per task (AutomationBench: `gpt-6-sol` at `xhigh`
+effort scores 33.2% at $0.27/task; `gpt-6-astra` at `low` effort scores
+30.3% at 3.9x that cost), which is a real premium but no longer the
+order-of-magnitude gap that held against the old `gpt-5.6-sol` ceiling.
+Treat it strictly as an escalation-only override, never as a `config_file`
+default:
 - an orchestrator may pass `--model gpt-6-astra` for a fresh (non-`--resume`)
   call after a role has already failed 3 resume rounds at its own
   default model/effort, or

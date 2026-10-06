@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.11.0] - 2026-09-22
+
+### Changed
+- Moved `planner`/`auditor` role defaults from `gpt-5.6-sol` to `gpt-6-sol`, and `explorer` from `gpt-5.6-luna` to `gpt-6-luna`, in `templates/codex/agents/*.toml` — both are 50% cheaper per-token than their `gpt-5.6` predecessors while scoring higher on AutomationBench/FrontierCode at equal or lower cost per task, so they moved into the role defaults instead of sitting behind an escalation gate. `builder_backend`/`builder_frontend`/`coordinator` stayed on `gpt-5.6-terra` (no `gpt-6-terra` exists, and there is no comparable cost/benchmark data yet).
+- Updated `AGENTS.md`'s Model Escalation Tier section: `gpt-6-astra` remains escalation-only (never a role default), now measured against the new `gpt-6-sol` ceiling instead of `gpt-5.6-sol` — roughly 4x its cost per task rather than the prior order-of-magnitude gap.
+
 ## [1.10.0] - 2026-09-05
 
 ### Added
