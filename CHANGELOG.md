@@ -1,5 +1,15 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+- Imported Apple-authored Xcode skills as native-branch skills routed through `skills/routing/NATIVE.md`: `swiftui-specialist`, `swiftui-whats-new-27`, `building-document-based-swiftui-applications`, `app-intents-specialist`, `app-intents-whats-new-27`, `uikit-app-modernization`, and `modernize-tests`.
+
+### Changed
+- `swiftui` now defers to `swiftui-specialist` on framework-level correctness, and notes the SDK 27 `@State` macro and `NavigationView` soft-deprecation.
+- `swift-localization` gained anti-patterns for missing `bundle: #bundle`, `.left`/`.right`, uncommented interpolations, and `String` vs `LocalizedStringResource`.
+- Extended `NATIVE.md` entry criteria, decision table, and combination rules for the new skills; `WORKFLOW.md` `/test` row points Swift testing to NATIVE.
+
 ## [1.11.0] - 2026-09-22
 
 ### Changed

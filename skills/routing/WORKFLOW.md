@@ -57,7 +57,7 @@
 | API contract design, OpenAPI spec, versioning, breaking change assessment | skills/api-contract/SKILL.md |
 | CI/CD pipeline, GitHub Actions, quality gates, deployment workflow | skills/ci-cd/SKILL.md |
 | Error handling design, retry strategy, circuit breaker, graceful degradation | skills/error-handling/SKILL.md |
-| `/test`, unit tests, component tests, Vitest, Jest, React Testing Library | skills/unit-testing/SKILL.md |
+| `/test`, unit tests, component tests, Vitest, Jest, React Testing Library (Swift/XCTest/Swift Testing: use skills/routing/NATIVE.md) | skills/unit-testing/SKILL.md |
 | Monorepo, Turborepo, Nx, workspace dependencies, affected builds | skills/monorepo-tooling/SKILL.md |
 | `/research`, task analysis, context gathering, PRD creation | skills/task-analysis/SKILL.md |
 | `/plan`, architecture design, solution planning, implementation phases | skills/architecture-design/SKILL.md |

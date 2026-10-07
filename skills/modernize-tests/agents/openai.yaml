@@ -1,0 +1,4 @@
+interface:
+  display_name: "Modernize Tests"
+  short_description: "Migrate XCTest to Swift Testing"
+  default_prompt: "Use $modernize-tests to migrate or modernize these Swift tests."

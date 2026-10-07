@@ -89,6 +89,13 @@ All skills live under `skills/` and are routed through `skills/routing/`:
 - `sql-and-database` — SQL schema design, normalization, indexes, migrations, ORM
 - `swift-localization` — Swift String Catalogs, pluralization, locale-aware formatting
 - `swiftui` — SwiftUI views, MVVM, Observation API, Factory DI
+- `swiftui-specialist` — Apple-authored SwiftUI best practices and performance (structure, data flow, environment, ForEach, soft deprecations)
+- `swiftui-whats-new-27` — New SwiftUI APIs and migration fixes for the 2027 OS releases
+- `building-document-based-swiftui-applications` — `Document` protocol, `DocumentGroup`, migration from `FileDocument`
+- `app-intents-specialist` — Apple-authored App Intents best practices
+- `app-intents-whats-new-27` — New App Intents APIs in iOS 26/27
+- `uikit-app-modernization` — UIKit scene lifecycle, `UIScreen.main`, orientation, safe-area modernization
+- `modernize-tests` — XCTest to Swift Testing migration and Swift Testing patterns
 - `stm32-hal` — STM32 HAL/LL drivers, CubeMX integration, DMA/interrupt patterns
 - `vue` — Vue 3 Composition API, composables, reactivity
 - `nuxt` — Nuxt 3 routing, SSR, middleware, composables
@@ -153,6 +160,10 @@ AGENTS.md (Root Router)
 │       ├── config.toml
 │       └── agents/
 ├── skills/
+│   ├── app-intents-specialist/
+│   ├── app-intents-whats-new-27/
+│   ├── building-document-based-swiftui-applications/
+│   ├── modernize-tests/
 │   ├── routing/
 │   │   ├── FRONTEND.md
 │   │   ├── BACKEND.md
@@ -201,10 +212,13 @@ AGENTS.md (Root Router)
 │   ├── stm32-hal/
 │   ├── swift-localization/
 │   ├── swiftui/
+│   ├── swiftui-specialist/
+│   ├── swiftui-whats-new-27/
 │   ├── task-analysis/
 │   ├── technical-context-discovery/
 │   ├── test-strategy/
 │   ├── ui-verification/
+│   ├── uikit-app-modernization/
 │   ├── vue/
 │   └── vuetify-primevue/
 ├── CHANGELOG.md

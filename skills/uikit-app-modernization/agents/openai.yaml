@@ -1,0 +1,4 @@
+interface:
+  display_name: "UIKit Modernization"
+  short_description: "Modernize UIKit for scenes and multi-window"
+  default_prompt: "Use $uikit-app-modernization to modernize this UIKit code for scenes and multi-window."

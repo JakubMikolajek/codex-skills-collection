@@ -1,0 +1,4 @@
+interface:
+  display_name: "SwiftUI What's New 27"
+  short_description: "Adopt SDK 27 SwiftUI APIs"
+  default_prompt: "Use $swiftui-whats-new-27 to adopt or fix SwiftUI SDK 27 APIs in this task."

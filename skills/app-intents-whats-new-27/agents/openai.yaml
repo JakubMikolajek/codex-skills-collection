@@ -1,0 +1,4 @@
+interface:
+  display_name: "App Intents What's New"
+  short_description: "Adopt iOS 26/27 App Intents APIs"
+  default_prompt: "Use $app-intents-whats-new-27 to adopt the new App Intents APIs in this task."

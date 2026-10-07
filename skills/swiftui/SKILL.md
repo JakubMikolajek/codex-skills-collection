@@ -25,6 +25,9 @@ SwiftUI progress:
 - Target iOS 17+ by default.
 - Prefer the modern Observation model over legacy `ObservableObject` patterns unless the project still depends on older code paths.
 - Do not add compatibility fallbacks for pre-iOS 17 APIs unless the repository explicitly requires them.
+- Apple's `swiftui-specialist` guidance supersedes model memory on framework behavior; when it conflicts with this skill on framework-level correctness (identity, invalidation, environment, deprecations), follow it and keep this skill for project conventions (MVVM, Factory).
+- On SDK 27+, `@State` is a macro: an `@State` build error after an SDK update is not fixed by reordering init assignments — see `swiftui-whats-new-27`.
+- Use `NavigationStack`/`NavigationSplitView`, not the soft-deprecated `NavigationView`, and the two-parameter/zero-parameter `onChange`.
 
 ## State Management Rules
 
@@ -142,6 +145,9 @@ Quality:
 
 ## Connected Skills
 
+- `swiftui-specialist` - Apple best practices for view structure, data flow, `@Environment`/`@Entry`, `ForEach` identity, animations, and soft-deprecated APIs
+- `swiftui-whats-new-27` - new SDK 27 SwiftUI APIs and `@State`/`@ContentBuilder` migration errors
+- `building-document-based-swiftui-applications` - document-based apps
 - `swift-localization` - use when the task involves multilingual strings, String Catalogs, or locale-aware UI behavior
 - `technical-context-discovery` - follow project iOS conventions before editing
 - `frontend-implementation` - apply UI quality and accessibility rules

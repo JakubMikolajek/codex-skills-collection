@@ -41,6 +41,6 @@
 - `shadcn-tailwind` + `react` when the UI uses shadcn/ui components
 - `pinia` + `vue` when the task involves Vue store logic
 - `nuxt` + `vue` for Nuxt routing or app-level behavior
-- `swift-localization` + `swiftui` for localized SwiftUI screens
+- `swift-localization` + `swiftui` + `swiftui-specialist` for localized SwiftUI screens
 - For Tauri desktop tasks that cross frontend/runtime boundaries, route through `TAURI` branch first
 - Framework skills are mutually exclusive across ecosystems — never combine React and Vue skills

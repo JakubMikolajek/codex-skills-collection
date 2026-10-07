@@ -1,0 +1,4 @@
+interface:
+  display_name: "SwiftUI Specialist"
+  short_description: "Apply Apple SwiftUI best practices"
+  default_prompt: "Use $swiftui-specialist to review or write SwiftUI code against Apple best practices."

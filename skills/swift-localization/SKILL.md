@@ -107,9 +107,14 @@ UX:
 | Manual date/number formatting for UI | Use locale-aware formatting |
 | Treating localization as string replacement only | Verify grammar, layout, RTL, and fallback behavior |
 | Using non-localized text APIs for translatable content | Use explicit localized APIs and reserve verbatim text for true literals |
+| Omitting `bundle:` in a Swift package or framework (lookup silently hits `Bundle.main`) | Pass `bundle: #bundle` to `Text`/`Label`/`Button` and `LocalizedStringResource` |
+| Using `.left`/`.right` edges or alignment | Use `.leading`/`.trailing` so RTL mirrors correctly |
+| Interpolated strings without translator context | Add a `comment:` describing each placeholder |
+| Plain `String` for localizable text on non-view types | Carry `LocalizedStringResource` and resolve it at the view |
 
 ## Connected Skills
 
+- `swiftui-specialist` - Apple's `references/localization.md` covers bundle selection, `LocalizedStringResource`, format styles, and translator comments; follow it on conflicts
 - `swiftui` - use for SwiftUI view structure, MVVM, Observation, and UI verification context
 - `technical-context-discovery` - follow project localization and iOS conventions before editing
 - `ui-verification` - validate layout and visual behavior across locales when UI output matters
