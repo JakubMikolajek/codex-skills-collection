@@ -40,7 +40,7 @@ before the result is known.
   "task": "one-line task description",
   "route": ["BACKEND", "nestjs"],
   "preloads": ["project-context", "technical-context-discovery"],
-  "model": "gpt-5.6-sol",
+  "model": "<model from workflow-facts.sh>",
   "effort": "high",
   "baseline_sha": "25a98ace9dabb30a02796758bbd65ea1c56d019a"
 }
