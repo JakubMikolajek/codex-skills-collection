@@ -19,8 +19,15 @@ plan or a prior session note). A phase marked done with a reference counts as
 completed and is not repeated; verify the reference exists and is relevant
 rather than re-running the phase from scratch. Phases not marked done still
 run, and risk-related requirements and final verification are never
-considered done by default. Report commands run with exit codes in the
-result; anything unverified is reported as `UNKNOWN`, not implied to pass.
+considered done by default. Report commands run with exit codes (and the HEAD
+sha / uncommitted-changes state they ran on) in the result; anything
+unverified is reported as `UNKNOWN`, not implied to pass.
+
+Never overwrite or discard changes you did not make in this task: check
+`git status` and the file's current state before editing, do not run
+`git reset --hard`, `git checkout --`, or `git clean`, and if the working
+tree conflicts with your task, stop and report it instead of resolving it
+silently.
 
 ## Commands
 
