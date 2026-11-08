@@ -13,6 +13,15 @@ Always follow:
 
 Do not skip phases unless the user explicitly asks to skip them.
 
+A delegation may state `completed_phases` in its `EXECUTION POLICY` block
+(for example `research: done` with an evidence reference such as an approved
+plan or a prior session note). A phase marked done with a reference counts as
+completed and is not repeated; verify the reference exists and is relevant
+rather than re-running the phase from scratch. Phases not marked done still
+run, and risk-related requirements and final verification are never
+considered done by default. Report commands run with exit codes in the
+result; anything unverified is reported as `UNKNOWN`, not implied to pass.
+
 ## Commands
 
 These command-like requests are supported:

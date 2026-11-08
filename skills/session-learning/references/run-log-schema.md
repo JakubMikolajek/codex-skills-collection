@@ -42,9 +42,17 @@ before the result is known.
   "preloads": ["project-context", "technical-context-discovery"],
   "model": "<model from workflow-facts.sh>",
   "effort": "high",
-  "baseline_sha": "25a98ace9dabb30a02796758bbd65ea1c56d019a"
+  "baseline_sha": "25a98ace9dabb30a02796758bbd65ea1c56d019a",
+  "task_id": "TASK-0042",
+  "attempt": 1
 }
 ```
+
+`task_id` and `attempt` are optional (older entries lack them; treat absence
+as "not recorded", not as a first attempt). `task_id` groups the delegations
+of one task (task units, retries); `attempt` is the 1-based try number for
+that task, incremented on each `--resume` or fresh retry. Retry rate is
+computable only for delegations that carry a `task_id`.
 
 ## `completion` event
 
@@ -69,10 +77,11 @@ orchestrator remembering to do it.
   `ts` — it is not written directly because the completion signal in at
   least one real implementation (Claude Code's `SubagentStop` hook) does not
   carry timing itself.
-- **No `retries`, `human_corrections`, `ownership_conflict`, or `tests`
-  fields populated by default.** These require richer per-task evidence
+- **No `human_corrections`, `ownership_conflict`, or `tests` fields
+  populated by default.** (Retries are derivable from `task_id` + `attempt`
+  when the orchestrator passes them.) These require richer per-task evidence
   (e.g. parsing `result_excerpt` for test output, or explicit orchestrator
-  bookkeeping across `--resume` calls) that is not guaranteed to exist. A
+  bookkeeping) that is not guaranteed to exist. A
   consumer must treat their absence as "not computed", not "zero" — silently
   defaulting them to a clean value would misrepresent the run.
 - **No original task/route/model in the `completion` event.** Always join
@@ -82,6 +91,10 @@ orchestrator remembering to do it.
   `"end_turn"` — observed directly in a live test of one implementation
   (Claude Code's `SubagentStop` hook) for a trivial single-turn completion.
   Treat it as best-effort metadata, not a guaranteed enum.
+- **Only Codex delegations are logged.** A reference orchestrator's hook may
+  receive events for every subagent (including non-Codex ones with an empty
+  or unrelated `agent_type`); it should record only those whose
+  `agent_type` starts with `codex`, so the log holds delegations only.
 - **A `completion` event with no matching `start` event is still evidence.**
   It means the delegation ran and finished, even if the orchestrator failed
   to log its start (or wasn't the one that launched it). Report it as an
