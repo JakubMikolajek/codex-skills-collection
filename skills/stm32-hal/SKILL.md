@@ -16,7 +16,7 @@ STM32 is the dominant microcontroller family in commercial embedded. This skill 
 
 ## When NOT to Use
 
-- ESP32 — use `esp32-idf`
+- ESP32 — use `esp-idf`
 - RP2040 — different SDK (Pico SDK), different patterns
 - AVR — different toolchain, avr-libc
 
@@ -163,9 +163,14 @@ HAL_UART_Receive_IT(&huart2, rx_buf, sizeof(rx_buf));
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
     if (huart->Instance == USART2) {
         // Process rx_buf — signal processing task
-        xQueueSendFromISR(uart_queue, rx_buf, NULL);
+        // Queue copies the item: send a descriptor/index, not a pointer into a buffer that is
+        // restarted right below; pass &woken and yield so the consumer runs promptly.
+        BaseType_t woken = pdFALSE;
+        xQueueSendFromISR(uart_queue, rx_buf, &woken);
         // Restart receive for next packet
+        // (NOTE: rx_buf is overwritten by the next transfer — double-buffer if the consumer is slow)
         HAL_UART_Receive_IT(&huart2, rx_buf, sizeof(rx_buf));
+        portYIELD_FROM_ISR(woken);
     }
 }
 
@@ -358,4 +363,6 @@ Error handling:
 - `c-embedded` — always load for C/C++ language patterns
 - `freertos` — FreeRTOS patterns when RTOS is enabled in CubeMX
 - `embedded-toolchain` — CMake toolchain file, flashing with OpenOCD/ST-Link
-- `debug-trace` — JTAG/SWD debugging with OpenOCD + GDB, STM32CubeMonitor
+- `embedded-debugging` — HardFault decoding, JTAG/SWD debugging with OpenOCD + GDB
+- `embedded-testing` — host-side tests for logic above the HAL
+- `debug-trace` — general debugging workflow

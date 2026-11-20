@@ -17,7 +17,7 @@ This skill covers the build layer underneath the SDK — the toolchain file, lin
 
 ## When NOT to Use
 
-- ESP-IDF projects — IDF has its own CMake integration (`idf_component_register`), see `esp32-idf`
+- ESP-IDF projects — IDF has its own CMake integration (`idf_component_register`, sdkconfig layering), see `esp-idf`
 - Arduino IDE projects — different build system entirely
 - CubeIDE-managed projects — use CMakeLists only if you explicitly export from CubeIDE
 
@@ -354,6 +354,17 @@ cmake --build build && cmake --build build --target flash
 | `multiple definition of 'foo'` | Same symbol in two .c files | Check for duplicate function names or missing include guards |
 | `cannot find -lnosys` | `nosys.specs` not available | Use `--specs=nosys.specs` not `-lnosys` separately |
 | `_exit` undefined | Newlib needs syscall stubs | Add `nosys.specs` or implement syscall stubs |
+| `undefined reference to '__sync_*'` / `__atomic_*` | Core without atomic instructions (Cortex-M0) | Use critical sections or provide the libatomic stubs |
+| Works at `-O0`, breaks at `-Os` | Missing `volatile`/barrier, UB, or stack too small | Fix the code; do not ship `-O0` — see `c-embedded` |
+
+## Size and Reproducibility Tracking
+
+- Record `size` / `--print-memory-usage` output per build in CI and fail on regression thresholds (flash, static RAM). Catching +20 KB in a PR is cheap; finding it at the partition limit is not.
+- Pin the toolchain version (container image or lockfile); different GCC versions change size, inlining and warnings.
+- Prefer `-ffile-prefix-map` / `-fdebug-prefix-map` so builds are path-independent; keep the `.elf` (with symbols) of **every released binary** — you cannot decode a field crash without the matching ELF.
+- Keep `-Wl,--cref`/map file as a CI artifact; use `bloaty` to diff two builds.
+- Separate **build** from **sign/flash**: signing keys never live in the repo or on developer laptops in production flows (see `esp-idf-secure-ota`).
+- Add a host-compiled test target for hardware-independent logic (see `embedded-testing`).
 
 ## Toolchain Checklist
 
@@ -377,6 +388,10 @@ Build outputs:
 Flashing:
 - [ ] openocd.cfg matches your programmer (ST-Link vs J-Link)
 - [ ] verify flag used when flashing (confirms write)
+
+Release hygiene:
+- [ ] Toolchain version pinned; size budget checked in CI
+- [ ] ELF + map of every shipped binary archived next to the binary
 ```
 
 ## Anti-Patterns to Avoid
@@ -396,5 +411,7 @@ Flashing:
 - `c-embedded` — always load for C/C++ language patterns
 - `freertos` — FreeRTOS CMake integration (`Middlewares/Third_Party/FreeRTOS`)
 - `stm32-hal` — STM32-specific HAL patterns that sit on top of this toolchain
-- `esp32-idf` — IDF has its own CMake layer — this skill covers non-IDF projects
-- `debug-trace` — GDB, OpenOCD, and core dump analysis for embedded
+- `esp-idf` — IDF has its own CMake layer — this skill covers non-IDF projects
+- `embedded-testing` — host-side test targets and fakes
+- `embedded-debugging` — GDB, OpenOCD, and core dump analysis for embedded
+- `debug-trace` — general debugging workflow

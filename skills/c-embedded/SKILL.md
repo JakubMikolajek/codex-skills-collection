@@ -16,7 +16,7 @@ Embedded C is not desktop C. The constraints are different: no OS memory safety 
 
 ## When NOT to Use
 
-- ESP32-specific SDK patterns (FreeRTOS tasks, NVS, WiFi) — use `esp32-idf`
+- ESP32-specific SDK patterns (component model, sdkconfig, memory caps, flash/cache rules, NVS, WiFi) — use `esp-idf`
 - High-level Arduino sketches with no direct hardware access — the patterns here apply but are not primary
 - Rust embedded (`no_std`) — different ownership model, different skill
 
@@ -60,6 +60,11 @@ typedef struct __attribute__((packed)) {
     uint8_t  checksum;
 } uart_frame_t;
 // __attribute__((packed)) prevents padding — critical for wire protocols
+// BUT: never take a pointer to a packed member (&frame.device_id) — unaligned access traps on
+// Cortex-M0/RISC-V and is slow elsewhere. memcpy the field out instead. Serialize/parse
+// explicitly byte by byte for anything crossing a wire or flash boundary (endianness, versioning);
+// treat the packed struct as a layout description, not as the parser.
+_Static_assert(sizeof(uart_frame_t) == 7, "uart_frame_t wire layout changed");
 
 // Never do this in embedded:
 int count;          // 16-bit on AVR, 32-bit on ARM — unpredictable
@@ -103,7 +108,24 @@ const volatile uint32_t *status_reg = (volatile uint32_t *)0x3FF44000;
 void process_frame(const uart_frame_t *frame, size_t len);
 ```
 
-Rule: **every hardware register access must be volatile. Every variable shared between ISR and non-ISR context must be volatile.**
+Rule: **every hardware register access must be volatile. Every variable shared with an ISR must be at least `volatile` — and if more than one value must stay consistent, or the access is a read-modify-write, `volatile` is not enough.**
+
+`volatile` only stops the compiler from caching/eliding the access. It gives **no atomicity** (a `uint64_t` or a struct is read in several instructions), **no ordering** between different variables, and **no cross-core visibility** on SMP chips (ESP32, ESP32-P4 dual core). For shared state use one of:
+
+```c
+#include <stdatomic.h>
+
+static atomic_uint_fast32_t s_rx_overruns;          // single counter / flag, lock-free
+atomic_fetch_add_explicit(&s_rx_overruns, 1, memory_order_relaxed);
+
+static atomic_bool s_data_ready;                    // publish flag with data behind it:
+// producer: write payload, THEN release-store the flag
+atomic_store_explicit(&s_data_ready, true, memory_order_release);
+// consumer: acquire-load the flag, THEN read payload
+if (atomic_load_explicit(&s_data_ready, memory_order_acquire)) { /* payload is visible */ }
+```
+
+Use a critical section / mutex / queue when several fields must change together. Check `ATOMIC_*_LOCK_FREE` on tiny cores (Cortex-M0 has no `LDREX/STREX`; the compiler falls back to library calls that are not ISR-safe).
 
 ## Interrupt-Safe Code
 
@@ -121,8 +143,9 @@ volatile uint32_t counter = 0;
 // Platform-agnostic critical section pattern:
 // ARM Cortex-M (STM32, RP2040, most commercial MCUs)
 void isr_handler(void) {
-    counter++;   // 32-bit aligned read-modify-write IS atomic on Cortex-M
-                 // but for multi-variable state, use critical section below
+    counter++;   // NOT atomic even on Cortex-M: LDR / ADD / STR can be preempted.
+                 // Safe only if this ISR is the SOLE writer and nothing else modifies it.
+                 // Otherwise: atomic_fetch_add or a critical section.
 }
 
 // Multi-variable or multi-step critical section — ARM Cortex-M
@@ -148,7 +171,7 @@ void update_state(void) {
 // taskENTER_CRITICAL_FROM_ISR() / taskEXIT_CRITICAL_FROM_ISR() — from ISR
 
 // ESP32-specific: portENTER_CRITICAL_ISR(&mux) for SMP (dual-core)
-// See esp32-idf skill for ESP32-specific critical section patterns
+// See esp-idf skill for ESP32-specific critical section patterns
 ```
 
 ISR rules (platform-agnostic):
@@ -156,7 +179,8 @@ ISR rules (platform-agnostic):
 - Never call blocking functions from ISR context (`printf`, `malloc`, mutex lock)
 - Never block in an ISR — no `while(waiting)`, no sleep
 - For RTOS systems: use ISR-safe API variants (FreeRTOS `xQueueSendFromISR`, `xSemaphoreGiveFromISR`)
-- For ESP32: mark ISR functions with `IRAM_ATTR` — flash cache misses during ISR cause crashes
+- For ESP32: only ISRs registered with `ESP_INTR_FLAG_IRAM` run while the flash cache is disabled; those (and everything they call, plus the data they touch) must live in IRAM/DRAM — see `esp-idf`
+- Never assume an ISR runs "rarely enough" — design for the worst-case storm (bouncing input, bus error loop) and bound the work per interrupt
 
 ```c
 // Correct ISR pattern: flag + main loop (bare metal / no RTOS)
@@ -208,12 +232,13 @@ free(buf);
 buf = NULL;                            // null after free — prevents use-after-free
 
 // Stack allocation for temporaries — but watch stack depth
-// ESP32 default task stack is 2048-4096 bytes
+// Task stacks are typically 2-8 KB; stack arrays + printf/snprintf + library frames add up
 // Large local arrays overflow the stack silently
 uint8_t large_buf[1024];              // DANGEROUS if task stack < ~2KB — use static or heap
+// Also avoid recursion, VLAs, and alloca() in firmware (unbounded stack use)
 ```
 
-Stack overflow detection: enable `CONFIG_ESP_TASK_WDT` and `CONFIG_FREERTOS_USE_TRACE_FACILITY` in sdkconfig. Use `uxTaskGetStackHighWaterMark()` to measure actual stack usage during development.
+Stack overflow detection: FreeRTOS `configCHECK_FOR_STACK_OVERFLOW = 2` (ESP-IDF: `CONFIG_FREERTOS_CHECK_STACKOVERFLOW_CANARY`), optionally GCC `-fstack-protector` / `CONFIG_COMPILER_STACK_CHECK_MODE_*` for overflow of local arrays. The task watchdog does **not** detect stack overflow. Use `uxTaskGetStackHighWaterMark()` to measure actual stack usage during development, under worst-case load (TLS handshake, JSON, logging, error paths) — not on the happy path.
 
 ```c
 // Check stack headroom during development
@@ -306,8 +331,10 @@ uint16_t raw = (uint16_t)(buf[0] << 8) | buf[1];   // big-endian from sensor
 #ifdef DEBUG
 #define ASSERT(cond) do { if (!(cond)) { ESP_LOGE(TAG, "Assert failed: %s", #cond); abort(); } } while(0)
 #else
-#define ASSERT(cond) ((void)(cond))
+#define ASSERT(cond) ((void)0)       // never evaluate `cond` in release — no side effects hidden in asserts
 #endif
+// Asserts catch *programmer* errors (broken invariants). Runtime/IO failures (timeout, NACK, CRC)
+// are NOT asserts — they are error returns. In production decide explicitly: log + safe state + reset.
 
 // 2. Guard all pointer parameters
 void process_data(const uint8_t *data, size_t len) {
@@ -343,6 +370,71 @@ while (!sensor_ready()) {
 // Enable hardware watchdog and feed it in the main loop
 ```
 
+## Concurrency Patterns Worth Knowing
+
+```c
+// Single-producer / single-consumer ring buffer (ISR -> task, or task -> task, no lock).
+// Power-of-two size, free-running indices, release/acquire pairing.
+#define RB_SIZE 64u                               // must be power of two
+_Static_assert((RB_SIZE & (RB_SIZE - 1u)) == 0, "RB_SIZE must be power of two");
+
+typedef struct {
+    uint8_t buf[RB_SIZE];
+    atomic_uint head;   // written only by producer
+    atomic_uint tail;   // written only by consumer
+} spsc_rb_t;
+
+static inline bool rb_push(spsc_rb_t *rb, uint8_t b) {      // producer only
+    unsigned h = atomic_load_explicit(&rb->head, memory_order_relaxed);
+    unsigned t = atomic_load_explicit(&rb->tail, memory_order_acquire);
+    if (h - t == RB_SIZE) return false;                     // full: count it, never overwrite silently
+    rb->buf[h & (RB_SIZE - 1u)] = b;
+    atomic_store_explicit(&rb->head, h + 1u, memory_order_release);
+    return true;
+}
+```
+
+This is correct only for exactly **one** producer and **one** consumer. Multiple producers → queue or mutex. On an RTOS, prefer the RTOS queue / stream buffer over hand-rolled lock-free code unless you have measured a need.
+
+## Time, Integers and Overflow
+
+```c
+// Tick/time counters wrap. Compare with unsigned subtraction, never with `<` on absolute values.
+if ((uint32_t)(now_ms - deadline_ms) < 0x80000000u) { /* deadline passed */ }
+// 32-bit ms counter wraps after 49.7 days — test with the counter pre-set near UINT32_MAX.
+
+// Integer promotion: uint8_t/uint16_t operands promote to int
+uint16_t a = 0xFFFF;
+uint32_t bad  = a << 16;            // UB-adjacent: a promotes to (signed) int, shift into sign bit
+uint32_t good = (uint32_t)a << 16;
+
+// Never shift by >= type width; never left-shift negative values; check size arithmetic
+if (count > SIZE_MAX / elem_size) return ERR_INVALID;   // before count * elem_size
+// Signed overflow is UB (compiler may delete your overflow check). Use unsigned or __builtin_*_overflow.
+if (__builtin_add_overflow(a, b, &sum)) return ERR_OVERFLOW;
+```
+
+Persisted counters that provide **uniqueness or replay protection** (nonces, TX counters, OTA anti-rollback) must be monotonic across power loss: persist/reserve **before** use, and never let a restore/rollback path move them backwards. See `embedded-persistence`.
+
+## DMA, Caches and Memory Regions
+
+- DMA buffers must be in DMA-capable memory, correctly aligned, and not on the stack. On chips with a data cache (Cortex-M7, ESP32-S3/P4 with PSRAM, STM32H7) **cache-line align and size** the buffer and clean/invalidate (or use non-cacheable regions) around transfers — otherwise you get stale data or corrupted neighbours that only appear under load.
+- Tightly-coupled/CCM RAM is often not DMA reachable. Check the reference manual bus matrix before placing buffers.
+- Do not touch a DMA buffer from the CPU while the transfer owns it; hand ownership off explicitly (flag/semaphore/callback).
+- Anything executed or read while flash is being written/erased must sit in RAM (`IRAM_ATTR` / `__attribute__((section(".ramfunc")))`).
+
+## Build-Time Hardening
+
+```
+- Warnings as errors on your own code: -Wall -Wextra -Wshadow -Wconversion -Wformat=2 -Wundef -Werror
+  (relax per third-party component, not globally)
+- _Static_assert for struct sizes, enum ranges, array lengths and buffer-vs-protocol limits
+- Static analysis in CI: clang-tidy / cppcheck, plus -fanalyzer where the toolchain supports it
+- Format specifiers: PRIu32 / PRId64 / %zu — never %d for uint32_t or size_t
+- Fixed `const` tables: mark `static const` so they stay in flash, not RAM
+- Keep ISR-visible and cache-sensitive sections explicit with attributes, not implicit by luck
+```
+
 ## Code Quality Rules
 
 - Function length: max 50 lines — extract hardware initialization, state machines, and protocol parsers into separate functions
@@ -360,12 +452,14 @@ Types:
 - [ ] No int/long/unsigned without explicit size
 - [ ] Packed attribute on wire-protocol structs
 
-Volatile:
+Volatile / atomics:
 - [ ] All hardware register accesses are volatile
-- [ ] All ISR-shared variables are volatile
+- [ ] ISR-shared variables are volatile AND atomic (or lock-protected) when read-modify-write or multi-field
+- [ ] No pointer to a packed-struct member; wire formats parsed explicitly, sizes `_Static_assert`ed
+- [ ] Time comparisons wrap-safe; size arithmetic overflow-checked
 
 Interrupts:
-- [ ] ISRs marked IRAM_ATTR (ESP32)
+- [ ] IRAM-safe ISRs (`ESP_INTR_FLAG_IRAM`) and everything they touch live in IRAM/DRAM (ESP32)
 - [ ] ISRs only signal tasks, do not do work
 - [ ] ISR-safe API variants used (xQueueSendFromISR etc.)
 - [ ] Critical sections protect multi-byte shared state
@@ -373,7 +467,8 @@ Interrupts:
 Memory:
 - [ ] malloc return value checked
 - [ ] Pointer nulled after free
-- [ ] Stack usage measured with uxTaskGetStackHighWaterMark
+- [ ] Stack usage measured with uxTaskGetStackHighWaterMark under worst-case paths
+- [ ] DMA buffers aligned, DMA-capable, cache-maintained, not on the stack
 - [ ] Large buffers static or heap, not stack-allocated
 
 Error handling:
@@ -476,6 +571,11 @@ target_compile_options(${PROJECT_NAME} PRIVATE
 |---|---|
 | `int count` for loop variable | `uint16_t count` — explicit size |
 | `*(uint16_t*)buf` for multi-byte read | Explicit shift + OR: `(buf[0] << 8) \| buf[1]` |
+| `volatile` used as thread/ISR synchronization | `<stdatomic.h>`, critical section, or RTOS queue |
+| `counter++` assumed atomic with an ISR | `atomic_fetch_add` or critical section |
+| `assert(do_something())` | Never put side effects in asserts; they vanish in release |
+| `now < deadline` on a wrapping tick counter | `(uint32_t)(now - deadline) < 0x80000000u` |
+| Hand-rolled lock-free queue with 2+ producers | RTOS queue / mutex |
 | Hardware register without `volatile` | `volatile uint32_t *reg = (volatile uint32_t*)ADDR` |
 | `malloc()` without checking NULL | Always check: `if (!ptr) { return ERR_NO_MEM; }` |
 | Blocking work inside ISR | Set flag / send to queue — work in main loop or task |
@@ -488,9 +588,12 @@ target_compile_options(${PROJECT_NAME} PRIVATE
 
 ## Connected Skills
 
-- `esp32-idf` — ESP32-specific SDK patterns built on this C/C++ foundation
+- `esp-idf` — ESP32-family SDK patterns built on this C/C++ foundation
 - `freertos` — FreeRTOS tasks, queues, semaphores, and synchronization (portable, not IDF-specific)
 - `stm32-hal` — STM32 HAL driver patterns and CubeMX-generated project workflow
 - `embedded-toolchain` — CMake cross-compilation, linker scripts, startup files, and GCC toolchain setup
-- `iot-connectivity` — MQTT and WiFi patterns for connected embedded devices
-- `debug-trace` — JTAG debugging, core dumps, hardware fault analysis
+- `embedded-persistence` — power-fail-safe storage, schemas, monotonic counters
+- `embedded-connectivity` — MQTT, WiFi, CAN/ISO-TP and link-layer patterns for connected devices
+- `embedded-testing` — host-side unit tests, fakes for RTOS/HAL, hardware-in-the-loop
+- `embedded-debugging` — reset-cause triage, watchdog resets, coredumps, JTAG
+- `debug-trace` — general debugging workflow (loop construction, hypothesis discipline)

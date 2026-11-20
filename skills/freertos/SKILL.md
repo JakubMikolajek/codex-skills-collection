@@ -17,7 +17,7 @@ FreeRTOS is the most widely deployed RTOS in commercial embedded. This skill cov
 
 ## When NOT to Use
 
-- ESP32-specific IDF patterns (`xTaskCreatePinnedToCore`, `IRAM_ATTR`, `portMUX`) — see `esp32-idf`
+- ESP-IDF specifics (`xTaskCreatePinnedToCore`, `IRAM_ATTR`, `portMUX`, PSRAM stacks, IDF SMP FreeRTOS) — see `esp-idf`
 - Bare metal without RTOS — see `c-embedded` for bare-metal patterns
 - Linux POSIX threads — different API despite similar concepts
 
@@ -67,8 +67,8 @@ TaskHandle_t sensor_handle = NULL;
 BaseType_t result = xTaskCreate(
     sensor_task,
     "sensor",                   // name visible in debugger / task list
-    256,                        // stack depth in WORDS (not bytes) on most ports
-                                // ESP32: bytes. Check portSTACK_TYPE size.
+    256,                        // stack depth in WORDS on vanilla FreeRTOS ports (Cortex-M)
+                                // ESP-IDF: BYTES (StackType_t is uint8_t). Check portSTACK_TYPE.
     (void *)&sensor_cfg,        // parameters
     5,                          // priority (higher number = higher priority)
     &sensor_handle
@@ -102,9 +102,11 @@ void stack_monitor_task(void *pv) {
 void vApplicationStackOverflowHook(TaskHandle_t task, char *name) {
     // Called when overflow detected — only useful if you reach it
     // Often the system is already corrupt by this point
-    // Minimum: log and reset
+    // Minimum: record task name in no-init RAM (survives the reset), then reset.
+    // Do NOT printf/malloc here — the stack and heap may be corrupt.
     (void)task;
-    NVIC_SystemReset();  // Cortex-M reset
+    record_fault_name(name);   // e.g. write to a retained / no-init region
+    NVIC_SystemReset();        // Cortex-M reset (ESP-IDF: panic path already handles this)
 }
 ```
 
@@ -112,8 +114,9 @@ Stack sizing guidelines:
 - Start with 256 words (1KB on 32-bit) for simple tasks
 - Tasks that call `printf`, `sprintf`, or nested functions: 512+ words
 - Tasks that use floating point: add 64 words for FPU save area
-- Tasks that call complex libraries (JSON parsing, crypto): 1024+ words
-- Measure with `uxTaskGetStackHighWaterMark` — do not guess
+- Tasks that call complex libraries (JSON parsing, TLS, crypto, filesystems): 1024+ words (≈4–8+ KB on IDF)
+- Measure with `uxTaskGetStackHighWaterMark` on the **worst-case path** (TLS handshake, error/retry branches, logging at DEBUG) — the idle happy path under-reports
+- Leave ≥ 25–30 % headroom after measuring; shrink only with evidence
 
 ### Priority Assignment
 
@@ -128,6 +131,8 @@ Stack sizing guidelines:
 // Leave headroom below configMAX_PRIORITIES (usually 10 or 32)
 ```
 
+Priority design rules: few priority levels; one owner per resource; the RTOS tick/daemon/timer tasks and any network stack tasks have their own priorities — a CPU-bound task above them starves them (and trips the task watchdog via IDLE starvation). Never busy-wait in a task without a blocking call or delay.
+
 Priority inversion risk: if a low-priority task holds a mutex needed by a high-priority task, and a medium-priority task preempts the low-priority task, the high-priority task is blocked indefinitely. Use **priority inheritance mutexes** (`xSemaphoreCreateMutex`) — FreeRTOS raises the low-priority holder's priority temporarily.
 
 ## Queues
@@ -137,7 +142,9 @@ Queues are the primary communication mechanism between tasks and ISRs.
 ```c
 #include "queue.h"
 
-// Create queue at startup — never create in a task (timing unpredictable)
+// Create queues at init time (before the tasks that use them start) — creation can fail on heap
+// exhaustion, and a failure at boot is easy to see while a failure at runtime is not.
+// Static allocation (xQueueCreateStatic) removes the failure mode entirely.
 QueueHandle_t sensor_queue = xQueueCreate(
     16,                      // depth: number of items
     sizeof(measurement_t)    // item size: queue copies by value
@@ -171,6 +178,30 @@ Queue depth sizing:
 - Too shallow: producers block or drop data, causing jitter
 - Too deep: wastes RAM (depth × item_size bytes always allocated)
 - Rule of thumb: 2–4× the burst rate of the fastest producer
+
+Queue discipline:
+- Queues copy items by value. For large payloads send a **pointer + explicit ownership rule** (who frees it, what happens on queue-full / task teardown) or use a pool — never a pointer to a stack variable.
+- Decide the overflow policy per queue (drop newest, drop oldest, block, count + alarm). "Block forever" on a queue that a safety/UI task feeds is a latent hang.
+- One consumer per queue unless work is genuinely interchangeable.
+- Check the result of **every** send; a silently dropped command or event is a bug you will chase for days.
+
+## Task Notifications, Stream and Message Buffers
+
+Prefer direct-to-task notifications over binary semaphores / event groups for 1:1 signalling (ISR → task, task → task): less RAM, faster.
+
+```c
+// Waiter
+uint32_t bits;
+if (xTaskNotifyWait(0, UINT32_MAX, &bits, pdMS_TO_TICKS(100)) == pdTRUE) { /* handle bits */ }
+
+// From ISR
+BaseType_t woken = pdFALSE;
+xTaskNotifyFromISR(task, EVT_RX_DONE, eSetBits, &woken);
+portYIELD_FROM_ISR(woken);
+```
+
+- Use a **stream buffer** for byte streams (UART RX, audio) with one writer and one reader; a **message buffer** for variable-length frames. Both are single-producer/single-consumer — guard with a mutex if that is violated.
+- A notification slot is one value: do not mix notification use for two different purposes in the same task.
 
 ## Semaphores and Mutexes
 
@@ -214,13 +245,22 @@ void use_spi(void) {
     }
 }
 
-// NEVER use mutex from ISR — use binary semaphore instead
-// NEVER call xSemaphoreTake twice from the same task (deadlock)
+// NEVER use mutex from ISR — use binary semaphore / task notification instead
+// NEVER call xSemaphoreTake twice from the same task (deadlock) — use xSemaphoreCreateRecursiveMutex()
+// only if re-entrancy is genuinely required (usually a sign of unclear ownership)
+// NEVER hold a mutex across a blocking call into another module that takes its own lock
+// (lock-order inversion). Document one global lock order; hold locks for the shortest span.
+// NEVER hold a mutex while waiting for a response that is produced by a task that needs the same mutex
 ```
 
 **Mutex vs Binary Semaphore:**
 - Mutex: shared resource protection between tasks. Has priority inheritance. Must be given by the same task that took it.
 - Binary semaphore: signaling. Can be given from ISR. No priority inheritance. Giver and taker can be different tasks.
+
+**Deadlock / hang review (do this on every PR that adds a lock):**
+1. List every lock held when a blocking call (queue send/receive, I/O, `vTaskDelay`, another module's API) is made — each is a candidate cycle.
+2. A task that waits **synchronously** for another task while holding a lock that task also needs (A holds M and waits on B's reply; B needs M to reply) deadlocks. Prefer message passing with no lock held across the wait.
+3. Every wait has a timeout and a defined failure path (log, retry, safe state), including mutex takes.
 
 ## Event Groups
 
@@ -237,7 +277,9 @@ EventGroupHandle_t system_events = xEventGroupCreate();
 #define EVENT_SENSOR_READY     BIT2
 #define EVENT_ALL_READY        (EVENT_WIFI_CONNECTED | EVENT_MQTT_CONNECTED | EVENT_SENSOR_READY)
 
-// Set bit from any task or ISR
+// Set bit from a task. From an ISR use xEventGroupSetBitsFromISR (defers to the timer task).
+// Event bits are a *state* (level), not a counted *event* — two sets before a wait look like one.
+// Only 8 usable bits on 16-bit ticks / 24 on 32-bit ticks (top byte reserved).
 xEventGroupSetBits(system_events, EVENT_WIFI_CONNECTED);
 
 // Wait for ALL bits (logical AND)
@@ -344,7 +386,10 @@ Queues:
 Synchronization:
 - [ ] Mutex used for shared resource (not binary semaphore)
 - [ ] Binary semaphore used for signaling ISR → task
-- [ ] Timeout set on all xSemaphoreTake calls (not portMAX_DELAY in production)
+- [ ] Timeout on every wait that can be caused by *another* task or by hardware; `portMAX_DELAY` only for a worker/consumer loop whose sole job is to wait for its own input queue
+- [ ] Documented lock order; no lock held across a call into another module that blocks
+- [ ] Queue overflow policy defined and every send result checked
+- [ ] Task notifications / stream buffers used for 1:1 signalling and byte streams
 - [ ] Mutex never taken from ISR
 
 Timers:
@@ -362,11 +407,16 @@ Memory:
 |---|---|
 | `vTaskDelay(100)` in fixed-rate task | `vTaskDelayUntil` — compensates for task run time |
 | Mutex from ISR context | Binary semaphore for ISR signaling |
-| `xSemaphoreTake` with `portMAX_DELAY` in production | Set timeout + handle failure |
+| `xSemaphoreTake(portMAX_DELAY)` guarding a resource owned by another task/hardware | Timeout + failure path (a consumer blocking on its own input queue is fine) |
+| Binary semaphore for 1:1 ISR→task signal | `xTaskNotifyFromISR` — cheaper |
+| Pointer to a stack variable sent through a queue | Copy by value, or heap/pool object with explicit ownership |
+| Task A waits on B while holding a mutex B needs | Message passing, release lock before waiting |
+| Busy-wait loop in a task (`while(!flag){}`) | Block on a primitive; busy loops starve lower priorities and IDLE |
+| Deleting a task that holds a mutex / owns heap memory | Signal the task to exit cleanly and release resources itself |
 | Calling `printf` / `malloc` from ISR | Signal task — work done outside ISR |
 | Guessing task stack sizes with no runtime checks | Measure `uxTaskGetStackHighWaterMark` and tune with margin |
 | Sharing mutable task data without mutex/queue/event synchronization | Use FreeRTOS primitives to protect ownership and ordering |
-| Creating queue inside a task | Create all objects at startup (e.g. in main before scheduler) |
+| Creating queues/mutexes lazily on first use (racy, can fail late) | Create at init, before dependent tasks start; or use `*Static` |
 | No `configASSERT` on object creation | Assert immediately — fail loudly |
 | Magic priority numbers in xTaskCreate | Named constants: `PRIORITY_HIGH` |
 | Blocking in timer callback | Signal a task from callback |
@@ -374,6 +424,7 @@ Memory:
 ## Connected Skills
 
 - `c-embedded` — always load for C/C++ language patterns
-- `esp32-idf` — ESP32-specific FreeRTOS extensions (pinned tasks, portMUX, IRAM_ATTR)
+- `esp-idf` — ESP-IDF FreeRTOS (SMP): core pinning, portMUX spinlocks, PSRAM stacks, watchdogs
 - `stm32-hal` — STM32 + FreeRTOS integration patterns (CubeMX generated FreeRTOS config)
-- `debug-trace` — FreeRTOS task list dump, stack overflow debugging
+- `embedded-debugging` — hangs, watchdog resets, stack overflow and task-state forensics
+- `debug-trace` — general debugging workflow
