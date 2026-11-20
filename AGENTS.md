@@ -289,6 +289,22 @@ Load order:
 
 ---
 
+### Recipe: ESP-IDF production firmware change (storage, OTA, connectivity, reset bugs)
+
+Domains: EMBEDDED (+ WORKFLOW, + BACKEND when a device/backend contract changes)  
+Branch files: `skills/routing/EMBEDDED.md`, `skills/routing/WORKFLOW.md`
+
+Load order:
+1. `technical-context-discovery` (IDF version, sdkconfig presets, component layout, vendored patches)
+2. `c-embedded` + `freertos` + `esp-idf` (foundation: memory placement, flash/cache rules, tasks, watchdogs)
+3. The task-specific embedded skill(s): `embedded-persistence` (flash writes, counters), `esp-idf-secure-ota` (partitions, signing, OTA), `embedded-connectivity` (Wi-Fi/MQTT/CAN), `embedded-lvgl` (UI), `embedded-debugging` (resets/hangs)
+4. `embedded-testing` (pure/impure split, host tests, fault injection) — before writing code when logic is separable
+5. `security-hardening` (any change touching keys, counters/nonces, signing, TLS, secrets in logs) and `message-queue` / `api-contract` (device↔backend contract)
+6. `code-review` and `/codex:adversarial-review` for changes to counters/nonces, OTA, signing or partitions
+7. `session-learning` (after /implement)
+
+---
+
 ### Recipe: Tauri desktop feature (React + Rust)
 
 Domains: TAURI + WORKFLOW  

@@ -3,7 +3,16 @@
 ## [Unreleased]
 
 ### Added
+- Added ESP-IDF–centred embedded skills, all routed through `skills/routing/EMBEDDED.md`: `esp-idf` (component model, sdkconfig layering and dev-vs-release diffing, memory placement, flash/cache-disabled rules, watchdogs, error handling), `esp-idf-secure-ota` (partitions, secure boot v2, flash encryption, signed/encrypted OTA, rollback/anti-rollback, companion-chip updates, release pipeline), `embedded-persistence` (atomic saves, storage worker, schema migration, wear budgets, monotonic counters/nonces, wipe semantics), `embedded-connectivity` (Wi-Fi/co-processor links, MQTT fragmentation/ownership/idempotency/LWT, CAN/ISO-TP, secure device links), `embedded-lvgl` (threading model, buffers/tearing, screen lifecycle, input and idle), `embedded-debugging` (reset-cause triage, hang-instead-of-reset, breadcrumbs, isolation matrix, hypothesis log) and `embedded-testing` (pure/impure split, sanitized host harness with stubs and fake peripherals, fixtures, fault injection, HIL smoke set).
+- Added the "ESP-IDF production firmware change" cross-domain recipe to `AGENTS.md`.
 - Imported Apple-authored Xcode skills as native-branch skills routed through `skills/routing/NATIVE.md`: `swiftui-specialist`, `swiftui-whats-new-27`, `building-document-based-swiftui-applications`, `app-intents-specialist`, `app-intents-whats-new-27`, `uikit-app-modernization`, and `modernize-tests`.
+
+### Fixed
+- `c-embedded`, `freertos`, `embedded-toolchain` and `stm32-hal` referenced the non-existent `esp32-idf` and `iot-connectivity` skills; they now point at the new skills.
+- `c-embedded`: removed the incorrect claim that `counter++` is atomic on Cortex-M, stopped presenting `volatile` as ISR synchronization (added `<stdatomic.h>` guidance, SPSC ring buffer, wrap-safe time comparison, integer-promotion/overflow rules, DMA/cache and packed-struct hazards, build hardening), corrected stack-overflow detection guidance (the task watchdog does not detect it) and made the release-mode `ASSERT` stop evaluating its argument.
+- `freertos`: stack depth units for ESP-IDF (bytes), task notifications and stream/message buffers, deadlock review procedure, queue ownership/overflow policy, event-group semantics, and a nuanced `portMAX_DELAY` rule instead of a blanket ban.
+- `embedded-toolchain`: added size/reproducibility tracking and release hygiene, plus extra linker-error rows.
+- `stm32-hal`: UART ISR example now passes `woken` and yields.
 
 ### Changed
 - `swiftui` now defers to `swiftui-specialist` on framework-level correctness, and notes the SDK 27 `@State` macro and `NavigationView` soft-deprecation.
